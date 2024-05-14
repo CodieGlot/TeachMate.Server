@@ -34,6 +34,16 @@ public class UserService : IUserService
     {
         appUser.Password = BC.HashPassword(appUser.Password);
 
+        switch (appUser.UserRole)
+        {
+            case UserRole.Tutor:
+                appUser.Tutor = new Tutor { DisplayName = appUser.DisplayName };
+                break;
+            case UserRole.Learner:
+                appUser.Learner = new Learner { DisplayName = appUser.DisplayName };
+                break;
+        }
+
         _context.Add(appUser);
         await _context.SaveChangesAsync();
 
