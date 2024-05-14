@@ -5,7 +5,7 @@
 namespace TeachMate.Services.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDb : Migration
+    public partial class InitDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,10 +28,32 @@ namespace TeachMate.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LearningModuleRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RequesterId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RequesterDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TutorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TutorDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Subject = table.Column<int>(type: "int", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    SerializedSchedule = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LearningModuleRequests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Learners",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,7 +70,8 @@ namespace TeachMate.Services.Migrations
                 name: "Tutors",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,7 +97,7 @@ namespace TeachMate.Services.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StartDate = table.Column<DateOnly>(type: "date", nullable: false),
                     EndDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    Schedule = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SerializedSchedule = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MaximumLearners = table.Column<int>(type: "int", nullable: false),
                     TutorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -129,6 +152,9 @@ namespace TeachMate.Services.Migrations
         {
             migrationBuilder.DropTable(
                 name: "LearnerLearningModule");
+
+            migrationBuilder.DropTable(
+                name: "LearningModuleRequests");
 
             migrationBuilder.DropTable(
                 name: "Learners");
