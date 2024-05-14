@@ -20,12 +20,12 @@ public class DataContext : DbContext
             .HasOne(x => x.Learner)
             .WithOne(x => x.AppUser)
             .HasForeignKey<Learner>();
-        modelBuilder.Entity<LearningSession>()
+        modelBuilder.Entity<LearningModule>()
             .Property(x => x.Id)
             .ValueGeneratedOnAdd();
     }
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<Tutor> Tutors { get; set; }
     public DbSet<Learner> Learners { get; set; }
-    public DbSet<LearningSession> LearningSessions { get; set; }
+    public DbSet<LearningModule> LearningModules { get; set; }
 }

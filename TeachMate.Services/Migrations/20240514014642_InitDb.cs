@@ -62,7 +62,7 @@ namespace TeachMate.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LearningSessions",
+                name: "LearningModules",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -71,16 +71,18 @@ namespace TeachMate.Services.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Subject = table.Column<int>(type: "int", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Schedule = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MaximumLearners = table.Column<int>(type: "int", nullable: false),
                     TutorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LearningSessions", x => x.Id);
+                    table.PrimaryKey("PK_LearningModules", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LearningSessions_Tutors_TutorId",
+                        name: "FK_LearningModules_Tutors_TutorId",
                         column: x => x.TutorId,
                         principalTable: "Tutors",
                         principalColumn: "Id",
@@ -88,37 +90,37 @@ namespace TeachMate.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LearnerLearningSession",
+                name: "LearnerLearningModule",
                 columns: table => new
                 {
                     EnrolledLearnersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EnrolledSessionsId = table.Column<int>(type: "int", nullable: false)
+                    EnrolledModulesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LearnerLearningSession", x => new { x.EnrolledLearnersId, x.EnrolledSessionsId });
+                    table.PrimaryKey("PK_LearnerLearningModule", x => new { x.EnrolledLearnersId, x.EnrolledModulesId });
                     table.ForeignKey(
-                        name: "FK_LearnerLearningSession_Learners_EnrolledLearnersId",
+                        name: "FK_LearnerLearningModule_Learners_EnrolledLearnersId",
                         column: x => x.EnrolledLearnersId,
                         principalTable: "Learners",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_LearnerLearningSession_LearningSessions_EnrolledSessionsId",
-                        column: x => x.EnrolledSessionsId,
-                        principalTable: "LearningSessions",
+                        name: "FK_LearnerLearningModule_LearningModules_EnrolledModulesId",
+                        column: x => x.EnrolledModulesId,
+                        principalTable: "LearningModules",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_LearnerLearningSession_EnrolledSessionsId",
-                table: "LearnerLearningSession",
-                column: "EnrolledSessionsId");
+                name: "IX_LearnerLearningModule_EnrolledModulesId",
+                table: "LearnerLearningModule",
+                column: "EnrolledModulesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LearningSessions_TutorId",
-                table: "LearningSessions",
+                name: "IX_LearningModules_TutorId",
+                table: "LearningModules",
                 column: "TutorId");
         }
 
@@ -126,13 +128,13 @@ namespace TeachMate.Services.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "LearnerLearningSession");
+                name: "LearnerLearningModule");
 
             migrationBuilder.DropTable(
                 name: "Learners");
 
             migrationBuilder.DropTable(
-                name: "LearningSessions");
+                name: "LearningModules");
 
             migrationBuilder.DropTable(
                 name: "Tutors");

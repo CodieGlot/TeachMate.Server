@@ -5,6 +5,6 @@ public class Learner
 {
     [Key]
     public Guid Id { get; set; }
-    public List<LearningSession> EnrolledSessions { get; set; } = new List<LearningSession>();
+    public List<LearningModule> EnrolledModules { get; set; } = new List<LearningModule>();
     public AppUser AppUser { get; set; } = null!;
 }

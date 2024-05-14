@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace TeachMate.Domain;
-public class LearningSession
+public class LearningModule
 {
     [Key]
     public int Id { get; set; }
@@ -10,8 +10,10 @@ public class LearningSession
     public Subject Subject { get; set; } = Subject.None;
     // Calculated in minutes
     public int Duration { get; set; }
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateOnly StartDate { get; set; }
+    public DateOnly EndDate { get; set; }
+    public string Schedule { get; set; } = string.Empty;
     public int MaximumLearners { get; set; }
     public Guid TutorId { get; set; }
     public Tutor Tutor { get; set; } = new Tutor();
