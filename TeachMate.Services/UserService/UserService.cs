@@ -68,10 +68,14 @@ public class UserService : IUserService
         switch (appUser.UserRole)
         {
             case UserRole.Tutor:
-                appUser.Tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.Id == appUser.Id);
+                appUser.Tutor = await _context.Tutors
+                    .Include(x => x.CreatedSessions)
+                    .FirstOrDefaultAsync(x => x.Id == appUser.Id);
                 break;
             case UserRole.Learner:
-                appUser.Learner = await _context.Learners.FirstOrDefaultAsync(x => x.Id == appUser.Id);
+                appUser.Learner = await _context.Learners
+                    .Include(x => x.EnrolledSessions)
+                    .FirstOrDefaultAsync(x => x.Id == appUser.Id);
                 break;
         }
     }
