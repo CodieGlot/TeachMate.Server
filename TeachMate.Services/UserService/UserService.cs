@@ -69,12 +69,12 @@ public class UserService : IUserService
         {
             case UserRole.Tutor:
                 appUser.Tutor = await _context.Tutors
-                    .Include(x => x.CreatedSessions)
+                    .Include(x => x.CreatedModules)
                     .FirstOrDefaultAsync(x => x.Id == appUser.Id);
                 break;
             case UserRole.Learner:
                 appUser.Learner = await _context.Learners
-                    .Include(x => x.EnrolledSessions)
+                    .Include(x => x.EnrolledModules)
                     .FirstOrDefaultAsync(x => x.Id == appUser.Id);
                 break;
         }

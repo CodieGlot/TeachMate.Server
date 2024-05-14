@@ -17,7 +17,7 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Login with Username and Password
     /// </summary>
-    [HttpPost("login")]
+    [HttpPost("Login")]
     public async Task<ActionResult<LoginPayloadDto>> Login(UserCredentialDto dto)
     {
         return Ok(await _authService.Login(dto));
@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Signin with google
     /// </summary>
-    [HttpPost("google-signin")]
+    [HttpPost("GoogleSignIn")]
     public async Task<ActionResult<LoginPayloadDto>> GoogleSignIn(GoogleSignInVM dto)
     {
         return Ok(await _authService.SignInWithGoogle(dto));
@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Signup with Username and Password
     /// </summary>
-    [HttpPost("signup")]
+    [HttpPost("SignUp")]
     public async Task<ActionResult<LoginPayloadDto>> Signup(CreateUserDto dto)
     {
         return Ok(await _authService.Signup(dto));
@@ -44,7 +44,7 @@ public class AuthController : ControllerBase
     /// <summary>
 	/// Get Current User
 	/// </summary>
-    [HttpGet("me")]
+    [HttpGet("Me")]
     public async Task<ActionResult<AppUser>> GetMe()
     {
         return Ok(await _authService.GetMe());

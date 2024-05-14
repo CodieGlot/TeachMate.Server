@@ -22,19 +22,19 @@ namespace TeachMate.Services.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("LearnerLearningSession", b =>
+            modelBuilder.Entity("LearnerLearningModule", b =>
                 {
                     b.Property<Guid>("EnrolledLearnersId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("EnrolledSessionsId")
+                    b.Property<int>("EnrolledModulesId")
                         .HasColumnType("int");
 
-                    b.HasKey("EnrolledLearnersId", "EnrolledSessionsId");
+                    b.HasKey("EnrolledLearnersId", "EnrolledModulesId");
 
-                    b.HasIndex("EnrolledSessionsId");
+                    b.HasIndex("EnrolledModulesId");
 
-                    b.ToTable("LearnerLearningSession");
+                    b.ToTable("LearnerLearningModule");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.AppUser", b =>
@@ -77,13 +77,16 @@ namespace TeachMate.Services.Migrations
                     b.ToTable("Learners");
                 });
 
-            modelBuilder.Entity("TeachMate.Domain.LearningSession", b =>
+            modelBuilder.Entity("TeachMate.Domain.LearningModule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -92,14 +95,18 @@ namespace TeachMate.Services.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("MaximumLearners")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Schedule")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("Subject")
                         .HasColumnType("int");
@@ -115,7 +122,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("TutorId");
 
-                    b.ToTable("LearningSessions");
+                    b.ToTable("LearningModules");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
@@ -128,7 +135,7 @@ namespace TeachMate.Services.Migrations
                     b.ToTable("Tutors");
                 });
 
-            modelBuilder.Entity("LearnerLearningSession", b =>
+            modelBuilder.Entity("LearnerLearningModule", b =>
                 {
                     b.HasOne("TeachMate.Domain.Learner", null)
                         .WithMany()
@@ -136,9 +143,9 @@ namespace TeachMate.Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TeachMate.Domain.LearningSession", null)
+                    b.HasOne("TeachMate.Domain.LearningModule", null)
                         .WithMany()
-                        .HasForeignKey("EnrolledSessionsId")
+                        .HasForeignKey("EnrolledModulesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -154,10 +161,10 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("TeachMate.Domain.LearningSession", b =>
+            modelBuilder.Entity("TeachMate.Domain.LearningModule", b =>
                 {
                     b.HasOne("TeachMate.Domain.Tutor", "Tutor")
-                        .WithMany("CreatedSessions")
+                        .WithMany("CreatedModules")
                         .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -185,7 +192,7 @@ namespace TeachMate.Services.Migrations
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
                 {
-                    b.Navigation("CreatedSessions");
+                    b.Navigation("CreatedModules");
                 });
 #pragma warning restore 612, 618
         }
