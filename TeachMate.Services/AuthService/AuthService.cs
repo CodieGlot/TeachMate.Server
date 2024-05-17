@@ -79,16 +79,6 @@ public class AuthService : IAuthService
                 UserRole = model.UserRole
             };
 
-            switch (appUser.UserRole)
-            {
-                case UserRole.Tutor:
-                    appUser.Tutor = new Tutor();
-                    break;
-                case UserRole.Learner:
-                    appUser.Learner = new Learner();
-                    break;
-            }
-
             appUser = await _userService.CreateUser(appUser);
         }
 

@@ -32,7 +32,10 @@ public class UserService : IUserService
     }
     public async Task<AppUser> CreateUser(AppUser appUser)
     {
-        appUser.Password = BC.HashPassword(appUser.Password);
+        if (appUser.Password != null)
+        {
+            appUser.Password = BC.HashPassword(appUser.Password);
+        }
 
         switch (appUser.UserRole)
         {
