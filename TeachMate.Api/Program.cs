@@ -109,9 +109,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
 
-// Add External Signin Methods
-builder.Services.Configure<GoogleAuthConfig>(builder.Configuration.GetSection("Google"));
-
 // Add Http Context Accessor
 builder.Services.AddHttpContextAccessor();
 
@@ -122,9 +119,14 @@ builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
 // Add DateOnly and TimeOnly Converters
 builder.Services.AddDateOnlyTimeOnlyStringConverters();
 
+// Add Configs
+builder.Services.Configure<GoogleAuthConfig>(builder.Configuration.GetSection("GoogleOAuth"));
+builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("Gmail"));
+
 // Add User-Defined Services
 builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<IHttpContextService, HttpContextService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
