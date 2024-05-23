@@ -11,5 +11,6 @@ namespace TeachMate.Domain.Models.Schedule
         public int Id { get; set; }
         public int NumberOfSlot { get; set; }
 
+        List<WeeklySlot> WeeklySlots { get; set; } = new List<WeeklySlot>();
     }
 }
