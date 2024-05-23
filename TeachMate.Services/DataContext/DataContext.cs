@@ -35,13 +35,13 @@ public class DataContext : DbContext
     public DbSet<Learner> Learners { get; set; }
     public DbSet<LearningModule> LearningModules { get; set; }
     public DbSet<LearningModuleRequest> LearningModuleRequests { get; set; }
-<<<<<<< HEAD
+
 
     public DbSet<WeeklySchedule> WeeklySchedules { get; set;}
     public DbSet<WeeklySlot> WeeklySlots { get; set; }
     public DbSet<LearningSession> LearningSessions { get; set; }
-=======
+
     public DbSet<PushNotification> PushNotifications { get; set; }
     public DbSet<PushNotificationReceiver> PushNotificationsReceivers { get; set; }
->>>>>>> 6eb49c6155b1125ce9b6a390f7496d41d679fd30
+
 }

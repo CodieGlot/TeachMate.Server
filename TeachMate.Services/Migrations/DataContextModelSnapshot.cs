@@ -205,11 +205,11 @@ namespace TeachMate.Services.Migrations
                     b.ToTable("LearningModuleRequests");
                 });
 
-<<<<<<< HEAD
+
             modelBuilder.Entity("TeachMate.Domain.LearningSession", b =>
-=======
+
             modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
->>>>>>> 6eb49c6155b1125ce9b6a390f7496d41d679fd30
+
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -217,7 +217,6 @@ namespace TeachMate.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-<<<<<<< HEAD
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
@@ -237,7 +236,7 @@ namespace TeachMate.Services.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LearningSessions");
-                });
+                }));
 
             modelBuilder.Entity("TeachMate.Domain.Models.Schedule.WeeklySchedule", b =>
                 {
@@ -275,7 +274,6 @@ namespace TeachMate.Services.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WeeklySlots");
-=======
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
@@ -309,7 +307,6 @@ namespace TeachMate.Services.Migrations
                     b.HasKey("PushNotificationId", "ReceiverId");
 
                     b.ToTable("PushNotificationsReceivers");
->>>>>>> 6eb49c6155b1125ce9b6a390f7496d41d679fd30
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
@@ -420,7 +417,7 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("Tutor");
                 });
 
-<<<<<<< HEAD
+
             modelBuilder.Entity("TeachMate.Domain.Learner", b =>
                 {
                     b.Navigation("LearningModuleRequests");
@@ -429,18 +426,19 @@ namespace TeachMate.Services.Migrations
             modelBuilder.Entity("TeachMate.Domain.LearningModule", b =>
                 {
                     b.Navigation("LearningModuleRequests");
-=======
-            modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
-                {
-                    b.Navigation("Receivers");
->>>>>>> 6eb49c6155b1125ce9b6a390f7496d41d679fd30
-                });
 
-            modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
-                {
-                    b.Navigation("CreatedModules");
-                });
+                    modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
+                        {
+                            b.Navigation("Receivers");
+
+                        });
+
+                    modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
+                        {
+                            b.Navigation("CreatedModules");
+                        });
+                }
 #pragma warning restore 612, 618
-        }
+                ); }
     }
 }
