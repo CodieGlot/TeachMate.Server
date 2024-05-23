@@ -26,10 +26,14 @@ public class DataContext : DbContext
         modelBuilder.Entity<LearningModuleRequest>()
             .Property(x => x.Id)
             .ValueGeneratedOnAdd();
+        modelBuilder.Entity<PushNotificationReceiver>()
+            .HasKey(x => new { x.PushNotificationId, x.ReceiverId });
     }
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<Tutor> Tutors { get; set; }
     public DbSet<Learner> Learners { get; set; }
     public DbSet<LearningModule> LearningModules { get; set; }
     public DbSet<LearningModuleRequest> LearningModuleRequests { get; set; }
+    public DbSet<PushNotification> PushNotifications { get; set; }
+    public DbSet<PushNotificationReceiver> PushNotificationsReceivers { get; set; }
 }
