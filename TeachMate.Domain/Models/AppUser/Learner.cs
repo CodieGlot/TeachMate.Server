@@ -10,4 +10,7 @@ public class Learner
     public List<LearningModule> EnrolledModules { get; set; } = new List<LearningModule>();
     [JsonIgnore]
     public AppUser AppUser { get; set; } = null!;
+    public int GradeLevel;
+    public List<LearningModuleRequest> LearningModuleRequests { get; set; } = new List<LearningModuleRequest>();
+
 }

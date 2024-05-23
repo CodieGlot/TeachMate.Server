@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeachMate.Services;
 
@@ -11,9 +12,11 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240523105340_SecondDB")]
+    partial class SecondDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -205,11 +208,7 @@ namespace TeachMate.Services.Migrations
                     b.ToTable("LearningModuleRequests");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("TeachMate.Domain.LearningSession", b =>
-=======
-            modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
->>>>>>> 6eb49c6155b1125ce9b6a390f7496d41d679fd30
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -217,7 +216,6 @@ namespace TeachMate.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-<<<<<<< HEAD
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
@@ -275,41 +273,6 @@ namespace TeachMate.Services.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WeeklySlots");
-=======
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatorDisplayName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CreatorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CustomMessage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PushNotifications");
-                });
-
-            modelBuilder.Entity("TeachMate.Domain.PushNotificationReceiver", b =>
-                {
-                    b.Property<int>("PushNotificationId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("ReceiverId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("PushNotificationId", "ReceiverId");
-
-                    b.ToTable("PushNotificationsReceivers");
->>>>>>> 6eb49c6155b1125ce9b6a390f7496d41d679fd30
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
@@ -391,17 +354,6 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("LearningModule");
                 });
 
-            modelBuilder.Entity("TeachMate.Domain.PushNotificationReceiver", b =>
-                {
-                    b.HasOne("TeachMate.Domain.PushNotification", "PushNotification")
-                        .WithMany("Receivers")
-                        .HasForeignKey("PushNotificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PushNotification");
-                });
-
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
                 {
                     b.HasOne("TeachMate.Domain.AppUser", "AppUser")
@@ -420,7 +372,6 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("Tutor");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("TeachMate.Domain.Learner", b =>
                 {
                     b.Navigation("LearningModuleRequests");
@@ -429,11 +380,6 @@ namespace TeachMate.Services.Migrations
             modelBuilder.Entity("TeachMate.Domain.LearningModule", b =>
                 {
                     b.Navigation("LearningModuleRequests");
-=======
-            modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
-                {
-                    b.Navigation("Receivers");
->>>>>>> 6eb49c6155b1125ce9b6a390f7496d41d679fd30
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
