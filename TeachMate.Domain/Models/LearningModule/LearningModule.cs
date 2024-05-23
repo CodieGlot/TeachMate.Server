@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using TeachMate.Domain.Models.Schedule;
 
 namespace TeachMate.Domain;
 public class LearningModule
@@ -11,6 +12,7 @@ public class LearningModule
     public string Description { get; set; } = string.Empty;
     public Subject Subject { get; set; } = Subject.None;
     // Calculated in minutes
+    public int GradeLevel { get; set; }
     public int Duration { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateOnly StartDate { get; set; }
@@ -24,4 +26,10 @@ public class LearningModule
     [JsonIgnore]
     public Tutor Tutor { get; set; } = new Tutor();
     public List<Learner> EnrolledLearners { get; set; } = new List<Learner>();
+    public ModuleType ModuleType { get; set; }
+    public int NumOfWeeks { get; set; }
+
+    public WeeklySchedule? WeeklySchedule { get; set; }
+
+    public List<LearningModuleRequest> LearningModuleRequests { get; set; } = new List<LearningModuleRequest>();
 }

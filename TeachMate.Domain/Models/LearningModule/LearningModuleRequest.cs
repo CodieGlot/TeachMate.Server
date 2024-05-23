@@ -20,4 +20,5 @@ public class LearningModuleRequest
     public string SerializedSchedule { get; set; } = string.Empty;
     [NotMapped]
     public List<LearningSession> Schedule { get; set; } = new();
+    public LearningModule LearningModule { get; set; }
 }

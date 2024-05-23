@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TeachMate.Domain;
+using TeachMate.Domain.Models.Schedule;
 
 namespace TeachMate.Services;
 
@@ -20,7 +21,7 @@ public class DataContext : DbContext
             .HasOne(x => x.Learner)
             .WithOne(x => x.AppUser)
             .HasForeignKey<Learner>();
-        modelBuilder.Entity<LearningModule>()
+        modelBuilder.Entity<LearningModule>()   
             .Property(x => x.Id)
             .ValueGeneratedOnAdd();
         modelBuilder.Entity<LearningModuleRequest>()
@@ -32,4 +33,8 @@ public class DataContext : DbContext
     public DbSet<Learner> Learners { get; set; }
     public DbSet<LearningModule> LearningModules { get; set; }
     public DbSet<LearningModuleRequest> LearningModuleRequests { get; set; }
+
+    public DbSet<WeeklySchedule> WeeklySchedules { get; set;}
+    public DbSet<WeeklySlot> WeeklySlots { get; set; }
+    public DbSet<LearningSession> LearningSessions { get; set; }
 }

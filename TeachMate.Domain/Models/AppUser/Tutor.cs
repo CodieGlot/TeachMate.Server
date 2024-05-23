@@ -10,4 +10,6 @@ public class Tutor
     public List<LearningModule> CreatedModules { get; set; } = new List<LearningModule>();
     [JsonIgnore]
     public AppUser AppUser { get; set; } = null!;
+    public string Description {  get; set; } = string.Empty;
+    public int GradeLevel { get; set; }
 }
