@@ -13,6 +13,6 @@ namespace TeachMate.Domain.Models.Schedule
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
 
-
+        public WeeklySchedule WeeklySchedule { get; set; }
     }
 }

@@ -205,11 +205,7 @@ namespace TeachMate.Services.Migrations
                     b.ToTable("LearningModuleRequests");
                 });
 
-
             modelBuilder.Entity("TeachMate.Domain.LearningSession", b =>
-
-            modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
-
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -236,7 +232,7 @@ namespace TeachMate.Services.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LearningSessions");
-                }));
+                });
 
             modelBuilder.Entity("TeachMate.Domain.Models.Schedule.WeeklySchedule", b =>
                 {
@@ -271,9 +267,24 @@ namespace TeachMate.Services.Migrations
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time");
 
+                    b.Property<int>("WeeklyScheduleId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("WeeklyScheduleId");
+
                     b.ToTable("WeeklySlots");
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
@@ -388,6 +399,17 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("LearningModule");
                 });
 
+            modelBuilder.Entity("TeachMate.Domain.Models.Schedule.WeeklySlot", b =>
+                {
+                    b.HasOne("TeachMate.Domain.Models.Schedule.WeeklySchedule", "WeeklySchedule")
+                        .WithMany()
+                        .HasForeignKey("WeeklyScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WeeklySchedule");
+                });
+
             modelBuilder.Entity("TeachMate.Domain.PushNotificationReceiver", b =>
                 {
                     b.HasOne("TeachMate.Domain.PushNotification", "PushNotification")
@@ -417,7 +439,6 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("Tutor");
                 });
 
-
             modelBuilder.Entity("TeachMate.Domain.Learner", b =>
                 {
                     b.Navigation("LearningModuleRequests");
@@ -426,19 +447,18 @@ namespace TeachMate.Services.Migrations
             modelBuilder.Entity("TeachMate.Domain.LearningModule", b =>
                 {
                     b.Navigation("LearningModuleRequests");
+                });
 
-                    modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
-                        {
-                            b.Navigation("Receivers");
+            modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
+                {
+                    b.Navigation("Receivers");
+                });
 
-                        });
-
-                    modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
-                        {
-                            b.Navigation("CreatedModules");
-                        });
-                }
+            modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
+                {
+                    b.Navigation("CreatedModules");
+                });
 #pragma warning restore 612, 618
-                ); }
+        }
     }
 }
