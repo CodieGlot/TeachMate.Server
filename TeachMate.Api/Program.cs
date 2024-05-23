@@ -122,8 +122,10 @@ builder.Services.AddDateOnlyTimeOnlyStringConverters();
 // Add Configs
 builder.Services.Configure<GoogleAuthConfig>(builder.Configuration.GetSection("GoogleOAuth"));
 builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("Gmail"));
+builder.Services.Configure<AblyConfig>(builder.Configuration.GetSection("Ably"));
 
 // Add User-Defined Services
+builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<IHttpContextService, HttpContextService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
