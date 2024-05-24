@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿/*using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeachMate.Domain;
 using TeachMate.Services;
@@ -127,3 +127,4 @@ public class LearningModuleController : ControllerBase
         return Ok(await _learningModuleService.UpdateRequestStatus(requestId, dto));
     }
 }
+*/
