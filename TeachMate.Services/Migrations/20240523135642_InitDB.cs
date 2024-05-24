@@ -207,7 +207,7 @@ namespace TeachMate.Services.Migrations
                         column: x => x.EnrolledLearnersId,
                         principalTable: "Learners",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_LearnerLearningModule_LearningModules_EnrolledModulesId",
                         column: x => x.EnrolledModulesId,
