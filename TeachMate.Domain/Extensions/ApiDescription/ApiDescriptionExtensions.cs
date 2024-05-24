@@ -6,7 +6,12 @@ public static class ApiDescriptionExtensions
 {
     private static readonly ResourceManager ResourceManager = new ResourceManager("TeachMate.Domain.Resources.core", typeof(ApiDescriptionExtensions).Assembly);
 
-    public static string ToApiDescription(this PushNotificationType notificationType, params object[] args)
+    public static string ToApiDescription(this PushNotificationType notificationType)
+    {
+        return ToApiDescription(notificationType, new List<object>());
+    }
+
+    public static string ToApiDescription(this PushNotificationType notificationType, List<object> args)
     {
         var enumType = typeof(PushNotificationType);
         var memberInfo = enumType.GetMember(notificationType.ToString());
@@ -19,7 +24,7 @@ public static class ApiDescriptionExtensions
 
             if (messageTemplate != null)
             {
-                return string.Format(messageTemplate, args);
+                return string.Format(messageTemplate, args.ToArray());
             }
         }
 
