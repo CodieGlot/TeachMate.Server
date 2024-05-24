@@ -15,6 +15,6 @@ public class AppUser
     public UserRole UserRole { get; set; } = UserRole.Learner;
     public Tutor? Tutor { get; set; }
     public Learner? Learner { get; set; }
-    public string PhoneNumber { get; set; }
-    public string Avatar { get; set; }
+    public string PhoneNumber { get; set; } 
+    public string Avatar { get; set; } 
 }
