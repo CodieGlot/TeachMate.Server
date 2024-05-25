@@ -1,4 +1,5 @@
-﻿using TeachMate.Domain.Models.Schedule;
+﻿using TeachMate.Domain.DTOs.ScheduleDto;
+using TeachMate.Domain.Models.Schedule;
 
 namespace TeachMate.Domain;
 public class CreateLearningModuleDto
@@ -14,7 +15,8 @@ public class CreateLearningModuleDto
     public DateOnly EndDate { get; set; }
     public int MaximumLearners { get; set; }
     public ModuleType ModuleType { get; set; }
-    public WeeklySchedule? WeeklySchedule { get; set; }
+    public List<WeeklySlotDto> WeeklySlots { get; set; }
     public int NumOfWeeks { get; set; }
+
     //public List<LearningSession> Schedule { get; set; } = new();
 }
