@@ -131,7 +131,7 @@ public class LearningModuleService : ILearningModuleService
     public async Task<List<LearningModuleRequest>> GetAllReceivedRequests(Guid tutorId)
     {
         return await _context.LearningModuleRequests
-            .Where(x => x.TutorId == tutorId)
+            .Where(x => x.LearningModule.TutorId == tutorId)
             .ToListAsync();
     }
     public async Task<LearningModuleRequest?> GetRequestById(int id)
@@ -139,10 +139,10 @@ public class LearningModuleService : ILearningModuleService
         var request = await _context.LearningModuleRequests
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        if (request != null)
+        /*if (request != null)
         {
             request.Schedule = JsonSerializer.Deserialize<List<LearningSession>>(request.SerializedSchedule) ?? new List<LearningSession>();
-        }
+        }*/
 
         return request;
     }
@@ -152,14 +152,11 @@ public class LearningModuleService : ILearningModuleService
         {
             RequesterId = user.Id,
             RequesterDisplayName = user.DisplayName,
-            TutorId = dto.TutorId,
-            TutorDisplayName = dto.TutorDisplayName,
+            LearningModuleId = dto.LearningModuleId,
             Title = dto.Title,
-            Subject = dto.Subject,
-            Duration = dto.Duration,
+            
             Status = RequestStatus.Waiting,
-            Schedule = dto.Schedule,
-            SerializedSchedule = JsonSerializer.Serialize(dto.Schedule)
+            
         };
 
         _context.LearningModuleRequests.Add(request);
@@ -184,53 +181,10 @@ public class LearningModuleService : ILearningModuleService
 
         return request;
     }
-
-   
-    public async Task<WeeklySchedule> AddWeeklySlots(AddWeeklySlotDto dto)
+    public async Task<List<LearningModuleRequest>> GetAllReceivedRequests(int moduleId, Guid tutorId)
     {
-
-        LearningModule? learningModule = await GetLearningModuleById(dto.LearningModuleId);
-        if (learningModule != null)
-        {
-            WeeklySchedule? weeklySchedule = learningModule.WeeklySchedule;
-
-            List<WeeklySlotDto> listDto = dto.WeeklySlots;
-        if (weeklySchedule != null)
-            {
-                for (int i = 0; i < weeklySchedule.NumberOfSlot; i++)
-                {
-                    var weeklySlot = new WeeklySlot()
-                    {
-                        DayOfWeek = listDto[i].DayOfWeek,
-                        StartTime = listDto[i].StartTime,
-                        EndTime = listDto[i].EndTime,
-                        WeeklyScheduleId = weeklySchedule.Id,
-                    };
-                    await _context.WeeklySlots.AddAsync(weeklySlot);
-                }
-                _context.Update(weeklySchedule);
-                await _context.SaveChangesAsync();
-                return weeklySchedule;
-            }
-            
-        }
-        return null;
+        return await _context.LearningModuleRequests
+           .Where(x => x.LearningModuleId == moduleId && x.LearningModule.TutorId == tutorId)
+           .ToListAsync();
     }
-
-    /*public Task<WeeklySchedule> AddWeeklySlots(, List<WeeklySlotDto> listDto)
-    {
-        List<WeeklySlot> listWeeklySlot = new List<WeeklySlot>();
-        for (int i = 0; i < weeklySchedule.NumberOfSlot; i++)
-        {
-            var weeklySlot = new WeeklySlot()
-            {
-                DayOfWeek = listDto[i].DayOfWeek,
-                StartTime = listDto[i].StartTime,
-                EndTime = listDto[i].EndTime
-            };
-            listWeeklySlot.Add(weeklySlot);
-        }
-        _context.WeeklySchedules.AddRangeAsync
-        _context.SaveChangesAsync();
-    }*/
 }
