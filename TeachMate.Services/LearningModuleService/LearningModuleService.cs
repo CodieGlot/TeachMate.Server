@@ -72,13 +72,15 @@ public class LearningModuleService : ILearningModuleService
             Title = dto.Title,
             Description = dto.Description,
             Subject = dto.Subject,
+            GradeLevel = dto.GradeLevel,
             Duration = dto.Duration,
             CreatedAt = dto.CreatedAt,
             StartDate = dto.StartDate,
             EndDate = dto.EndDate,
             MaximumLearners = dto.MaximumLearners,
-            Schedule = dto.Schedule,
-            SerializedSchedule = JsonSerializer.Serialize(dto.Schedule)
+            ModuleType = dto.ModuleType,
+            WeeklySchedule = dto.WeeklySchedule,
+            NumOfWeeks = dto.NumOfWeeks,
         };
 
         if (user.Tutor != null)
