@@ -22,6 +22,8 @@ public class AuthController : ControllerBase
     {
         return Ok(await _authService.Login(dto));
     }
+    
+    
 
     /// <summary>
     /// Signin with google

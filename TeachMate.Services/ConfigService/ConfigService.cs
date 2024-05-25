@@ -30,4 +30,5 @@ public class ConfigService : IConfigService
             throw new Exception($"Value of {key} is not a valid integer.");
         }
     }
+
 }
