@@ -15,8 +15,7 @@ namespace TeachMate.Services
     public class InformationServices : IInformationServices
     {
         
-        private readonly IHttpContextAccessor? _httpContextAccessor;
-        private readonly IUserService? _userService;
+       
         private readonly DataContext _context;
 
 
