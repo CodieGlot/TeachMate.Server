@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using TeachMate.Domain;
-using TeachMate.Domain.DTOs.ScheduleDto;
-using TeachMate.Domain.Models.Schedule;
+
 
 namespace TeachMate.Services;
 public class LearningModuleService : ILearningModuleService
@@ -20,10 +19,10 @@ public class LearningModuleService : ILearningModuleService
             .Include(x => x.WeeklySchedule)
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        if (learningModule != null)
+        /*if (learningModule != null)
         {
             learningModule.Schedule = JsonSerializer.Deserialize<List<LearningSession>>(learningModule.SerializedSchedule) ?? new List<LearningSession>();
-        }
+        } */
 
         return learningModule;
     }

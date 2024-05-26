@@ -130,7 +130,7 @@ public class LearningModuleController : ControllerBase
     // TODO: Add filter to validate if current user is the one modify the request status or not
     /// <summary>
     /// Update Request Status
-    /// </summary>
+    /// </summary> 
     [Authorize(Roles = CustomRoles.Tutor)]
     [HttpPut("Request/{requestId:int}/UpdateStatus")]
     public async Task<ActionResult<LearningModuleRequest>> UpdateRequestStatus(int requestId, UpdateRequestStatusDto dto)

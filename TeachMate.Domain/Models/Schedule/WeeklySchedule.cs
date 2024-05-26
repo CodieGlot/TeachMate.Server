@@ -1,4 +1,4 @@
-﻿namespace TeachMate.Domain.Models.Schedule
+﻿namespace TeachMate.Domain
 {
     public class WeeklySchedule
     {

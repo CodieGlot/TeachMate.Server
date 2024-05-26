@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TeachMate.Domain.Models.Schedule
+namespace TeachMate.Domain
 {
     public class WeeklySlot
     {

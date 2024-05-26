@@ -1,6 +1,4 @@
 ﻿using TeachMate.Domain;
-using TeachMate.Domain.DTOs.ScheduleDto;
-using TeachMate.Domain.Models.Schedule;
 
 namespace TeachMate.Services;
 public interface ILearningModuleService
