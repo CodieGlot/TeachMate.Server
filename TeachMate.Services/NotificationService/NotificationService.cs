@@ -23,12 +23,12 @@ public class NotificationService : INotificationService
         return await _context.PushNotificationReceivers
             .Where(pr => pr.ReceiverId == user.Id)
             .OrderByDescending(pr => pr.PushNotification.CreatedAt)
-            .Take(5)
+            .Take(4)
             .Select(pr => pr.PushNotification)
             .AsNoTracking()
             .ToListAsync();
     }
-    public async Task<PushNotification> CreatePushNotification(PushNotificationType type, AppUser? creator, List<Guid> receiverIds, List<object> messageParams)
+    public async Task<PushNotification> CreatePushNotification(NotificationType type, AppUser? creator, List<Guid> receiverIds, List<object> messageParams)
     {
         var pushNotification = new PushNotification
         {
@@ -55,11 +55,13 @@ public class NotificationService : INotificationService
     {
         if (receiverIds == null || receiverIds.Count == 0) return;
 
+        pushNotification.Receivers = new List<PushNotificationReceiver>();
+
         var tasks = new List<Task>();
 
-        foreach (var userId in receiverIds)
+        foreach (var receiverId in receiverIds)
         {
-            var channel = ably.Channels.Get($"Notification:{userId}");
+            var channel = ably.Channels.Get($"Notification:{receiverId}");
             tasks.Add(channel.PublishAsync("Notification", pushNotification));
         }
 
