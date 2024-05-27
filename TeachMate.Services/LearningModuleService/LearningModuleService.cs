@@ -2,6 +2,7 @@
 using System.Text.Json;
 using TeachMate.Domain;
 
+
 namespace TeachMate.Services;
 public class LearningModuleService : ILearningModuleService
 {
@@ -15,12 +16,13 @@ public class LearningModuleService : ILearningModuleService
     {
         var learningModule = await _context.LearningModules
             .Include(x => x.EnrolledLearners)
+            .Include(x => x.WeeklySchedule)
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        if (learningModule != null)
+        /*if (learningModule != null)
         {
             learningModule.Schedule = JsonSerializer.Deserialize<List<LearningSession>>(learningModule.SerializedSchedule) ?? new List<LearningSession>();
-        }
+        } */
 
         return learningModule;
     }
@@ -67,6 +69,7 @@ public class LearningModuleService : ILearningModuleService
     }
     public async Task<LearningModule> CreateLearningModule(AppUser user, CreateLearningModuleDto dto)
     {
+
         var learningModule = new LearningModule
         {
             Title = dto.Title,
@@ -79,15 +82,40 @@ public class LearningModuleService : ILearningModuleService
             EndDate = dto.EndDate,
             MaximumLearners = dto.MaximumLearners,
             ModuleType = dto.ModuleType,
-            WeeklySchedule = dto.WeeklySchedule,
+            //WeeklySchedule = dto.WeeklySchedule,
             NumOfWeeks = dto.NumOfWeeks,
         };
+
+        if (dto.ModuleType == ModuleType.Custom)
+        {
+            learningModule.WeeklySchedule = null;
+        }
+
+        else if (dto.ModuleType == ModuleType.Weekly)
+        {
+            var listWeeklySlotDto = dto.WeeklySlots;
+            var listWeeklySlot = new List<WeeklySlot>();
+            learningModule.WeeklySchedule = new WeeklySchedule();
+            for (int i = 0; i < listWeeklySlotDto.Count; i++)
+            {
+                var weeklySlot = new WeeklySlot()
+                {
+                    DayOfWeek = listWeeklySlotDto[i].DayOfWeek,
+                    StartTime = listWeeklySlotDto[i].StartTime,
+                    EndTime = listWeeklySlotDto[i].EndTime,
+                    
+                };
+                listWeeklySlot.Add(weeklySlot);
+            }
+            learningModule.WeeklySchedule.NumberOfSlot = listWeeklySlot.Count();
+            learningModule.WeeklySchedule.WeeklySlots = listWeeklySlot;
+        }
 
         if (user.Tutor != null)
         {
             user.Tutor.CreatedModules.Add(learningModule);
         }
-
+        
         _context.Update(user);
         await _context.SaveChangesAsync();
 
@@ -102,7 +130,7 @@ public class LearningModuleService : ILearningModuleService
     public async Task<List<LearningModuleRequest>> GetAllReceivedRequests(Guid tutorId)
     {
         return await _context.LearningModuleRequests
-            .Where(x => x.TutorId == tutorId)
+            .Where(x => x.LearningModule.TutorId == tutorId)
             .ToListAsync();
     }
     public async Task<LearningModuleRequest?> GetRequestById(int id)
@@ -110,10 +138,10 @@ public class LearningModuleService : ILearningModuleService
         var request = await _context.LearningModuleRequests
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        if (request != null)
+        /*if (request != null)
         {
             request.Schedule = JsonSerializer.Deserialize<List<LearningSession>>(request.SerializedSchedule) ?? new List<LearningSession>();
-        }
+        }*/
 
         return request;
     }
@@ -123,14 +151,11 @@ public class LearningModuleService : ILearningModuleService
         {
             RequesterId = user.Id,
             RequesterDisplayName = user.DisplayName,
-            TutorId = dto.TutorId,
-            TutorDisplayName = dto.TutorDisplayName,
+            LearningModuleId = dto.LearningModuleId,
             Title = dto.Title,
-            Subject = dto.Subject,
-            Duration = dto.Duration,
+            
             Status = RequestStatus.Waiting,
-            Schedule = dto.Schedule,
-            SerializedSchedule = JsonSerializer.Serialize(dto.Schedule)
+            
         };
 
         _context.LearningModuleRequests.Add(request);
@@ -154,5 +179,11 @@ public class LearningModuleService : ILearningModuleService
         await _context.SaveChangesAsync();
 
         return request;
+    }
+    public async Task<List<LearningModuleRequest>> GetAllReceivedRequests(int moduleId, Guid tutorId)
+    {
+        return await _context.LearningModuleRequests
+           .Where(x => x.LearningModuleId == moduleId && x.LearningModule.TutorId == tutorId)
+           .ToListAsync();
     }
 }
