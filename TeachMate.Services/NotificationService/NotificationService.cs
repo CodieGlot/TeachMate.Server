@@ -62,7 +62,7 @@ public class NotificationService : INotificationService
         foreach (var receiverId in receiverIds)
         {
             var channel = ably.Channels.Get($"Notification:{receiverId}");
-            tasks.Add(channel.PublishAsync("Notification", pushNotification));
+            tasks.Add(channel.PublishAsync("Notification", pushNotification.ToJson()));
         }
 
         await Task.WhenAll(tasks);
