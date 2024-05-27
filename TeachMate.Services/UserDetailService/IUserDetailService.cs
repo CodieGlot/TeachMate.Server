@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeachMate.Domain;
-using TeachMate.Domain.DTOs.InformationDto;
 
 namespace TeachMate.Services
 {
-    public interface IInformationServices
+    public interface IUserDetailService
     {
         Task<AppUser> AddTutorDetail(AppUser user, AddTutorDetailDto dto);
         Task<AppUser> AddLearnerDetail(AppUser user, AddLearnerDetailDto dto);

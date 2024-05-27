@@ -84,6 +84,17 @@ public class LearningModuleController : ControllerBase
     }
 
     /// <summary>
+    /// Get all received requests from a learning module
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpGet("Request/LearningModule/GetAll")]
+    public async Task<ActionResult<List<LearningModuleRequest>>> GetAllReceivedRequests(int moduleId)
+    {
+        var user = await _contextService.GetAppUserAndThrow();
+        return Ok(await _learningModuleService.GetAllReceivedRequests(moduleId, user.Id));
+    }
+
+    /// <summary>
     /// Get all created requests
     /// </summary>
     [Authorize(Roles = CustomRoles.Learner)]
@@ -119,7 +130,7 @@ public class LearningModuleController : ControllerBase
     // TODO: Add filter to validate if current user is the one modify the request status or not
     /// <summary>
     /// Update Request Status
-    /// </summary>
+    /// </summary> 
     [Authorize(Roles = CustomRoles.Tutor)]
     [HttpPut("Request/{requestId:int}/UpdateStatus")]
     public async Task<ActionResult<LearningModuleRequest>> UpdateRequestStatus(int requestId, UpdateRequestStatusDto dto)

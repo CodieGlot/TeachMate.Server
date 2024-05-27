@@ -1,4 +1,5 @@
 ﻿using TeachMate.Domain;
+using TeachMate.Domain.DTOs.InformationDto;
 
 namespace TeachMate.Services;
 public interface IUserService
@@ -8,4 +9,5 @@ public interface IUserService
     Task<AppUser?> GetUserById(Guid id);
     Task<AppUser?> GetUserByUsernameOrEmail(string usernameOrEmail);
     Task<AppUser> UpdateUser(AppUser appUser);
+    Task<AppUser> ChangeUserPassWord(AppUser user, UserPassword dto);
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TeachMate.Domain;
-using TeachMate.Domain.Models.Schedule;
 
 namespace TeachMate.Services;
 

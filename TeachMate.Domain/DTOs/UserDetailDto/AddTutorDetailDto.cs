@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace TeachMate.Domain.DTOs.InformationDto
+namespace TeachMate.Domain
 {
     public class AddTutorDetailDto
     {

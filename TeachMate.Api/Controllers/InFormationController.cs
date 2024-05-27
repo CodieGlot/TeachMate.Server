@@ -11,9 +11,9 @@ namespace TeachMate.Api
     [ApiController]
     public class InFormationController : ControllerBase
     {
-        private readonly IInformationServices _information;
+        private readonly IUserDetailServices _information;
         private readonly IHttpContextService _contextService;
-        public InFormationController(IInformationServices information, IHttpContextService contextService)
+        public InFormationController(IUserDetailServices information, IHttpContextService contextService)
         {
             _information = information;
             _contextService = contextService;

@@ -6,10 +6,12 @@ using TeachMate.Domain;
 namespace TeachMate.Services;
 public class EmailService : IEmailService
 {
+    private readonly NetworkCredential _credential;
     private readonly EmailConfig _emailConfig;
     public EmailService(IOptions<EmailConfig> emailConfig)
     {
         _emailConfig = emailConfig.Value;
+        _credential = new NetworkCredential(_emailConfig.AppEmail, _emailConfig.AppPassword);
     }
     public void SendTestEmail(AppUser user)
     {
@@ -28,7 +30,7 @@ public class EmailService : IEmailService
         var smtpClient = new SmtpClient("smtp.gmail.com")
         {
             Port = 587,
-            Credentials = new NetworkCredential(_emailConfig.AppEmail, _emailConfig.AppPassword),
+            Credentials = _credential,
             EnableSsl = true
         };
 

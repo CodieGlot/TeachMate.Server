@@ -7,19 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeachMate.Domain;
-using TeachMate.Domain.DTOs.InformationDto;
 
 namespace TeachMate.Services
 {
     
-    public class InformationServices : IInformationServices
+    public class UserDetailService : IUserDetailService
     {
         
        
         private readonly DataContext _context;
 
 
-        public InformationServices(DataContext context)
+        public UserDetailService(DataContext context)
         {
             _context = context;
         }
@@ -85,7 +84,7 @@ namespace TeachMate.Services
             }
             else if (dto.Old_Password == dto.New_Password)
             {
-                throw new InvalidOperationException("New password must be different from the old password.");
+                throw new InvalidOperationException("New password mgit ust be different from the old password.");
             }
             dto.New_Password = BCrypt.Net.BCrypt.HashPassword(dto.New_Password);
             user.Password = dto.New_Password;
