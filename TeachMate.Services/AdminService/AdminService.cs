@@ -26,4 +26,17 @@ public class AdminService : IAdminService
         }
         return appUser;
     }
+
+    public async Task<List<AppUser>> GetUserDisable(UserRole userrole)
+    {
+        var appUser = await _context.AppUsers
+                            .Where(u => u.IsDisabled && u.UserRole == userrole)
+                            .ToListAsync();
+
+        foreach (var user in appUser)
+        {
+            Console.WriteLine(user);
+        }
+        return appUser;
+    }
 }

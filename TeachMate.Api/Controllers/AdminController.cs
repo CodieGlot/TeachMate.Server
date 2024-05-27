@@ -19,6 +19,26 @@ public class AdminController : ControllerBase
     }
 
     /// <summary>
+    /// Get all user
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPost("GetAllUser")]
+    public async Task<ActionResult<AppUser>> GetUser()
+    {
+        return Ok(await _adminService.GetAllUser());
+    }
+
+    /// <summary>
+    /// Get user is disable
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPost("GetUserDisable")]
+    public async Task<ActionResult<AppUser>> GetUserDisable(UserRole userRole)
+    {
+        return Ok(await _adminService.GetUserDisable(userRole));
+    }
+
+    /// <summary>
     /// Disable user
     /// </summary>
     [Authorize(Roles = CustomRoles.Admin)]
@@ -28,13 +48,5 @@ public class AdminController : ControllerBase
         return Ok(await _userService.DisableUser(Id));
     }
 
-    /// <summary>
-    /// List All User
-    /// </summary>
-    [Authorize(Roles =CustomRoles.Admin)]
-    [HttpPost("List all user")]
-    public async Task<ActionResult<AppUser>> ListUser()
-    {
-        return Ok(await _adminService.GetAllUser());
-    }
+
 }
