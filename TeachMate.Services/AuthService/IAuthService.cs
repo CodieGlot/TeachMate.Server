@@ -7,4 +7,6 @@ public interface IAuthService
     Task<LoginPayloadDto> Login(UserCredentialDto dto);
     Task<LoginPayloadDto> SignInWithGoogle(GoogleSignInVM model);
     Task<LoginPayloadDto> Signup(CreateUserDto dto);
+    Task<ResponseDto> ChangeUserPassWord(AppUser user, UserPassword dto);
+
 }

@@ -13,6 +13,5 @@ namespace TeachMate.Services
         Task<AppUser> AddLearnerDetail(AppUser user, AddLearnerDetailDto dto);
         Task<AppUser> UpdateLearnerDetail(AppUser user, AddLearnerDetailDto dto);
         Task<AppUser> UpdateTutorDetail(AppUser user, AddTutorDetailDto dto);
-        Task<AppUser> ChangeUserPassWord (AppUser user, UserPassword dto);
     }
 }

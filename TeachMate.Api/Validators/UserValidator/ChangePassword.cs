@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using TeachMate.Domain;
-using TeachMate.Domain.DTOs.InformationDto;
 using TeachMate.Services;
 
 namespace TeachMate.Api.Validators.UserValidator

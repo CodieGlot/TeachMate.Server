@@ -2,18 +2,17 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TeachMate.Domain;
-using TeachMate.Domain.DTOs.InformationDto;
 using TeachMate.Services;
 
 namespace TeachMate.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InFormationController : ControllerBase
+    public class UserDetailController : ControllerBase
     {
-        private readonly IUserDetailServices _information;
+        private readonly IUserDetailService _information;
         private readonly IHttpContextService _contextService;
-        public InFormationController(IUserDetailServices information, IHttpContextService contextService)
+        public UserDetailController(IUserDetailService information, IHttpContextService contextService)
         {
             _information = information;
             _contextService = contextService;
@@ -45,11 +44,7 @@ namespace TeachMate.Api
             var user = await _contextService.GetAppUserAndThrow();
             return Ok(await _information.UpdateTutorDetail(user,dto));
         }
-        [HttpPut("General/ChangePassWord")]
-        public async Task<ActionResult<AppUser>> ChangePassWord(UserPassword dto) {
-            var user = await _contextService.GetAppUserAndThrow();
-            return Ok(await _information.ChangeUserPassWord(user, dto));
-        }
+        
 
     }
 }

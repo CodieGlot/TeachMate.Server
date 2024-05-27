@@ -76,21 +76,7 @@ namespace TeachMate.Services
             return user;
         }
 
-        public async Task<AppUser> ChangeUserPassWord(AppUser user, UserPassword dto)
-        {
-            if (!BCrypt.Net.BCrypt.Verify(dto.Old_Password, user.Password))
-            {
-                throw new UnauthorizedException();
-            }
-            else if (dto.Old_Password == dto.New_Password)
-            {
-                throw new InvalidOperationException("New password mgit ust be different from the old password.");
-            }
-            dto.New_Password = BCrypt.Net.BCrypt.HashPassword(dto.New_Password);
-            user.Password = dto.New_Password;
-            await _context.SaveChangesAsync();
-            return user;
-        }
+        
 
       
 
