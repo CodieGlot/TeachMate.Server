@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using TeachMate.Domain.Models.Schedule;
 
 namespace TeachMate.Domain;
 public class LearningModule
@@ -17,10 +16,11 @@ public class LearningModule
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateOnly StartDate { get; set; }
     public DateOnly EndDate { get; set; }
-    [NotMapped]
+    /*[NotMapped]
     public List<LearningSession> Schedule { get; set; } = new();
     [JsonIgnore]
-    public string SerializedSchedule { get; set; } = string.Empty;
+    public string SerializedSchedule { get; set; } = string.Empty;*/
+    public List<LearningSession> Schedule { get; set; } = new();
     public int MaximumLearners { get; set; }
     public Guid TutorId { get; set; }
     [JsonIgnore]

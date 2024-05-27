@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 
 namespace TeachMate.Domain;
-public enum PushNotificationType
+public enum NotificationType
 {
     Custom = 0,
     [Description("NotificationMessage_NewLearnerJoined")]
