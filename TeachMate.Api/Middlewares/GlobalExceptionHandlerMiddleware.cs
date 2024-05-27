@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using System.Net;
-using System.Text.Json;
 using TeachMate.Domain;
 
 namespace TeachMate.Api;
@@ -45,18 +44,13 @@ public class GlobalExceptionHandlerMiddleware
             _ => (int)HttpStatusCode.InternalServerError,
         };
 
-        var serializeOptions = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
-
-        var result = JsonSerializer.Serialize(new ErrorResponseDto
+        var result = new ErrorResponseDto
         {
             StatusCode = response.StatusCode,
             Message = ex.Message,
             Path = request.Path.Value,
             Timestamp = DateTime.UtcNow
-        }, serializeOptions);
+        }.ToJson();
 
         await response.WriteAsync(result);
     }
