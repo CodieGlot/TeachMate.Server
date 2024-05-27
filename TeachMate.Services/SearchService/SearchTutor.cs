@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeachMate.Domain;
-using TeachMate.Domain.DTOs.SearchDto;
-using TeachMate.Service.SearchService;
+using TeachMate.Domain;
+using TeachMate.Services;
 
-namespace TeachMate.Services.SearchService
+namespace TeachMate.Services
 {
     public class SearchTutor : ISearchTutor
     {

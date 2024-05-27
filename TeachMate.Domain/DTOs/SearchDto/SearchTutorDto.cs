@@ -11,9 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using TeachMate.Domain.Models.Schedule;
 
-namespace TeachMate.Domain.DTOs.SearchDto
+namespace TeachMate.Domain
 {
     public class SearchTutorDto
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeachMate.Domain;
-using TeachMate.Domain.DTOs.SearchDto;
+using TeachMate.Domain;
 
-namespace TeachMate.Services.SearchService
+namespace TeachMate.Services
 {
     public class SearchClass : ISearchClass
     {
@@ -31,27 +31,27 @@ namespace TeachMate.Services.SearchService
                 query = query.Where(m => m.Subject == dto.Subject);
             }
 
-            if (dto.GradeLevel > -1) // Only apply filter if gradeLevel is provided
+            if (dto.GradeLevel != null) // Only apply filter if gradeLevel is provided
             {
                 query = query.Where(m => m.GradeLevel == dto.GradeLevel);
             }
 
-            if (dto.StartOpenDate != default(DateOnly) && dto.EndOpenDate != default(DateOnly))
+            if (dto.StartOpenDate != null && dto.EndOpenDate != null)
             {
                 query = query.Where(m => m.StartDate >= dto.StartOpenDate && m.EndDate <= dto.EndOpenDate);
             }
 
-            if (dto.MaximumLearners > 0)
+            if (dto.MaximumLearners != null)
             {
                 query = query.Where(m => m.MaximumLearners <= dto.MaximumLearners);
             }
 
-            if (dto.ModuleType != ModuleType.Weekly)
+            if (dto.ModuleType != null)
             {
                 query = query.Where(m => m.ModuleType == dto.ModuleType);
             }
 
-            if (dto.NumOfWeeks > 0)
+            if (dto.NumOfWeeks != null)
             {
                 query = query.Where(m => m.NumOfWeeks == dto.NumOfWeeks);
             }

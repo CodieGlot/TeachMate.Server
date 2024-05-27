@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeachMate.Domain;
-using TeachMate.Domain.DTOs.SearchDto;
-using TeachMate.Service.SearchService;
+using TeachMate.Domain;
 using TeachMate.Services;
-using TeachMate.Services.SearchService;
+
 
 namespace TeachMate.Api
 {

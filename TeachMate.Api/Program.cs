@@ -11,10 +11,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using TeachMate.Api;
 using TeachMate.Domain;
-using TeachMate.Service.SearchService;
 using TeachMate.Services;
-using TeachMate.Services.SearchService;
-
 
 var builder = WebApplication.CreateBuilder(args);
 

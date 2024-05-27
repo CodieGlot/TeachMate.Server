@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeachMate.Domain;
-using TeachMate.Domain.DTOs.SearchDto;
+using TeachMate.Domain;
 
-namespace TeachMate.Service.SearchService;
+namespace TeachMate.Services;
 public interface ISearchTutor
 {
     Task<List<AppUser>> Search(string DisplayName);

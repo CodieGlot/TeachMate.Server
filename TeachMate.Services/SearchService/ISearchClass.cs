@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeachMate.Domain;
-using TeachMate.Domain.DTOs.SearchDto;
+using TeachMate.Domain;
 
-namespace TeachMate.Services.SearchService
+namespace TeachMate.Services
 {
     public interface ISearchClass
     {
