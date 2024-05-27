@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeachMate.Domain;
+using TeachMate.Domain.DTOs.SearchDto;
+using TeachMate.Service.SearchService;
 
 namespace TeachMate.Services.SearchService
 {
-    public class SearchTutor : ISearchTotor
+    public class SearchTutor : ISearchTutor
     {
         private readonly DataContext _context;
         public SearchTutor(DataContext context)
@@ -16,10 +18,14 @@ namespace TeachMate.Services.SearchService
             _context = context;
         }
 
-        public async Task<AppUser> SearchTutorById(Guid id)
+        public async Task<List<AppUser>> Search(string DisplayName)
         {
             // Retrieve the Tutor by ID
-            var tutor = await _context.Tutors.Include(t => t.AppUser).FirstOrDefaultAsync(t => t.Id == id);
+            var tutor = await _context.Tutors
+                                       .Include(t => t.AppUser)
+                                       .Where(t => t.AppUser.DisplayName.ToLower().Contains(DisplayName.ToLower()))
+                                       .Select(t => t.AppUser)
+                                       .ToListAsync();
 
             // Check if the tutor is found
             if (tutor == null)
@@ -28,7 +34,7 @@ namespace TeachMate.Services.SearchService
             }
 
             // Return the associated AppUser
-            return tutor.AppUser;
+            return tutor;
         }
     }
 }

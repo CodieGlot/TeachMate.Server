@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using TeachMate.Domain;
 using TeachMate.Domain.DTOs.SearchDto;
 
-namespace TeachMate.Service.SearchService;
-public interface ISearchTutor
+namespace TeachMate.Services.SearchService
 {
-    Task<List<AppUser>> Search(string DisplayName);
+    public interface ISearchClass
+    {
+        Task<List<LearningModule>> Search(SearchClassDto dto); //truyen vo data user enter
+    }
 }

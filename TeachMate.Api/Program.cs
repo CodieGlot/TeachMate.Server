@@ -11,7 +11,10 @@ using System.Text;
 using System.Text.Json.Serialization;
 using TeachMate.Api;
 using TeachMate.Domain;
+using TeachMate.Service.SearchService;
 using TeachMate.Services;
+using TeachMate.Services.SearchService;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -133,6 +136,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILearningModuleService, LearningModuleService>();
+builder.Services.AddScoped<ISearchTutor, SearchTutor>();
+builder.Services.AddScoped<ISearchClass, SearchClass>();
 
 var app = builder.Build();
 
