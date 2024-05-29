@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,13 +13,14 @@ public class AuthService : IAuthService
     private readonly IHttpContextService _httpContextService;
     private readonly IUserService _userService;
     private readonly IGoogleAuthService _googleAuthService;
-
-    public AuthService(IUserService userService, IConfigService configService, IHttpContextService httpContextService, IGoogleAuthService googleAuthService)
+    private readonly DataContext _context;
+    public AuthService(IUserService userService, IConfigService configService, IHttpContextService httpContextService, IGoogleAuthService googleAuthService, DataContext context)
     {
         _userService = userService;
         _configService = configService;
         _httpContextService = httpContextService;
         _googleAuthService = googleAuthService;
+        _context = context;
     }
     public async Task<AppUser> GetMe()
     {
@@ -131,4 +133,27 @@ public class AuthService : IAuthService
 
         return tokenHandler.WriteToken(jwt);
     }
+    public async Task<ResponseDto> ChangeUserPassWord(AppUser user, UserPassword dto)
+    {
+        if (!BCrypt.Net.BCrypt.Verify(dto.Old_Password, user.Password))
+        {
+            return new ResponseDto("Wrong recent password");
+        }
+        else if (dto.Old_Password == dto.New_Password)
+        {
+            return new ResponseDto("Old password and new password must not be the same");
+
+        }
+        else if (dto.New_Password != dto.Confirm_Password)
+        {
+            return new ResponseDto("Confirm password fail");
+        }
+        dto.New_Password = BCrypt.Net.BCrypt.HashPassword(dto.New_Password);
+        user.Password = dto.New_Password;
+        await _context.SaveChangesAsync();
+        return new ResponseDto("Change successfully");
+
+    }
 }
+
+  
