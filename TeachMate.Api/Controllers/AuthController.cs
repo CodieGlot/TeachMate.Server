@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using TeachMate.Domain;
 using TeachMate.Services;
 
@@ -8,10 +9,12 @@ namespace TeachMate.Api;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly IHttpContextService _contextService;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, IHttpContextService contextService)
     {
         _authService = authService;
+        _contextService = contextService;
     }
 
     /// <summary>
@@ -22,6 +25,8 @@ public class AuthController : ControllerBase
     {
         return Ok(await _authService.Login(dto));
     }
+    
+    
 
     /// <summary>
     /// Signin with google
@@ -48,5 +53,12 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<AppUser>> GetMe()
     {
         return Ok(await _authService.GetMe());
+    }
+
+    [HttpPut("ChangePassWord")]
+    public async Task<ActionResult<AppUser>> ChangePassWord(UserPassword dto)
+    {
+        var user = await _contextService.GetAppUserAndThrow();
+        return Ok(await _authService.ChangeUserPassWord(user, dto));
     }
 }
