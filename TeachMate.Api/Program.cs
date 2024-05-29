@@ -132,7 +132,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILearningModuleService, LearningModuleService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IUserDetailService, UserDetailService>();
+
 
 var app = builder.Build();
 
