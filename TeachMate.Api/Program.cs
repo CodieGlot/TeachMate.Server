@@ -134,7 +134,7 @@ builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILearningModuleService, LearningModuleService>();
 builder.Services.AddScoped<IUserDetailService, UserDetailService>();
-
+builder.Services.AddScoped<IEmailOtp, EmailOtp>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
