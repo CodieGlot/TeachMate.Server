@@ -91,5 +91,7 @@ public class UserService : IUserService
                     .FirstOrDefaultAsync(x => x.Id == appUser.Id);
                 break;
         }
+        
     }
+    
 }
