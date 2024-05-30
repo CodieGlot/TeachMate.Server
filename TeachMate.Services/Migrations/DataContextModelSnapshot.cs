@@ -34,8 +34,10 @@ namespace TeachMate.Services.Migrations
 
                 b.HasIndex("EnrolledModulesId");
 
+
                 b.ToTable("LearnerLearningModule");
             });
+
 
             modelBuilder.Entity("TeachMate.Domain.AppUser", b =>
             {
@@ -231,6 +233,49 @@ namespace TeachMate.Services.Migrations
                 b.ToTable("LearningSessions");
             });
 
+            modelBuilder.Entity("TeachMate.Domain.Models.Schedule.WeeklySchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("NumberOfSlot")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WeeklySchedules", (string)null);
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.Models.Schedule.WeeklySlot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("WeeklyScheduleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WeeklyScheduleId");
+
+                    b.ToTable("WeeklySlots", (string)null);
+                });
+
             modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
             {
                 b.Property<int>("Id")
@@ -266,7 +311,6 @@ namespace TeachMate.Services.Migrations
 
                 b.ToTable("PushNotifications");
             });
-
             modelBuilder.Entity("TeachMate.Domain.PushNotificationReceiver", b =>
             {
                 b.Property<int>("PushNotificationId")

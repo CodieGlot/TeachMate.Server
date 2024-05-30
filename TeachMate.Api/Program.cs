@@ -132,6 +132,10 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILearningModuleService, LearningModuleService>();
+
+builder.Services.AddScoped<ISearchTutor, SearchTutor>();
+builder.Services.AddScoped<ISearchClass, SearchClass>();
+
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IUserDetailService, UserDetailService>();
 builder.Services.AddScoped<IEmailOtp, EmailOtp>();
