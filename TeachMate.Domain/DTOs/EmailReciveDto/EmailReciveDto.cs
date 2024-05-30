@@ -11,7 +11,5 @@ namespace TeachMate.Domain
 
         public string GmailReceiveOTP { get; set; }
 
-
-
     }
 }
