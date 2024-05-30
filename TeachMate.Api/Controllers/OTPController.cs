@@ -11,21 +11,19 @@ namespace TeachMate.Api.Controllers
     public class OTPController : ControllerBase { 
         public readonly IEmailOtp _IEmailOTP;
         private readonly IHttpContextService _contextService;
-        private readonly DataContext _context;
 
-        public OTPController(IEmailOtp IEmailOTP, IHttpContextService contextService, DataContext context)
+        public OTPController(IEmailOtp IEmailOTP, IHttpContextService contextService)
         {
             _IEmailOTP = IEmailOTP;
             _contextService = contextService;
-            _context = context;
         }
 
-        [HttpPost("SendOTP")]
+        /*[HttpPost("SendOTP")]
         public  async Task<ActionResult> SendOtp(EmailReciveDto dto) {
             
                 await _IEmailOTP.SendEmailOtp(dto);
             return Ok("Email send success");     
             
-        }
+        }*/
     }
 }

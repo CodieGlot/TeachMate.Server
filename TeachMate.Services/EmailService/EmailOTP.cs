@@ -25,8 +25,6 @@ namespace TeachMate.Services
         public async Task SendEmailOtp(EmailReciveDto dto )
         {
             Random rnd = new Random();
-           
-
 
             int digit1 = rnd.Next(0, 10); 
             int digit2 = rnd.Next(0, 10);

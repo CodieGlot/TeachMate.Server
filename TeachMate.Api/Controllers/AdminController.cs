@@ -1,11 +1,52 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeachMate.Domain;
+using TeachMate.Services;
 
 namespace TeachMate.Api;
-[Authorize(CustomRoles.Admin)]
+
 [Route("api/[controller]")]
 [ApiController]
 public class AdminController : ControllerBase
 {
+    private readonly IUserService _userService;
+    private readonly IAdminService _adminService;   
+
+    public AdminController(IUserService userService, IAdminService adminService)
+    {
+        _userService = userService;
+        _adminService = adminService;
+    }
+
+    /// <summary>
+    /// Get all user
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPost("GetAllUser")]
+    public async Task<ActionResult<AppUser>> GetUser()
+    {
+        return Ok(await _adminService.GetAllUser());
+    }
+
+    /// <summary>
+    /// Get user is disable
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPost("GetUserDisable")]
+    public async Task<ActionResult<AppUser>> GetUserDisable(UserRole userRole)
+    {
+        return Ok(await _adminService.GetUserDisable(userRole));
+    }
+
+    /// <summary>
+    /// Disable user
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPost("DisableUser")]
+    public async Task<ActionResult<AppUser>> DisableUser(Guid Id)
+    {
+        return Ok(await _userService.DisableUser(Id));
+    }
+
+
 }
