@@ -11,20 +11,23 @@ using TeachMate.Domain;
 
 namespace TeachMate.Services
 {
-    public class EmailOtp: IEmailOtp
+    public class EmailOtp : IEmailOtp
     {
         private readonly NetworkCredential _credential;
         private readonly EmailConfig _emailConfig;
         private readonly DataContext _context;
+
         private OtpService _OtpService;
-        public EmailOtp(IOptions<EmailConfig> emailConfig, DataContext context,OtpService otpService)
+
+        public EmailOtp(IOptions<EmailConfig> emailConfig, DataContext context, OtpService otpService)
+
         {
             _emailConfig = emailConfig.Value;
             _credential = new NetworkCredential(_emailConfig.AppEmail, _emailConfig.AppPassword);
             _context = context;
             _OtpService = otpService;
         }
-        public async Task<ResponseDto> SendEmailOtp(EmailReciveDto dto )
+        public async Task<ResponseDto> SendEmailOtp(EmailReciveDto dto)
         {
             _OtpService.SetEmail(dto.GmailReceiveOTP);
             var appUser = await _context.AppUsers.FirstOrDefaultAsync(p => p.Email == dto.GmailReceiveOTP);
@@ -50,7 +53,7 @@ namespace TeachMate.Services
                 message.Subject = "OTP";
                 message.To.Add(new MailAddress(dto.GmailReceiveOTP));
                 message.IsBodyHtml = true;
-                 _OtpService.SetOtp( randomNumberString);
+                _OtpService.SetOtp(randomNumberString);
                 message.Body = $"This is your OTP : {randomNumberString}";
 
                 var smtpClient = new SmtpClient("smtp.gmail.com")
@@ -67,5 +70,12 @@ namespace TeachMate.Services
         }
 
 
+
+
+       
+
+
+
     }
 }
+

@@ -9,6 +9,10 @@ namespace TeachMate.Services
 {
     public interface IEmailOtp
     {
+
         Task<ResponseDto> SendEmailOtp(EmailReciveDto dto);
+
+        
+
     }
 }

@@ -26,5 +26,6 @@ namespace TeachMate.Api.Controllers
             return Ok(await _IEmailOTP.SendEmailOtp(dto));
 
         }
+
     }
 }

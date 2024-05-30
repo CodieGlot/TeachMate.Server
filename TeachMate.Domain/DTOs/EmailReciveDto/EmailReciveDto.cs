@@ -8,7 +8,10 @@ namespace TeachMate.Domain
 {
     public class EmailReciveDto
     {
+
         public string GmailReceiveOTP { get; set; }
+
+
 
     }
 }
