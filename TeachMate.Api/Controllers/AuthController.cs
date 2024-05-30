@@ -25,8 +25,8 @@ public class AuthController : ControllerBase
     {
         return Ok(await _authService.Login(dto));
     }
-    
-    
+
+
 
     /// <summary>
     /// Signin with google
@@ -61,4 +61,14 @@ public class AuthController : ControllerBase
         var user = await _contextService.GetAppUserAndThrow();
         return Ok(await _authService.ChangeUserPassWord(user, dto));
     }
+
+    [HttpPost("ForgetPassWord")]
+    public async Task<ActionResult<AppUser>> forgetPassword(ForgetPasswordDto dto) {
+        return Ok(await _authService.ForgetPassword(dto));
+    }
+    [HttpPost("OTP")]
+    public async Task<ActionResult<ResponseDto>> Otp() {
+        return Ok( await _authService.Otp());
+    }
+
 }

@@ -14,13 +14,15 @@ public class AuthService : IAuthService
     private readonly IUserService _userService;
     private readonly IGoogleAuthService _googleAuthService;
     private readonly DataContext _context;
-    public AuthService(IUserService userService, IConfigService configService, IHttpContextService httpContextService, IGoogleAuthService googleAuthService, DataContext context)
+    private readonly OtpService _OtpService;
+    public AuthService(IUserService userService, IConfigService configService, IHttpContextService httpContextService, IGoogleAuthService googleAuthService, DataContext context, OtpService otpService)
     {
         _userService = userService;
         _configService = configService;
         _httpContextService = httpContextService;
         _googleAuthService = googleAuthService;
         _context = context;
+        _OtpService = otpService;
     }
     public async Task<AppUser> GetMe()
     {
@@ -154,6 +156,30 @@ public class AuthService : IAuthService
         return new ResponseDto("Change successfully");
 
     }
+    public async Task<ResponseDto> ForgetPassword(ForgetPasswordDto dto)
+    {
+        
+        if (!dto.OTP.Equals(_OtpService.GetOtp()))
+        {
+            return new ResponseDto("Wrong OTP");
+        }
+        else if (dto.NewPassword != dto.ConfirmPassword)
+        {
+            return new ResponseDto("Confirm password fail");
+        }
+        dto.NewPassword = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+        var User = await _context.AppUsers.FirstOrDefaultAsync(p => p.Email == _OtpService.GetEmail());
+        User.Password = dto.NewPassword;
+        await _context.SaveChangesAsync();
+        return new ResponseDto("Change successfully");
+    }
+    public async Task<ResponseDto>Otp()
+    {
+        string otp = _OtpService.GetOtp();
+        
+        return new ResponseDto(otp);
+
+    }
 }
 
-  
+
