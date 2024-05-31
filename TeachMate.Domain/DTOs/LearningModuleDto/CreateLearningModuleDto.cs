@@ -13,7 +13,7 @@ public class CreateLearningModuleDto
     public DateOnly EndDate { get; set; }
     public int MaximumLearners { get; set; }
     public ModuleType ModuleType { get; set; }
-    public List<WeeklySlotDto> WeeklySlots { get; set; }
+    
     public int NumOfWeeks { get; set; }
 
     //public List<LearningSession> Schedule { get; set; } = new();
