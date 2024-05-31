@@ -11,7 +11,7 @@ using TeachMate.Domain;
 
 namespace TeachMate.Services
 {
-    public class EmailOtp : IEmailOtp
+    public class EmailOTPService : IEmailOtp
     {
         private readonly NetworkCredential _credential;
         private readonly EmailConfig _emailConfig;
@@ -19,7 +19,7 @@ namespace TeachMate.Services
 
         private OtpService _OtpService;
 
-        public EmailOtp(IOptions<EmailConfig> emailConfig, DataContext context, OtpService otpService)
+        public EmailOTPService(IOptions<EmailConfig> emailConfig, DataContext context, OtpService otpService)
 
         {
             _emailConfig = emailConfig.Value;
