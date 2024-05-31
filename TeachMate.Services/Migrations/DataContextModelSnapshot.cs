@@ -34,7 +34,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("EnrolledModulesId");
 
-                    b.ToTable("LearnerLearningModule", (string)null);
+                    b.ToTable("LearnerLearningModule");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.AppUser", b =>
@@ -72,7 +72,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppUsers", (string)null);
+                    b.ToTable("AppUsers");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Learner", b =>
@@ -89,7 +89,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Learners", (string)null);
+                    b.ToTable("Learners");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.LearningModule", b =>
@@ -147,7 +147,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("WeeklyScheduleId");
 
-                    b.ToTable("LearningModules", (string)null);
+                    b.ToTable("LearningModules");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.LearningModuleRequest", b =>
@@ -190,7 +190,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("LearningModuleId");
 
-                    b.ToTable("LearningModuleRequests", (string)null);
+                    b.ToTable("LearningModuleRequests");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.LearningSession", b =>
@@ -228,7 +228,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("LearningModuleId");
 
-                    b.ToTable("LearningSessions", (string)null);
+                    b.ToTable("LearningSessions");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
@@ -264,7 +264,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("CreatedAt");
 
-                    b.ToTable("PushNotifications", (string)null);
+                    b.ToTable("PushNotifications");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.PushNotificationReceiver", b =>
@@ -277,7 +277,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("PushNotificationId", "ReceiverId");
 
-                    b.ToTable("PushNotificationReceivers", (string)null);
+                    b.ToTable("PushNotificationReceivers");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
@@ -298,7 +298,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tutors", (string)null);
+                    b.ToTable("Tutors");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.WeeklySchedule", b =>
@@ -314,7 +314,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WeeklySchedules", (string)null);
+                    b.ToTable("WeeklySchedules");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.WeeklySlot", b =>
@@ -341,7 +341,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("WeeklyScheduleId");
 
-                    b.ToTable("WeeklySlots", (string)null);
+                    b.ToTable("WeeklySlots");
                 });
 
             modelBuilder.Entity("LearnerLearningModule", b =>
