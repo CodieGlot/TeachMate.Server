@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeachMate.Services;
 
@@ -11,9 +12,11 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240531054101_AddUserOTPIsExpired")]
+    partial class AddUserOTPIsExpired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,10 +204,6 @@ namespace TeachMate.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time");
-
-
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
@@ -212,39 +211,11 @@ namespace TeachMate.Services.Migrations
                         .HasColumnType("time");
 
                     b.Property<int>("LearningModuleId")
-
                         .HasColumnType("int");
 
                     b.Property<string>("LinkMeet")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-});
-
-            modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpireAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Gmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OTP")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("UserOTPs");
 
                     b.Property<int>("Slot")
                         .HasColumnType("int");
@@ -332,8 +303,8 @@ namespace TeachMate.Services.Migrations
 
                     b.ToTable("Tutors");
                 });
-                
-                modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
+
+            modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -358,7 +329,7 @@ namespace TeachMate.Services.Migrations
                     b.HasKey("id");
 
                     b.ToTable("UserOTPs");
-                    });
+                });
 
             modelBuilder.Entity("TeachMate.Domain.WeeklySchedule", b =>
                 {
