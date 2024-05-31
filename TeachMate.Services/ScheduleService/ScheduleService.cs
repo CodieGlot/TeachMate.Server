@@ -52,6 +52,7 @@ public class ScheduleService : IScheduleService
         if (learningModule.ModuleType == ModuleType.Custom) throw new BadRequestException("The module type is custom");
         if (!learningModule.Schedule.IsNullOrEmpty()) throw new BadRequestException("Learning Module already update sessions");
         if (learningModule.WeeklySchedule.WeeklySlots.IsNullOrEmpty()) throw new BadRequestException("Weekly Slots has not been defined");
+        
         var weeklySlots = learningModule.WeeklySchedule.WeeklySlots;
         var numOfWeeks = learningModule.NumOfWeeks;
         var startDate = learningModule.StartDate;
