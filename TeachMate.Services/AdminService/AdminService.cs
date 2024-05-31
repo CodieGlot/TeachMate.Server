@@ -20,6 +20,7 @@ public class AdminService : IAdminService
     {
         var appUser = await _context.AppUsers.ToListAsync();
 
+        appUser.ForEach(user => Console.WriteLine(user));
         foreach (var user in appUser)
         {
             Console.WriteLine(user);
