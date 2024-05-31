@@ -197,9 +197,12 @@ namespace TeachMate.Services.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
@@ -208,11 +211,39 @@ namespace TeachMate.Services.Migrations
                         .HasColumnType("time");
 
                     b.Property<int>("LearningModuleId")
+
                         .HasColumnType("int");
 
                     b.Property<string>("LinkMeet")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+});
+
+            modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Gmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OTP")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("UserOTPs");
 
                     b.Property<int>("Slot")
                         .HasColumnType("int");
@@ -300,8 +331,8 @@ namespace TeachMate.Services.Migrations
 
                     b.ToTable("Tutors");
                 });
-
-            modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
+                
+                modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -326,7 +357,7 @@ namespace TeachMate.Services.Migrations
                     b.HasKey("id");
 
                     b.ToTable("UserOTPs");
-                });
+                    });
 
             modelBuilder.Entity("TeachMate.Domain.WeeklySchedule", b =>
                 {

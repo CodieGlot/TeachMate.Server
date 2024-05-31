@@ -138,6 +138,7 @@ builder.Services.AddScoped<ISearchClass, SearchClass>();
 
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IUserDetailService, UserDetailService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
 builder.Services.AddScoped<IEmailOtp, EmailOtp>();
 builder.Services.AddScoped<IOtpService, OtpService>();
