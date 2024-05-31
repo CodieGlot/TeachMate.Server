@@ -66,9 +66,6 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<AppUser>> forgetPassword(ForgetPasswordDto dto) {
         return Ok(await _authService.ForgetPassword(dto));
     }
-    [HttpPost("OTP")]
-    public async Task<ActionResult<ResponseDto>> Otp() {
-        return Ok( await _authService.Otp());
-    }
+    
 
 }

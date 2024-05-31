@@ -139,16 +139,16 @@ public class AuthService : IAuthService
     {
         if (!BCrypt.Net.BCrypt.Verify(dto.Old_Password, user.Password))
         {
-            return new ResponseDto("Wrong recent password");
+            throw new BadRequestException("Wrong recent password");
         }
         else if (dto.Old_Password == dto.New_Password)
         {
-            return new ResponseDto("Old password and new password must not be the same");
+            throw new BadRequestException("Old password and new password must not be the same");
 
         }
         else if (dto.New_Password != dto.Confirm_Password)
         {
-            return new ResponseDto("Confirm password fail");
+            throw new BadRequestException("Confirm password fail");
         }
         dto.New_Password = BCrypt.Net.BCrypt.HashPassword(dto.New_Password);
         user.Password = dto.New_Password;
@@ -158,28 +158,27 @@ public class AuthService : IAuthService
     }
     public async Task<ResponseDto> ForgetPassword(ForgetPasswordDto dto)
     {
-        
-        if (!dto.OTP.Equals(_OtpService.GetOtp()))
+        var OtpCode =await  _context.UserOTPs.Where(p => p.OTP == dto.OTP && !p.IsExpired).Select(p => p.OTP).FirstOrDefaultAsync();
+        var email = await _context.UserOTPs.Where(p => p.OTP.Equals(dto.OTP)).Select(p => p.Gmail).FirstOrDefaultAsync();
+        var OtpAppUser = await _context.UserOTPs.Where(p => p.OTP == dto.OTP).FirstOrDefaultAsync();
+        var appUser = await _context.AppUsers.Where(p => p.Email.Equals(email)).FirstOrDefaultAsync();
+        if (!dto.OTP.Equals(OtpCode))
         {
-            return new ResponseDto("Wrong OTP");
+            throw new BadRequestException("Wrong OTP");
         }
         else if (dto.NewPassword != dto.ConfirmPassword)
         {
-            return new ResponseDto("Confirm password fail");
+            throw new BadRequestException("Confirm password fail");
+        } else if(OtpAppUser.ExpireAt <= DateTime.Now) {
+            throw new BadRequestException("the OTP has been expired");
         }
-        dto.NewPassword = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
-        var User = await _context.AppUsers.FirstOrDefaultAsync(p => p.Email == _OtpService.GetEmail());
-        User.Password = dto.NewPassword;
+        dto.NewPassword = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);      
+        appUser.Password = dto.NewPassword;
+        _context.Update(appUser);
         await _context.SaveChangesAsync();
         return new ResponseDto("Change successfully");
     }
-    public async Task<ResponseDto>Otp()
-    {
-        string otp = _OtpService.GetOtp();
-        
-        return new ResponseDto(otp);
-
-    }
+    
 }
 
 

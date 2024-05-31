@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TeachMate.Services.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUserOTP : Migration
+    public partial class AddUserOTPIsExpired : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace TeachMate.Services.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OTP = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    gmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExpireAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

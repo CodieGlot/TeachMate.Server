@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using TeachMate.Domain;
 using TeachMate.Services;
 
-namespace TeachMate.Api.Validators.UserValidator
+namespace TeachMate.Api
 {
-    public class ChangePassword : AbstractValidator<UserPassword>
+    public class ChangePasswordValidator : AbstractValidator<UserPassword>
     {
 
        
-        public ChangePassword() {
+        public ChangePasswordValidator() {
             
             RuleFor(x => x.Old_Password)
                 .NotEmpty()

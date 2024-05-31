@@ -29,12 +29,12 @@ namespace TeachMate.Services
         }
         public async Task<ResponseDto> SendEmailOtp(EmailReciveDto dto)
         {
-            _OtpService.SetEmail(dto.GmailReceiveOTP);
+            
             var appUser = await _context.AppUsers.FirstOrDefaultAsync(p => p.Email == dto.GmailReceiveOTP);
 
-            if (appUser == null)
+                        if (appUser == null)
             {
-                return new ResponseDto("Wrong Email");
+                throw new BadRequestException("Wrong Email");
             }
             else
             {
@@ -55,14 +55,20 @@ namespace TeachMate.Services
                 message.IsBodyHtml = true;
                 _OtpService.SetOtp(randomNumberString);
                 message.Body = $"This is your OTP : {randomNumberString}";
-
+                var otp = new UserOTP
+                {
+                    Gmail = dto.GmailReceiveOTP,
+                    OTP = randomNumberString,
+                };
                 var smtpClient = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587,
                     Credentials = _credential,
                     EnableSsl = true
                 };
-
+                
+                await _context.UserOTPs.AddAsync(otp);
+                _context.SaveChanges();
                 smtpClient.Send(message);
                 return new ResponseDto("Send success");
             }

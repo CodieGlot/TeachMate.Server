@@ -12,8 +12,8 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240530170530_AddUserOTP")]
-    partial class AddUserOTP
+    [Migration("20240531054101_AddUserOTPIsExpired")]
+    partial class AddUserOTPIsExpired
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -318,11 +318,11 @@ namespace TeachMate.Services.Migrations
                     b.Property<DateTime>("ExpireAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("OTP")
+                    b.Property<string>("Gmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("gmail")
+                    b.Property<string>("OTP")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

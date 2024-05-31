@@ -315,11 +315,11 @@ namespace TeachMate.Services.Migrations
                     b.Property<DateTime>("ExpireAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("OTP")
+                    b.Property<string>("Gmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("gmail")
+                    b.Property<string>("OTP")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
