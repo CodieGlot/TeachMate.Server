@@ -19,7 +19,6 @@ public class EmailService : IEmailService
         {
             return;
         }
-
         MailMessage message = new MailMessage();
         message.From = new MailAddress(_emailConfig.AppEmail);
         message.Subject = "Test Email";

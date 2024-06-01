@@ -16,7 +16,9 @@ public class LearningModuleService : ILearningModuleService
     {
         var learningModule = await _context.LearningModules
             .Include(x => x.EnrolledLearners)
+            .Include(x => x.Schedule)
             .Include(x => x.WeeklySchedule)
+            .ThenInclude(x => x.WeeklySlots)
             .FirstOrDefaultAsync(x => x.Id == id);
 
         /*if (learningModule != null)
@@ -93,7 +95,8 @@ public class LearningModuleService : ILearningModuleService
 
         else if (dto.ModuleType == ModuleType.Weekly)
         {
-            var listWeeklySlotDto = dto.WeeklySlots;
+            learningModule.WeeklySchedule = new WeeklySchedule() ;
+            /*var listWeeklySlotDto = dto.WeeklySlots;
             var listWeeklySlot = new List<WeeklySlot>();
             learningModule.WeeklySchedule = new WeeklySchedule();
             for (int i = 0; i < listWeeklySlotDto.Count; i++)
@@ -108,7 +111,7 @@ public class LearningModuleService : ILearningModuleService
                 listWeeklySlot.Add(weeklySlot);
             }
             learningModule.WeeklySchedule.NumberOfSlot = listWeeklySlot.Count();
-            learningModule.WeeklySchedule.WeeklySlots = listWeeklySlot;
+            learningModule.WeeklySchedule.WeeklySlots = listWeeklySlot;*/
         }
 
         if (user.Tutor != null)
