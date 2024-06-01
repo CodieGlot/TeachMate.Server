@@ -140,7 +140,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IUserDetailService, UserDetailService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
-builder.Services.AddScoped<IEmailOtp, EmailOtp>();
+builder.Services.AddScoped<IEmailOtp, EmailOTPService>();
 builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddScoped<OtpService>();
 

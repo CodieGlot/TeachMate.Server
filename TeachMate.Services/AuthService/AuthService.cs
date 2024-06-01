@@ -158,7 +158,7 @@ public class AuthService : IAuthService
     }
     public async Task<ResponseDto> ForgetPassword(ForgetPasswordDto dto)
     {
-        var OtpCode =await  _context.UserOTPs.Where(p => p.OTP == dto.OTP && !p.IsExpired).Select(p => p.OTP).FirstOrDefaultAsync();
+        var OtpCode =await  _context.UserOTPs.Where(p => p.OTP == dto.OTP ).Select(p => p.OTP).FirstOrDefaultAsync();
         var email = await _context.UserOTPs.Where(p => p.OTP.Equals(dto.OTP)).Select(p => p.Gmail).FirstOrDefaultAsync();
         var OtpAppUser = await _context.UserOTPs.Where(p => p.OTP == dto.OTP).FirstOrDefaultAsync();
         var appUser = await _context.AppUsers.Where(p => p.Email.Equals(email)).FirstOrDefaultAsync();
