@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeachMate.Domain;
-using TeachMate.Domain;
 
 namespace TeachMate.Services
 {
