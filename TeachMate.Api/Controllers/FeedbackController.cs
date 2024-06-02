@@ -13,42 +13,70 @@ namespace TeachMate.Api.Controllers
     {
         private readonly IHttpContextService _httpContextService;
         private readonly IFeedbackService _feedbackService;
+        private readonly ILearningModuleService _learningModuleService;
 
-        public FeedbackController(IFeedbackService feedbackService, IHttpContextService httpContextService)
+        public FeedbackController(IFeedbackService feedbackService, IHttpContextService httpContextService, ILearningModuleService learningModuleService)
         {
             _feedbackService = feedbackService;
             _httpContextService = httpContextService;
+            _learningModuleService = learningModuleService;
         }
 
-        /// <summary>
-        /// Add feedback for a learning module.
-        /// </summary>
         [Authorize(Roles = CustomRoles.Learner)]
         [HttpPost("Learner/AddFeedback")]
         public async Task<IActionResult> AddFeedback([FromBody] LearnerFeedbackDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid data provided.");
+            }
+
+            var user = await _httpContextService.GetAppUserAndThrow();
+
+            var learningModule = await _learningModuleService.GetLearningModuleById(dto.LearningModuleId);
+            if (learningModule == null)
+            {
+                return BadRequest("Invalid learning module ID.");
+            }
+
+            var isEnrolled = learningModule.EnrolledLearners.Any(learner => learner.Id == user.Id);
+            if (!isEnrolled)
+            {
+                return BadRequest("You are not enrolled in this learning module. Please enroll before giving feedback.");
+            }
+
+            var feedback = await _feedbackService.AddFeedback(dto, user);
+            return Ok(feedback);
+        }
+
+        [Authorize(Roles = CustomRoles.GeneralUser)]
+        [HttpPost("LikeFeedback/{feedbackId}")]
+        public async Task<IActionResult> LikeFeedback(int feedbackId)
+        {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Invalid data provided.");
-                }
-
                 var user = await _httpContextService.GetAppUserAndThrow();
+                var feedback = await _feedbackService.LikeFeedback(feedbackId,user);
+                return Ok(feedback);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An unexpected error occurred: {ex.Message}");
+            }
+        }
 
-                var learningModule = await _feedbackService.GetLearningModuleById(dto.LearningModuleId);
-                if (learningModule == null)
-                {
-                    return BadRequest("Invalid learning module ID.");
-                }
-
-                var isEnrolled = learningModule.EnrolledLearners.Any(learner => learner.Id == user.Id);
-                if (!isEnrolled)
-                {
-                    return BadRequest("You are not enrolled in this learning module. Please enroll before giving feedback.");
-                }
-
-                var feedback = await _feedbackService.AddFeedback(dto, user);
+        [Authorize(Roles = CustomRoles.GeneralUser)]
+        [HttpPost("DislikeFeedback/{feedbackId}")]
+        public async Task<IActionResult> DislikeFeedback(int feedbackId)
+        {
+            try
+            {
+                var user = await _httpContextService.GetAppUserAndThrow();
+                var feedback = await _feedbackService.DisLikeFeedback(feedbackId, user);
                 return Ok(feedback);
             }
             catch (InvalidOperationException ex)

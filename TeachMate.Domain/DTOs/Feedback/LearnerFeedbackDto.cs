@@ -15,10 +15,6 @@ namespace TeachMate.Domain
         [Range(1, 5)]
         public int Star { get; set; }
         public int LearningModuleId { get; set; }
-     /*   public int LikeNumber { get; set; } = 0;
-        public int DislikeNumber { get; set; } = 0;*/
         public bool IsAnonymous { get; set; } = false;
-    
-
     }
 }

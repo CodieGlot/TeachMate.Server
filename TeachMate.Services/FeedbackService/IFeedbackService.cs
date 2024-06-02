@@ -9,7 +9,9 @@ namespace TeachMate.Services
 {
     public interface IFeedbackService
     {
-        Task<LearningModule> GetLearningModuleById(int moduleId);
         Task<LearningModuleFeedback?> AddFeedback(LearnerFeedbackDto dto, AppUser appUser);
+        Task<LearningModuleFeedback> LikeFeedback(int feedbackId, AppUser appUser);
+        Task<LearningModuleFeedback> DisLikeFeedback(int feedbackId, AppUser appUser);
+
     }
 }

@@ -12,8 +12,8 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240531030445_AddFeedbackForClass")]
-    partial class AddFeedbackForClass
+    [Migration("20240602051219_SaveUserLikeAndDislike")]
+    partial class SaveUserLikeAndDislike
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,29 @@ namespace TeachMate.Services.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AppUsers");
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.Dislike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("LearningModuleFeedbackId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("LearningModuleFeedbackId");
+
+                    b.ToTable("Dislikes");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Learner", b =>
@@ -280,6 +303,29 @@ namespace TeachMate.Services.Migrations
                     b.ToTable("LearningSessions");
                 });
 
+            modelBuilder.Entity("TeachMate.Domain.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("LearningModuleFeedbackId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("LearningModuleFeedbackId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
                 {
                     b.Property<int>("Id")
@@ -350,6 +396,33 @@ namespace TeachMate.Services.Migrations
                     b.ToTable("Tutors");
                 });
 
+            modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Gmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OTP")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("UserOTPs");
+                });
+
             modelBuilder.Entity("TeachMate.Domain.WeeklySchedule", b =>
                 {
                     b.Property<int>("Id")
@@ -406,6 +479,25 @@ namespace TeachMate.Services.Migrations
                         .HasForeignKey("EnrolledModulesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.Dislike", b =>
+                {
+                    b.HasOne("TeachMate.Domain.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TeachMate.Domain.LearningModuleFeedback", "LearningModuleFeedback")
+                        .WithMany()
+                        .HasForeignKey("LearningModuleFeedbackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("LearningModuleFeedback");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Learner", b =>
@@ -479,6 +571,25 @@ namespace TeachMate.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("LearningModule");
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.Like", b =>
+                {
+                    b.HasOne("TeachMate.Domain.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TeachMate.Domain.LearningModuleFeedback", "LearningModuleFeedback")
+                        .WithMany()
+                        .HasForeignKey("LearningModuleFeedbackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("LearningModuleFeedback");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.PushNotificationReceiver", b =>

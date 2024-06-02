@@ -75,6 +75,29 @@ namespace TeachMate.Services.Migrations
                     b.ToTable("AppUsers");
                 });
 
+            modelBuilder.Entity("TeachMate.Domain.Dislike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("LearningModuleFeedbackId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("LearningModuleFeedbackId");
+
+                    b.ToTable("Dislikes");
+                });
+
             modelBuilder.Entity("TeachMate.Domain.Learner", b =>
                 {
                     b.Property<Guid>("Id")
@@ -149,7 +172,6 @@ namespace TeachMate.Services.Migrations
 
                     b.ToTable("LearningModules");
                 });
-<<<<<<< HEAD
 
             modelBuilder.Entity("TeachMate.Domain.LearningModuleFeedback", b =>
                 {
@@ -196,8 +218,6 @@ namespace TeachMate.Services.Migrations
 
                     b.ToTable("LearningModuleFeedbacks");
                 });
-=======
->>>>>>> fc4e64edf3f7047a0d0557a03a3804af25cd5893
 
             modelBuilder.Entity("TeachMate.Domain.LearningModuleRequest", b =>
                 {
@@ -250,7 +270,6 @@ namespace TeachMate.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-<<<<<<< HEAD
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
@@ -281,70 +300,29 @@ namespace TeachMate.Services.Migrations
                     b.ToTable("LearningSessions");
                 });
 
-=======
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time");
-
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
-
-                    b.Property<TimeOnly>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<int>("LearningModuleId")
-
-                        .HasColumnType("int");
-
-                    b.Property<string>("LinkMeet")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-});
-
-            modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
+            modelBuilder.Entity("TeachMate.Domain.Like", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("ExpireAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Gmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OTP")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("UserOTPs");
-
-                    b.Property<int>("Slot")
+                    b.Property<int>("LearningModuleFeedbackId")
                         .HasColumnType("int");
-
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LearningModuleId");
+                    b.HasIndex("AppUserId");
 
-                    b.ToTable("LearningSessions");
+                    b.HasIndex("LearningModuleFeedbackId");
+
+                    b.ToTable("Likes");
                 });
 
->>>>>>> fc4e64edf3f7047a0d0557a03a3804af25cd5893
             modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
                 {
                     b.Property<int>("Id")
@@ -414,10 +392,8 @@ namespace TeachMate.Services.Migrations
 
                     b.ToTable("Tutors");
                 });
-<<<<<<< HEAD
-=======
-                
-                modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
+
+            modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -442,8 +418,7 @@ namespace TeachMate.Services.Migrations
                     b.HasKey("id");
 
                     b.ToTable("UserOTPs");
-                    });
->>>>>>> fc4e64edf3f7047a0d0557a03a3804af25cd5893
+                });
 
             modelBuilder.Entity("TeachMate.Domain.WeeklySchedule", b =>
                 {
@@ -503,6 +478,25 @@ namespace TeachMate.Services.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TeachMate.Domain.Dislike", b =>
+                {
+                    b.HasOne("TeachMate.Domain.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TeachMate.Domain.LearningModuleFeedback", "LearningModuleFeedback")
+                        .WithMany()
+                        .HasForeignKey("LearningModuleFeedbackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("LearningModuleFeedback");
+                });
+
             modelBuilder.Entity("TeachMate.Domain.Learner", b =>
                 {
                     b.HasOne("TeachMate.Domain.AppUser", "AppUser")
@@ -531,7 +525,6 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("WeeklySchedule");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("TeachMate.Domain.LearningModuleFeedback", b =>
                 {
                     b.HasOne("TeachMate.Domain.AppUser", "AppUser")
@@ -551,8 +544,6 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("LearningModule");
                 });
 
-=======
->>>>>>> fc4e64edf3f7047a0d0557a03a3804af25cd5893
             modelBuilder.Entity("TeachMate.Domain.LearningModuleRequest", b =>
                 {
                     b.HasOne("TeachMate.Domain.Learner", null)
@@ -577,6 +568,25 @@ namespace TeachMate.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("LearningModule");
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.Like", b =>
+                {
+                    b.HasOne("TeachMate.Domain.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TeachMate.Domain.LearningModuleFeedback", "LearningModuleFeedback")
+                        .WithMany()
+                        .HasForeignKey("LearningModuleFeedbackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("LearningModuleFeedback");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.PushNotificationReceiver", b =>
