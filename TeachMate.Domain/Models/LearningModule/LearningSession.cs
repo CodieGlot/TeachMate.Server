@@ -10,4 +10,6 @@ public class LearningSession
     public string LinkMeet { get; set; }
 
     public LearningModule LearningModule{ get; set; }
+    public int LearningModuleId { get; set; }
+
 }
