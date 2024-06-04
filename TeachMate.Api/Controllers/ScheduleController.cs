@@ -28,6 +28,7 @@ public class ScheduleController : ControllerBase
     {
         return Ok(await _scheduleService.UpdateWeeklyLearningSession(id));
     }
+
     /// <summary>
     /// Add Weekly Schedule
     /// </summary>
@@ -38,6 +39,23 @@ public class ScheduleController : ControllerBase
         return Ok(await _scheduleService.AddWeeklySchedule(dto));
     }
 
+    /// <summary>
+    /// Add Custom Schedule
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpPost("CreateCustomLearning")]
+    public async Task<ActionResult<LearningSession>> CreateCustomLearning(CreateCustomLearningDto dto)
+    {
+        return Ok(await _scheduleService.CreateCustomLearningSession(dto));
+    }
 
-
+    /// <summary>
+    /// Get Schedule by Id
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpPost("GetScheduleById")]
+    public async Task<ActionResult<LearningSession>> GetScheduleById(int id)
+    {
+        return Ok(await _scheduleService.GetScheduleById(id));
+    }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TeachMate.Domain;
 using TeachMate.Domain.DTOs.ScheduleDto;
 
@@ -44,6 +45,31 @@ public class ScheduleService : IScheduleService
         return learningModule;
     }
 
+    public async Task<LearningSession> CreateCustomLearningSession(CreateCustomLearningDto dto)
+    {
+
+        LearningModule learningModule = await _learningModuleService.GetLearningModuleById(dto.LearningModuleId);
+        if (learningModule == null) throw new NotFoundException("Can not found learning module");
+        if (learningModule.ModuleType == ModuleType.Weekly)
+        {
+            throw new BadRequestException("This learning module type is weekly");
+        }
+        LearningSession session = new LearningSession()
+        {
+            Date = dto.Date,
+            EndTime = dto.EndTime,
+            StartTime = dto.StartTime,
+            LinkMeet = "...",
+            Title = dto.Title,
+            LearningModule = learningModule
+        };
+        var count = await _context.LearningSessions.Where(x => x.LearningModuleId == learningModule.Id).CountAsync();
+        session.Slot = count + 1;
+        learningModule.Schedule.Add(session);
+        _context.Update(learningModule);
+        await _context.SaveChangesAsync();
+        return session;
+    }
 
     public async Task<LearningModule> UpdateWeeklyLearningSession(int id)
     {
@@ -87,9 +113,13 @@ public class ScheduleService : IScheduleService
         return learningModule;
 
     }
-    public Task<LearningSession> CreateCustomLearningSession()
+    public async Task<List<LearningSession>> GetScheduleById(int id)
     {
-        throw new NotImplementedException();
+        var learningSessions =await _context.LearningModules
+            .Where(u => u.Id == id)
+            .Select(u => u.Schedule).FirstAsync();
+        return learningSessions;
     }
+
 
 }
