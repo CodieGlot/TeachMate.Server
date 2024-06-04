@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TeachMate.Domain;
+using TeachMate.Services.Migrations;
 
 namespace TeachMate.Services;
 
@@ -41,5 +42,13 @@ public class DataContext : DbContext
     public DbSet<LearningSession> LearningSessions { get; set; }
     public DbSet<PushNotification> PushNotifications { get; set; }
     public DbSet<PushNotificationReceiver> PushNotificationReceivers { get; set; }
+
+    public DbSet<LearningModuleFeedback> LearningModuleFeedbacks { get; set; }
+    public DbSet<Like> Likes { get; set; }
+
+    public DbSet<Dislike> Dislikes { get; set; }
+
+    public object Users { get; set; }
     public DbSet<UserOTP> UserOTPs { get; set; }
+
 }

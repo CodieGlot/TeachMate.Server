@@ -135,6 +135,7 @@ builder.Services.AddScoped<ILearningModuleService, LearningModuleService>();
 
 builder.Services.AddScoped<ISearchTutor, SearchTutor>();
 builder.Services.AddScoped<ISearchClass, SearchClass>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IUserDetailService, UserDetailService>();
