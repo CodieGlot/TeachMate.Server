@@ -4,7 +4,7 @@ namespace TeachMate.Services;
 public interface ILearningModuleService
 {
     Task<LearningModule> CreateLearningModule(AppUser user, CreateLearningModuleDto dto);
-    Task<LearningModule> EnrollLearningModule(AppUser user, int moduleId);
+    Task<LearningModule> EnrollLearningModule(Guid learnerId, int moduleId);
     Task<List<LearningModule>> GetAllCreatedModules(AppUser user);
     Task<List<LearningModuleRequest>> GetAllCreatedRequests(Guid requesterId);
     Task<List<LearningModule>> GetAllEnrolledModules(AppUser user);
