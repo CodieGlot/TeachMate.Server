@@ -7,8 +7,12 @@ using TeachMate.Domain;
 
 namespace TeachMate.Services
 {
-    public interface ISearchClass
+    public interface IEmailOtp
     {
-        Task<List<LearningModule>> Search(SearchClassDto dto); //truyen vo data user enter
+
+        Task<ResponseDto> SendEmailOtp(EmailReciveDto dto);
+
+        
+
     }
 }

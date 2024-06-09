@@ -41,4 +41,5 @@ public class DataContext : DbContext
     public DbSet<LearningSession> LearningSessions { get; set; }
     public DbSet<PushNotification> PushNotifications { get; set; }
     public DbSet<PushNotificationReceiver> PushNotificationReceivers { get; set; }
+    public DbSet<UserOTP> UserOTPs { get; set; }
 }
