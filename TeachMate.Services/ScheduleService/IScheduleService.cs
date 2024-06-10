@@ -12,5 +12,6 @@ public interface IScheduleService
 {
     Task<LearningModule> AddWeeklySchedule(AddWeeklyScheduleDto dto);
     Task<LearningModule> UpdateWeeklyLearningSession(int id);
-    Task<LearningSession> CreateCustomLearningSession();
+    Task<LearningSession> CreateCustomLearningSession(CreateCustomLearningDto dto);
+    Task<List<LearningSession>> GetScheduleById(int id);
 }

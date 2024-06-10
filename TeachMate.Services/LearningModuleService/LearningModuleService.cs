@@ -14,13 +14,22 @@ public class LearningModuleService : ILearningModuleService
     }
     public async Task<LearningModule?> GetLearningModuleById(int id)
     {
+        
         var learningModule = await _context.LearningModules
+            .Include(x => x.EnrolledLearners)
+            .Include(x => x.Schedule)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (learningModule.ModuleType == ModuleType.Weekly)
+        {
+            var learningModuleWeekly = await _context.LearningModules
             .Include(x => x.EnrolledLearners)
             .Include(x => x.Schedule)
             .Include(x => x.WeeklySchedule)
             .ThenInclude(x => x.WeeklySlots)
             .FirstOrDefaultAsync(x => x.Id == id);
-
+            return learningModuleWeekly;
+        }
         /*if (learningModule != null)
         {
             learningModule.Schedule = JsonSerializer.Deserialize<List<LearningSession>>(learningModule.SerializedSchedule) ?? new List<LearningSession>();

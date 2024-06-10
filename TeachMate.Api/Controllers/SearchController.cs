@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeachMate.Domain;
-using TeachMate.Domain;
 using TeachMate.Services;
 
 

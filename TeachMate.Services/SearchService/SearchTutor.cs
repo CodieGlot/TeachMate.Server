@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeachMate.Domain;
-using TeachMate.Domain;
 using TeachMate.Services;
 
 namespace TeachMate.Services
