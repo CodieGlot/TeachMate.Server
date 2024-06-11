@@ -23,4 +23,8 @@
     <ProjectReference Include="..\TeachMate.Domain\TeachMate.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="PaymentService\VnPay\" />
+  </ItemGroup>
+
 </Project>

@@ -122,6 +122,8 @@ builder.Services.AddDateOnlyTimeOnlyStringConverters();
 builder.Services.Configure<GoogleAuthConfig>(builder.Configuration.GetSection("GoogleOAuth"));
 builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("Gmail"));
 builder.Services.Configure<AblyConfig>(builder.Configuration.GetSection("Ably"));
+builder.Services.Configure<ZaloPayConfig>(builder.Configuration.GetSection("ZaloPay"));
+builder.Services.Configure<MomoConfig>(builder.Configuration.GetSection("Momo"));
 
 // Add User-Defined Services
 builder.Services.AddScoped<INotificationService, NotificationService>();
@@ -145,7 +147,9 @@ builder.Services.AddScoped<IEmailOtp, EmailOTPService>();
 builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddScoped<OtpService>();
 
-
+builder.Services.AddScoped<IZaloPayService, ZaloPayService>();
+builder.Services.AddScoped<IMomoService, MomoService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 
 
