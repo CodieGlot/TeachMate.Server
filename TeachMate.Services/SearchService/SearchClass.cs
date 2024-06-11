@@ -19,15 +19,11 @@ namespace TeachMate.Services
         {
             var query = _context.LearningModules.AsQueryable();
 
-            /*if (!string.IsNullOrWhiteSpace(dto.TitleOrDesc))
+            if (!string.IsNullOrWhiteSpace(dto.TitleOrDesc))
             {
                 var trimmedSearchTerm = dto.TitleOrDesc.Trim().ToLower();
-                query = query.Where(m => EF.Functions.Like(m.Title.ToLower(), $"%{trimmedSearchTerm}%") ||
-                                         EF.Functions.Like(m.Description.ToLower(), $"%{trimmedSearchTerm}%"));
-            }*/
-            if (dto.TitleOrDesc != null)
-            {
-                query = query.Where(m => m.Title == dto.TitleOrDesc);
+                query = query.Where((LearningModule m) => EF.Functions.Like(m.Title.ToLower(), $"%{trimmedSearchTerm}%") ||
+                                                           EF.Functions.Like(m.Description.ToLower(), $"%{trimmedSearchTerm}%"));
             }
 
             if (dto.Subject != null && dto.Subject != Subject.None)

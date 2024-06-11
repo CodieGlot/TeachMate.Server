@@ -123,5 +123,22 @@ namespace TeachMate.Services
 
             return feedback;
         }
+
+        public async Task<List<LearningModuleFeedback>> GetFeedbacksByLearningModuleId(int moduleId)
+        {
+            return await _context.LearningModuleFeedbacks
+                                 .Where(fb => fb.LearningModule.Id == moduleId)
+                                 .ToListAsync();
+        }
+
+        public async Task<double> GetAverageRatingByStar(int moduleId)
+        {
+            var feedbacks = await GetFeedbacksByLearningModuleId(moduleId);
+            if (feedbacks.Any())
+            {
+                return feedbacks.Average(fb => fb.Star);
+            }
+            return 0; 
+        }
     }
 }

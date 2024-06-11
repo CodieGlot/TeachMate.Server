@@ -10,13 +10,16 @@ namespace TeachMate.Domain
 {
     public class SearchClassDto
     {
-        public string TitleOrDesc { get; set; }
-        public Subject? Subject { get; set; } // Nullable enum
-        public int? GradeLevel { get; set; }
-        public DateOnly? StartOpenDate { get; set; }
-        public DateOnly? EndOpenDate { get; set; }
+        public string? TitleOrDesc { get; set; } = string.Empty;
+        public Subject Subject { get; set; } = Subject.None;
+        // Calculated in minutes
+        public int? GradeLevel { get; set; } = -1;
+        public DateOnly? StartOpenDate { get; set; } = default; //nguoi dung muon biet lop mo khi nao, trong khoang thoi gian nao
+        // 25/5 - 25/6 --> StartDate > StartdATE
+        public DateOnly? EndOpenDate { get; set; } = default;
         public int? MaximumLearners { get; set; }
         public ModuleType? ModuleType { get; set; }
-        public int? NumOfWeeks { get; set; }
+        public int? NumOfWeeks { get; set; } = 0;
+
     }
 }

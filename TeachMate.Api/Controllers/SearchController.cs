@@ -24,7 +24,7 @@ namespace TeachMate.Api
         /// </summary>
         [Authorize(Roles = CustomRoles.GeneralUser)]
         [HttpGet("Tutor/")]
-        public async Task<ActionResult<List<AppUser>>> Search(string DisplayName)
+        public async Task<ActionResult<List<AppUser>>> Search(string? DisplayName)
         {
             try
             {
