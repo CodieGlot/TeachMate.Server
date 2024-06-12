@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,20 @@ namespace TeachMate.Services
             _context = context;
         }
 
-        public async Task<List<AppUser>> Search(string DisplayName)
+        public async Task<List<AppUser>> Search(string? DisplayName)
         {
+            if(DisplayName.IsNullOrEmpty())
+            {
+                var tutorAll = await _context.Tutors
+                                       .Include(t => t.AppUser)
+                                       .Select(t => t.AppUser)
+                                       .ToListAsync();
+                if (tutorAll == null)
+                {
+                    throw new KeyNotFoundException("Tutor not found");
+                }
+                return tutorAll;
+            }
             // Retrieve the Tutor by ID
             var tutor = await _context.Tutors
                                        .Include(t => t.AppUser)

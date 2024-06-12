@@ -22,15 +22,16 @@ namespace TeachMate.Services
             if (!string.IsNullOrWhiteSpace(dto.TitleOrDesc))
             {
                 var trimmedSearchTerm = dto.TitleOrDesc.Trim().ToLower();
-                query = query.Where(m => m.Title.ToLower().Contains(trimmedSearchTerm) || m.Description.ToLower().Contains(trimmedSearchTerm));
+                query = query.Where((LearningModule m) => EF.Functions.Like(m.Title.ToLower(), $"%{trimmedSearchTerm}%") ||
+                                                           EF.Functions.Like(m.Description.ToLower(), $"%{trimmedSearchTerm}%"));
             }
 
-            if (dto.Subject != Subject.None)
+            if (dto.Subject != null && dto.Subject != Subject.None)
             {
                 query = query.Where(m => m.Subject == dto.Subject);
             }
 
-            if (dto.GradeLevel != null) // Only apply filter if gradeLevel is provided
+            if (dto.GradeLevel != null) 
             {
                 query = query.Where(m => m.GradeLevel == dto.GradeLevel);
             }
