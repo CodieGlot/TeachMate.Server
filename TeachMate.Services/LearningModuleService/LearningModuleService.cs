@@ -7,10 +7,12 @@ namespace TeachMate.Services;
 public class LearningModuleService : ILearningModuleService
 {
     private readonly DataContext _context;
+    private readonly IUserService _userService;
 
-    public LearningModuleService(DataContext context)
+    public LearningModuleService(DataContext context, IUserService userService)
     {
         _context = context;
+        _userService = userService;
     }
     public async Task<LearningModule?> GetLearningModuleById(int id)
     {
@@ -58,22 +60,22 @@ public class LearningModuleService : ILearningModuleService
 
         return user.Learner?.EnrolledModules ?? new List<LearningModule>();
     }
-    public async Task<LearningModule> EnrollLearningModule(AppUser user, int moduleId)
+    public async Task<LearningModule> EnrollLearningModule(Guid learnerId, int moduleId)
     {
-        var learningModule = await _context.LearningModules
-            .FirstOrDefaultAsync(x => x.Id == moduleId);
+        var learningModule = await GetLearningModuleById(moduleId);
 
+        var learner = await _userService.GetUserById(learnerId);
+        if (learner == null || learner.Learner == null)
+        {
+            throw new BadRequestException("Learner does not exist.");
+        }
         if (learningModule == null)
         {
             throw new BadRequestException("Module does not exist.");
         }
 
-        if (user.Learner != null)
-        {
-            learningModule.EnrolledLearners.Add(user.Learner);
-        }
-
-        _context.Update(learningModule);
+        learner.Learner.EnrolledModules.Add(learningModule);
+        _context.Update(learner);
         await _context.SaveChangesAsync();
 
         return learningModule;
@@ -159,6 +161,11 @@ public class LearningModuleService : ILearningModuleService
     }
     public async Task<LearningModuleRequest> CreateLearningModuleRequest(AppUser user, CreateLearningModuleRequestDto dto)
     {
+        var learningModule = await GetLearningModuleById(dto.LearningModuleId);
+        if (learningModule == null)
+        {
+            throw new BadRequestException("Module does not exist.");
+        }
         var request = new LearningModuleRequest
         {
             RequesterId = user.Id,
@@ -170,13 +177,23 @@ public class LearningModuleService : ILearningModuleService
             
         };
 
+        if (learningModule.MaximumLearners <= learningModule.EnrolledLearners.Count)
+        {
+            throw new Exception("The Classes is full");
+        }
         _context.LearningModuleRequests.Add(request);
         await _context.SaveChangesAsync();
 
         return request;
     }
+
     public async Task<LearningModuleRequest> UpdateRequestStatus(int requestId, UpdateRequestStatusDto dto)
     {
+        var learningModule = await GetLearningModuleById(dto.LearningModuleId);
+        if (learningModule == null)
+        {
+            throw new BadRequestException("Module does not exist.");
+        }
         var request = await _context.LearningModuleRequests
             .FirstOrDefaultAsync(x => x.Id == requestId);
 
@@ -184,10 +201,24 @@ public class LearningModuleService : ILearningModuleService
         {
             throw new BadRequestException("Request does not exist.");
         }
-
+        
         request.Status = dto.Status;
 
         _context.Update(request);
+
+        if (request.Status == RequestStatus.Rejected)
+        {
+            learningModule.LearningModuleRequests.Remove(request);
+        }else
+        if (learningModule.MaximumLearners <= learningModule.EnrolledLearners.Count)
+        {
+            throw new Exception("Class is full");
+        }else
+        if (request.Status == RequestStatus.Approved)
+        {
+            await EnrollLearningModule(request.RequesterId, request.LearningModuleId);
+            learningModule.LearningModuleRequests.Remove(request);
+        }
         await _context.SaveChangesAsync();
 
         return request;
