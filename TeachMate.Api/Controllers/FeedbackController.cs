@@ -88,5 +88,35 @@ namespace TeachMate.Api.Controllers
                 return StatusCode(500, $"An unexpected error occurred: {ex.Message}");
             }
         }
+
+        [Authorize(Roles = CustomRoles.GeneralUser)]
+        [HttpGet("GetFeedbacksByLearningModuleId/{moduleId}")]
+        public async Task<IActionResult> GetFeedbacksByLearningModuleId(int moduleId)
+        {
+            try
+            {
+                var feedbacks = await _feedbackService.GetFeedbacksByLearningModuleId(moduleId);
+                return Ok(feedbacks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An unexpected error occurred: {ex.Message}");
+            }
+        }
+
+        [Authorize(Roles = CustomRoles.GeneralUser)]
+        [HttpGet("GetAverageRatingByStar/{moduleId}")]
+        public async Task<IActionResult> GetAverageRatingByStar(int moduleId)
+        {
+            try
+            {
+                var averageRating = await _feedbackService.GetAverageRatingByStar(moduleId);
+                return Ok(averageRating);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An unexpected error occurred: {ex.Message}");
+            }
+        }
     }
 }
