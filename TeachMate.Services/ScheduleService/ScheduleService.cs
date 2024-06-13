@@ -9,11 +9,12 @@ public class ScheduleService : IScheduleService
 {
     private readonly DataContext _context;
     private readonly ILearningModuleService _learningModuleService;
-    public ScheduleService(DataContext context, ILearningModuleService learningModuleService)
+    private readonly IUserService _userService;
+    public ScheduleService(DataContext context, ILearningModuleService learningModuleService, IUserService userService)
     {
         _context = context;
         _learningModuleService = learningModuleService;
-
+        _userService = userService;
     }
 
     public async Task<LearningModule> AddWeeklySchedule(AddWeeklyScheduleDto dto)
@@ -46,9 +47,9 @@ public class ScheduleService : IScheduleService
         return learningModule;
     }
 
-    public async Task<LearningSession> CreateCustomLearningSession(CreateCustomLearningDto dto)
+    public async Task<LearningSession> CreateCustomLearningSession(CreateCustomLearningDto dto, AppUser user)
     {
-
+       
         LearningModule learningModule = await _learningModuleService.GetLearningModuleById(dto.LearningModuleId);
         if (learningModule == null) throw new NotFoundException("Can not found learning module");
         if (learningModule.ModuleType == ModuleType.Weekly)
@@ -64,6 +65,10 @@ public class ScheduleService : IScheduleService
             Title = dto.Title,
             LearningModule = learningModule
         };
+        if (await CheckDuplicateLearningSession(session, user))
+        {
+            throw new BadRequestException("Unable to schedule session. The selected time slot overlaps with an existing session in your schedule. Please choose a different time or consult your schedule for availability.");
+        }
         var count = await _context.LearningSessions.Where(x => x.LearningModuleId == learningModule.Id).CountAsync();
         session.Slot = count + 1;
         learningModule.Schedule.Add(session);
@@ -122,6 +127,76 @@ public class ScheduleService : IScheduleService
             .Select(u => u.Schedule).FirstAsync();
         return learningSessions;
     }
+
+    public async Task<List<LearningSession>> GetScheduleByTutor(AppUser tutor)
+    {
+        var learningSessions = await _context.LearningSessions
+            .Where(ls => ls.LearningModule.TutorId == tutor.Id) 
+            .OrderBy(ls => ls.Date) 
+            .ThenBy(ls => ls.StartTime) 
+            .Select(s => new LearningSession
+            {
+                Id = s.Id,
+                Slot = s.Slot,
+                Title = s.Title,
+                Date = s.Date,
+                StartTime = s.StartTime,
+                EndTime = s.EndTime,
+                LinkMeet = s.LinkMeet,
+                LearningModuleId = s.LearningModuleId
+            })
+            .ToListAsync();
+
+        return learningSessions;
+    }
+
+    public async Task<List<LearningSession>> GetScheduleByLearner(AppUser learner)
+    {
+        var learningModules = await _learningModuleService.GetAllEnrolledModules(learner);
+        var learningSessions = new List<LearningSession>();
+        var list = new List<LearningSession>();
+
+        foreach (var learningModule in learningModules)
+        {
+           list  = await _context.LearningSessions
+                .Where(x => x.LearningModule.Id == learningModule.Id)
+                .OrderBy(ls => ls.Date)
+                .ThenBy(ls => ls.StartTime)
+                 .Select(s => new LearningSession
+                 {
+                     Id = s.Id,
+                     Slot = s.Slot,
+                     Title = s.Title,
+                     Date = s.Date,
+                     StartTime = s.StartTime,
+                     EndTime = s.EndTime,
+                     LinkMeet = s.LinkMeet,
+                     LearningModuleId = s.LearningModuleId
+                 }).ToListAsync();
+            learningSessions.AddRange(list);
+        }
+         
+        return learningSessions;
+    }
+
+    public async Task<bool> CheckDuplicateLearningSession(LearningSession newSession, AppUser user)
+    {
+        var learningSessions = new List<LearningSession>();
+        if (user.Tutor != null)
+        {
+            learningSessions = await GetScheduleByTutor(user);
+        }
+        else if (user.Learner != null)
+        {
+            learningSessions = await GetScheduleByLearner(user);
+        };
+        return learningSessions.Any(x => x.Date == newSession.Date && ((newSession.StartTime <= x.EndTime) && (newSession.StartTime >= x.StartTime)) 
+        || ((newSession.EndTime >= x.StartTime) && (newSession.EndTime <= x.EndTime)) ||
+        ((newSession.StartTime <= x.StartTime) && (newSession.EndTime >= x.EndTime)));
+       
+    }
+
+
 
 
 }

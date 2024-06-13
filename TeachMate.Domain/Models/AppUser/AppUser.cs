@@ -17,4 +17,7 @@ public class AppUser
     public Learner? Learner { get; set; }
     public string PhoneNumber { get; set; } = "";
     public string Avatar { get; set; } = "";
+
+    List<LearningSession> LearningSessions { get; set; } = new List<LearningSession>();
+
 }

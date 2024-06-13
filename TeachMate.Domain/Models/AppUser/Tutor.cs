@@ -12,4 +12,6 @@ public class Tutor
     public AppUser AppUser { get; set; } = null!;
     public string Description {  get; set; } = string.Empty;
     public int GradeLevel { get; set; }
+
+    List<LearningSession> LearningSessions { get; set; } = new List<LearningSession>();
 }
