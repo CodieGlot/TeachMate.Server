@@ -14,4 +14,6 @@ public interface IScheduleService
     Task<LearningModule> UpdateWeeklyLearningSession(int id);
     Task<LearningSession> CreateCustomLearningSession(CreateCustomLearningDto dto);
     Task<List<LearningSession>> GetScheduleById(int id);
+    Task<LearningSession> UpdateCustomLearning(CreateCustomLearningDto dto);
+    Task<LearningSession> DeleteCustomLearningById(int id);
 }

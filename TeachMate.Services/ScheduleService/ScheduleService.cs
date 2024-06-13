@@ -9,6 +9,7 @@ public class ScheduleService : IScheduleService
 {
     private readonly DataContext _context;
     private readonly ILearningModuleService _learningModuleService;
+
     public ScheduleService(DataContext context, ILearningModuleService learningModuleService)
     {
         _context = context;
@@ -121,5 +122,38 @@ public class ScheduleService : IScheduleService
         return learningSessions;
     }
 
+    public async Task<LearningSession> UpdateCustomLearning(CreateCustomLearningDto dto)
+    {
+        var learningSession = await _context.LearningSessions.Where(u => u.Id == dto.Id).FirstOrDefaultAsync();
+        if (learningSession == null)
+        {
+            throw new Exception("Custom learning session not found");
+        }
+
+        learningSession.Title = string.IsNullOrEmpty(dto.Title) ? learningSession.Title : dto.Title;
+        learningSession.Date = dto.Date != default(DateOnly) ? learningSession.Date : dto.Date;
+        learningSession.StartTime = dto.StartTime != default(TimeOnly) ? dto.StartTime : learningSession.StartTime;
+        learningSession.EndTime = dto.EndTime != default(TimeOnly) ? dto.EndTime : learningSession.EndTime;
+        learningSession.LinkMeet = string.IsNullOrEmpty(dto.LinkMeet) ? learningSession.LinkMeet : dto.LinkMeet;
+
+        await _context.LearningSessions.AddAsync(learningSession);
+        return learningSession;
+    }
+
+    public async Task<LearningSession> DeleteCustomLearningById(int id)
+    {
+        var learningSession = await _context.LearningSessions
+                                            .Where(u => u.Id == id)
+                                            .FirstOrDefaultAsync();
+
+        if (learningSession == null)
+        {
+            throw new Exception("Custom learning session not found.");
+        }
+
+        _context.LearningSessions.Remove(learningSession);
+        await _context.SaveChangesAsync();
+        return learningSession;
+    }
 
 }
