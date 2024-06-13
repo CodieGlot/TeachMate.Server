@@ -18,6 +18,5 @@ public class AppUser
     public string PhoneNumber { get; set; } = "";
     public string Avatar { get; set; } = "";
 
-    List<LearningSession> LearningSessions { get; set; } = new List<LearningSession>();
 
 }
