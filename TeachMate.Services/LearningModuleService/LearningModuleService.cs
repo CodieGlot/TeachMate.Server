@@ -92,7 +92,7 @@ public class LearningModuleService : ILearningModuleService
             Duration = dto.Duration,
             CreatedAt = dto.CreatedAt,
             StartDate = dto.StartDate,
-            EndDate = dto.EndDate,
+            EndDate = dto.StartDate.AddDays(7 * dto.NumOfWeeks),
             MaximumLearners = dto.MaximumLearners,
             ModuleType = dto.ModuleType,
             //WeeklySchedule = dto.WeeklySchedule,
