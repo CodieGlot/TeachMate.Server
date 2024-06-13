@@ -12,8 +12,12 @@ public interface IScheduleService
 {
     Task<LearningModule> AddWeeklySchedule(AddWeeklyScheduleDto dto);
     Task<LearningModule> UpdateWeeklyLearningSession(int id);
-    Task<LearningSession> CreateCustomLearningSession(CreateCustomLearningDto dto);
+    Task<LearningSession> CreateCustomLearningSession(CreateCustomLearningDto dto, AppUser user);
     Task<List<LearningSession>> GetScheduleById(int id);
-    Task<LearningSession> UpdateCustomLearning(CreateCustomLearningDto dto);
-    Task<LearningSession> DeleteCustomLearningById(int id);
+    Task<LearningSession> UpdateLearningSession(CreateCustomLearningDto dto, AppUser user);
+    Task<LearningSession> DeleteLearningSessionById(int id);
+
+    Task<List<LearningSession>> GetScheduleByTutor(AppUser tutor);
+    Task<List<LearningSession>> GetScheduleByLearner(AppUser learner);
+    Task<bool> CheckDuplicateLearningSession(LearningSession newSession, AppUser user);
 }

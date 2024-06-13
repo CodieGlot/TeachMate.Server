@@ -11,7 +11,7 @@ public interface ILearningModuleService
     Task<List<LearningModuleRequest>> GetAllReceivedRequests(Guid tutorId);
     Task<LearningModule?> GetLearningModuleById(int id);
     Task<LearningModuleRequest?> GetRequestById(int id);
-    Task<LearningModuleRequest> UpdateRequestStatus(int requestId, UpdateRequestStatusDto dto);
+    Task<LearningModuleRequest> UpdateRequestStatus(UpdateRequestStatusDto dto);
     Task<LearningModuleRequest> CreateLearningModuleRequest(AppUser user, CreateLearningModuleRequestDto dto);
 
     Task<List<LearningModuleRequest>> GetAllReceivedRequests(int moduleId, Guid tutorId);

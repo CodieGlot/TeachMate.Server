@@ -11,12 +11,11 @@ namespace TeachMate.Api;
 public class ScheduleController : ControllerBase
 {
     private readonly IScheduleService _scheduleService;
-    private readonly IAdminService _adminService;   
-
-    public ScheduleController(IScheduleService scheduleService, IAdminService adminService)
+    private readonly IHttpContextService _contextService;
+    public ScheduleController(IScheduleService scheduleService, IHttpContextService contextService)
     {
         _scheduleService = scheduleService;
-        _adminService = adminService;
+        _contextService = contextService;
     }
 
     /// <summary>
@@ -46,7 +45,8 @@ public class ScheduleController : ControllerBase
     [HttpPost("CreateCustomLearning")]
     public async Task<ActionResult<LearningSession>> CreateCustomLearning(CreateCustomLearningDto dto)
     {
-        return Ok(await _scheduleService.CreateCustomLearningSession(dto));
+        var tutor = await _contextService.GetAppUserAndThrow();
+        return Ok(await _scheduleService.CreateCustomLearningSession(dto, tutor));
     }
 
     /// <summary>
@@ -60,22 +60,43 @@ public class ScheduleController : ControllerBase
     }
 
     /// <summary>
-    /// Update Custom Learning Session
+    /// Update Learning Session
     /// </summary>
     [Authorize(Roles = CustomRoles.Tutor)]
-    [HttpPost("UpdateCustomLearning")]
-    public async Task<ActionResult<LearningSession>> UpdateCustomLearning(CreateCustomLearningDto dto)
+    [HttpPost("UpdateLearningSession")]
+    public async Task<ActionResult<LearningSession>> UpdateLearningSession(CreateCustomLearningDto dto)
     {
-        return Ok(await _scheduleService.UpdateCustomLearning(dto));
+        var tutor = await _contextService.GetAppUserAndThrow();
+        return Ok(await _scheduleService.UpdateLearningSession(dto, tutor));
     }
 
     /// <summary>
-    /// Delete Custom Learning Session by ID
+    /// Delete Learning Session by ID
     /// </summary>
     [Authorize(Roles = CustomRoles.Tutor)]
-    [HttpPost("DeleteCustomLearningById")]
-    public async Task<ActionResult<LearningSession>> DeleteCustomLearningById(int id)
+    [HttpPost("DeleteLearningSessionById")]
+    public async Task<ActionResult<LearningSession>> DeleteLearningSessionById(int id)
     {
-        return Ok(await _scheduleService.DeleteCustomLearningById(id));
+        return Ok(await _scheduleService.DeleteLearningSessionById(id));
     }
+    /// <summary>
+    /// Get Schedule For Tutor
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpGet("GetScheduleByTutor")]
+    public async Task<ActionResult<LearningSession>> GetScheduleByTutor()
+    {
+        var tutor = await _contextService.GetAppUserAndThrow();
+        return Ok(await _scheduleService.GetScheduleByTutor(tutor));
+    }
+
+    [Authorize(Roles = CustomRoles.Learner)]
+    [HttpGet("GetScheduleByLearner")]
+    public async Task<ActionResult<LearningSession>> GetScheduleByLearner()
+    {
+        var learner = await _contextService.GetAppUserAndThrow();
+        return Ok(await _scheduleService.GetScheduleByLearner(learner));
+    }
+    
+
 }
