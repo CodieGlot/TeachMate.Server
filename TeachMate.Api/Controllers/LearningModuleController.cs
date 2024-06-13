@@ -132,9 +132,9 @@ public class LearningModuleController : ControllerBase
     /// Update Request Status
     /// </summary> 
     [Authorize(Roles = CustomRoles.Tutor)]
-    [HttpPut("Request/{requestId:int}/UpdateStatus")]
-    public async Task<ActionResult<LearningModuleRequest>> UpdateRequestStatus(int requestId, UpdateRequestStatusDto dto)
+    [HttpPut("Request/UpdateStatus")]
+    public async Task<ActionResult<LearningModuleRequest>> UpdateRequestStatus(UpdateRequestStatusDto dto)
     {
-        return Ok(await _learningModuleService.UpdateRequestStatus(requestId, dto));
+        return Ok(await _learningModuleService.UpdateRequestStatus(dto));
     }
 }

@@ -187,7 +187,7 @@ public class LearningModuleService : ILearningModuleService
         return request;
     }
 
-    public async Task<LearningModuleRequest> UpdateRequestStatus(int requestId, UpdateRequestStatusDto dto)
+    public async Task<LearningModuleRequest> UpdateRequestStatus(UpdateRequestStatusDto dto)
     {
         var learningModule = await GetLearningModuleById(dto.LearningModuleId);
         if (learningModule == null)
@@ -195,7 +195,7 @@ public class LearningModuleService : ILearningModuleService
             throw new BadRequestException("Module does not exist.");
         }
         var request = await _context.LearningModuleRequests
-            .FirstOrDefaultAsync(x => x.Id == requestId);
+            .FirstOrDefaultAsync(x => x.Id == dto.LearningRequestId);
 
         if (request == null)
         {
