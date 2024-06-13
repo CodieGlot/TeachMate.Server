@@ -10,7 +10,6 @@ public class CreateLearningModuleDto
     public int Duration { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateOnly StartDate { get; set; }
-    public DateOnly EndDate { get; set; }
     public int MaximumLearners { get; set; }
     public ModuleType ModuleType { get; set; }
     
