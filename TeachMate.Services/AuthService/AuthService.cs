@@ -14,15 +14,13 @@ public class AuthService : IAuthService
     private readonly IUserService _userService;
     private readonly IGoogleAuthService _googleAuthService;
     private readonly DataContext _context;
-    private readonly OtpService _OtpService;
-    public AuthService(IUserService userService, IConfigService configService, IHttpContextService httpContextService, IGoogleAuthService googleAuthService, DataContext context, OtpService otpService)
+    public AuthService(IUserService userService, IConfigService configService, IHttpContextService httpContextService, IGoogleAuthService googleAuthService, DataContext context)
     {
         _userService = userService;
         _configService = configService;
         _httpContextService = httpContextService;
         _googleAuthService = googleAuthService;
         _context = context;
-        _OtpService = otpService;
     }
     public async Task<AppUser> GetMe()
     {
@@ -158,27 +156,35 @@ public class AuthService : IAuthService
     }
     public async Task<ResponseDto> ForgetPassword(ForgetPasswordDto dto)
     {
-        var OtpCode =await  _context.UserOTPs.Where(p => p.OTP == dto.OTP ).Select(p => p.OTP).FirstOrDefaultAsync();
-        var email = await _context.UserOTPs.Where(p => p.OTP.Equals(dto.OTP)).Select(p => p.Gmail).FirstOrDefaultAsync();
-        var OtpAppUser = await _context.UserOTPs.Where(p => p.OTP == dto.OTP).FirstOrDefaultAsync();
-        var appUser = await _context.AppUsers.Where(p => p.Email.Equals(email)).FirstOrDefaultAsync();
-        if (!dto.OTP.Equals(OtpCode))
-        {
-            throw new BadRequestException("Wrong OTP");
-        }
-        else if (dto.NewPassword != dto.ConfirmPassword)
+        var appUser = await _context.AppUsers.Where(p => p.Email.Equals(dto.Email)).FirstOrDefaultAsync();
+
+        if (dto.NewPassword != dto.ConfirmPassword)
         {
             throw new BadRequestException("Confirm password fail");
-        } else if(OtpAppUser.ExpireAt <= DateTime.Now) {
-            throw new BadRequestException("the OTP has been expired");
         }
-        dto.NewPassword = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);      
+        dto.NewPassword = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
         appUser.Password = dto.NewPassword;
         _context.Update(appUser);
         await _context.SaveChangesAsync();
         return new ResponseDto("Change successfully");
     }
-    
+    public async Task<ResponseDto> VerifyOTP(VerifyOTPDto dto)
+    {
+        String OTP = dto.OTP1 + dto.OTP2 + dto.OTP3 + dto.OTP4;
+        var OtpCode = await _context.UserOTPs.Where(p => p.Gmail == dto.Email).Select(p => p.OTP).FirstOrDefaultAsync();
+        var OtpAppUser = await _context.UserOTPs.Where(p => p.OTP == OTP).FirstOrDefaultAsync();
+        var appUser = await _context.AppUsers.Where(p => p.Email.Equals(dto.Email)).FirstOrDefaultAsync();
+        if (!OTP.Equals(OtpCode))
+        {
+            throw new BadRequestException("Wrong OTP");
+        }
+        else if (OtpAppUser.ExpireAt <= DateTime.Now)
+        {
+            throw new BadRequestException("the OTP has been expired");
+        }
+        return new ResponseDto(" successfully");
+    }
+
 }
 
 

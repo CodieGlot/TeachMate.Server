@@ -19,6 +19,7 @@ public class DataContext : DbContext
             .HasForeignKey<Tutor>();
         modelBuilder.Entity<AppUser>()
             .HasOne(x => x.Learner)
+
             .WithOne(x => x.AppUser)
             .HasForeignKey<Learner>();
         modelBuilder.Entity<LearningModule>()
@@ -31,6 +32,8 @@ public class DataContext : DbContext
             .HasIndex(x => x.CreatedAt);
         modelBuilder.Entity<PushNotificationReceiver>()
             .HasKey(x => new { x.PushNotificationId, x.ReceiverId });
+       
+
     }
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<Tutor> Tutors { get; set; }
