@@ -35,7 +35,6 @@ public class ScheduleService : IScheduleService
             {
                 DayOfWeek = listWeeklySlotDto[i].DayOfWeek,
                 StartTime = listWeeklySlotDto[i].StartTime,
-                EndTime = listWeeklySlotDto[i].EndTime,
 
             };
             listWeeklySlot.Add(weeklySlot);
@@ -60,8 +59,8 @@ public class ScheduleService : IScheduleService
         LearningSession session = new LearningSession()
         {
             Date = dto.Date,
-            EndTime = dto.EndTime,
             StartTime = dto.StartTime,
+            EndTime = dto.StartTime.AddMinutes(learningModule.Duration),
             LinkMeet = "...",
             Title = dto.Title,
             LearningModule = learningModule
@@ -105,7 +104,7 @@ public class ScheduleService : IScheduleService
                 {
                     Date = dateMark.AddDays(((int)weeklySlotsOrdered[i].DayOfWeek - (int)startDayOfWeek + 7) % 7),
                     StartTime = weeklySlotsOrdered[i].StartTime,
-                    EndTime = weeklySlotsOrdered[i].EndTime,
+                    EndTime = weeklySlotsOrdered[i].StartTime.AddMinutes(learningModule.Duration),
                     Slot = ++slotCount,
                     Title = learningModule.Title + " Slot " + slotCount,
                     LinkMeet = "...",
@@ -143,7 +142,6 @@ public class ScheduleService : IScheduleService
             Title = string.IsNullOrEmpty(dto.Title) ? learningSession.Title : dto.Title,
             Date = dto.Date != default(DateOnly) ? dto.Date : learningSession.Date,
             StartTime = dto.StartTime != default(TimeOnly) ? dto.StartTime : learningSession.StartTime,
-            EndTime = dto.EndTime != default(TimeOnly) ? dto.EndTime : learningSession.EndTime,
             LinkMeet = string.IsNullOrEmpty(dto.LinkMeet) ? learningSession.LinkMeet : dto.LinkMeet,
             LearningModuleId = learningSession.LearningModuleId
         };
@@ -161,7 +159,6 @@ public class ScheduleService : IScheduleService
         learningSession.Title = tempLearningSession.Title;
         learningSession.Date = tempLearningSession.Date;
         learningSession.StartTime = tempLearningSession.StartTime;
-        learningSession.EndTime = tempLearningSession.EndTime;
         learningSession.LinkMeet = tempLearningSession.LinkMeet;
         await _context.SaveChangesAsync();
         return learningSession;
@@ -245,8 +242,7 @@ public class ScheduleService : IScheduleService
             learningSessions = await GetScheduleByLearner(user);
         };
         return learningSessions.Any(x => x.Date == newSession.Date && (((newSession.StartTime <= x.EndTime) && (newSession.StartTime >= x.StartTime)) 
-        || ((newSession.EndTime >= x.StartTime) && (newSession.EndTime <= x.EndTime)) ||
-        ((newSession.StartTime <= x.StartTime) && (newSession.EndTime >= x.EndTime))));
+        || ((newSession.EndTime >= x.StartTime) && (newSession.EndTime <= x.EndTime))));
        
     }
 

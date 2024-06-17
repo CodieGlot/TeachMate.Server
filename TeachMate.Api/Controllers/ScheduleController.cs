@@ -52,8 +52,8 @@ public class ScheduleController : ControllerBase
     /// <summary>
     /// Get Schedule by Id
     /// </summary>
-    [Authorize(Roles = CustomRoles.Tutor)]
-    [HttpPost("GetScheduleById")]
+    [Authorize(Roles = CustomRoles.GeneralUser)]
+    [HttpGet("GetScheduleById")]
     public async Task<ActionResult<LearningSession>> GetScheduleById(int id)
     {
         return Ok(await _scheduleService.GetScheduleById(id));
@@ -83,7 +83,7 @@ public class ScheduleController : ControllerBase
     /// Get Schedule For Tutor
     /// </summary>
     [Authorize(Roles = CustomRoles.Tutor)]
-    [HttpGet("GetScheduleByTutor")]
+    [HttpPost("GetScheduleByTutor")]
     public async Task<ActionResult<LearningSession>> GetScheduleByTutor()
     {
         var tutor = await _contextService.GetAppUserAndThrow();
@@ -91,7 +91,7 @@ public class ScheduleController : ControllerBase
     }
 
     [Authorize(Roles = CustomRoles.Learner)]
-    [HttpGet("GetScheduleByLearner")]
+    [HttpPost("GetScheduleByLearner")]
     public async Task<ActionResult<LearningSession>> GetScheduleByLearner()
     {
         var learner = await _contextService.GetAppUserAndThrow();
