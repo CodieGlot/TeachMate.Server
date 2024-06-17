@@ -41,6 +41,7 @@ namespace TeachMate.Services
 
                 // Concatenating the digits into a string
                 string randomNumberString = $"{digit1}{digit2}{digit3}{digit4}";
+                int number = digit1 * 1000 + digit2 * 100 + digit3 * 10 + digit4 * 1;
 
                 MailMessage message = new MailMessage();
                 message.From = new MailAddress(_emailConfig.AppEmail);
@@ -53,7 +54,7 @@ namespace TeachMate.Services
                     " <a href=\"\" style=\"font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600\">TeachMate</a>\r\n   " +
                     " </div>\r\n    <p style=\"font-size:1.1em\">Hi,</p>\r\n    " +
                     "<p>Thank you for choosing TeachMate. Use the following OTP to complete your procedures. OTP is valid for 2 minutes</p>\r\n   " +
-                   $"<h2 style=\"background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;\">{randomNumberString}</h2> " +
+                   $"<h2 style=\"background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;\">{number}</h2> " +
                     "<p style=\"font-size:0.9em;\">Regards,<br />TeachMate</p>\r\n   " +
                     " <hr style=\"border:none;border-top:1px solid #eee\" />\r\n  " +
                     "  <div style=\"float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300\">\r\n     " +
@@ -82,12 +83,13 @@ namespace TeachMate.Services
                     userOTP.Gmail = dto.Email;
                     userOTP.CreateAt = DateTime.Now;
                     userOTP.ExpireAt = DateTime.Now.AddMinutes(3);
+                    _context.Update(userOTP);
                 }
                 else if (userOTP == null)
                 {
                     await _context.UserOTPs.AddAsync(otp);
                 }
-                 _context.Update(userOTP);
+                
                 await _context.SaveChangesAsync();
                 smtpClient.Send(message);
                 return new ResponseDto("Send success");
