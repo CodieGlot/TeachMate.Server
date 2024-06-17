@@ -55,6 +55,7 @@ public class AuthService : IAuthService
             Username = dto.Username,
             DisplayName = dto.Username,
             Password = dto.Password,
+            Email=dto.Email,
             UserRole = dto.UserRole,
         };
 

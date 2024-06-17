@@ -39,7 +39,7 @@ namespace TeachMate.Api
             return Ok(await _information.UpdateLearnerDetail(user, dto));
         }
         [Authorize(Roles = CustomRoles.Tutor)]
-        [HttpPut("Tutor/UpdateLearnerDetail")]
+        [HttpPut("Tutor/UpdateTutorDetail")]
         public async Task<ActionResult<AppUser>> UpdateTutorDetail(UpdateTutorDetailDto dto) {
             var user = await _contextService.GetAppUserAndThrow();
             return Ok(await _information.UpdateTutorDetail(user,dto));

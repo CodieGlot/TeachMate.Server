@@ -34,6 +34,7 @@ public class DataContext : DbContext
             .HasKey(x => new { x.PushNotificationId, x.ReceiverId });
        
 
+        modelBuilder.Entity<AppUser>().HasIndex(x => x.Email).IsUnique();
     }
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<Tutor> Tutors { get; set; }

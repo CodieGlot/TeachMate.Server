@@ -58,8 +58,29 @@ public class ScheduleController : ControllerBase
     {
         return Ok(await _scheduleService.GetScheduleById(id));
     }
+
     /// <summary>
-    /// Get Schedule by Id
+    /// Update Learning Session
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpPost("UpdateLearningSession")]
+    public async Task<ActionResult<LearningSession>> UpdateLearningSession(CreateCustomLearningDto dto)
+    {
+        var tutor = await _contextService.GetAppUserAndThrow();
+        return Ok(await _scheduleService.UpdateLearningSession(dto, tutor));
+    }
+
+    /// <summary>
+    /// Delete Learning Session by ID
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpPost("DeleteLearningSessionById")]
+    public async Task<ActionResult<LearningSession>> DeleteLearningSessionById(int id)
+    {
+        return Ok(await _scheduleService.DeleteLearningSessionById(id));
+    }
+    /// <summary>
+    /// Get Schedule For Tutor
     /// </summary>
     [Authorize(Roles = CustomRoles.Tutor)]
     [HttpPost("GetScheduleByTutor")]
