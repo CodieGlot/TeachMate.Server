@@ -52,7 +52,10 @@ namespace TeachMate.Services.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+
+
                         .HasColumnType("nvarchar(450)");
+
 
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("bit");
@@ -72,11 +75,15 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("Id");
 
+
+                    b.ToTable("AppUsers", (string)null);
+
                     b.HasIndex("Email")
                         .IsUnique()
                         .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("AppUsers");
+
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Dislike", b =>
@@ -99,7 +106,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("LearningModuleFeedbackId");
 
-                    b.ToTable("Dislikes");
+                    b.ToTable("Dislikes", (string)null);
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Learner", b =>
@@ -220,7 +227,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("LearningModuleId");
 
-                    b.ToTable("LearningModuleFeedbacks");
+                    b.ToTable("LearningModuleFeedbacks", (string)null);
                 });
 
             modelBuilder.Entity("TeachMate.Domain.LearningModuleRequest", b =>
@@ -324,7 +331,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("LearningModuleFeedbackId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("Likes", (string)null);
                 });
 
             modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
@@ -394,7 +401,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tutors");
+                    b.ToTable("Tutors", (string)null);
                 });
 
             modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
@@ -421,7 +428,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("UserOTPs");
+                    b.ToTable("UserOTPs", (string)null);
                 });
 
             modelBuilder.Entity("TeachMate.Domain.WeeklySchedule", b =>
@@ -464,6 +471,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("WeeklyScheduleId");
 
+                    b.ToTable("WeeklySlots", (string)null);
                     b.ToTable("WeeklySlots");
                 });
 

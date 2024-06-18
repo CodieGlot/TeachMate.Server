@@ -129,7 +129,6 @@ builder.Services.Configure<MomoConfig>(builder.Configuration.GetSection("Momo"))
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<IHttpContextService, HttpContextService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -144,8 +143,6 @@ builder.Services.AddScoped<IUserDetailService, UserDetailService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
 builder.Services.AddScoped<IEmailOtp, EmailOTPService>();
-builder.Services.AddScoped<IOtpService, OtpService>();
-builder.Services.AddScoped<OtpService>();
 
 builder.Services.AddScoped<IZaloPayService, ZaloPayService>();
 builder.Services.AddScoped<IMomoService, MomoService>();
