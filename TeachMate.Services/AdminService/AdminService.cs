@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeachMate.Domain;
+using TeachMate.Domain.DTOs.SearchDto;
 
 namespace TeachMate.Services;
 
@@ -30,16 +31,31 @@ public class AdminService : IAdminService
         return appUser;
     }
 
-    public async Task<List<AppUser>> GetUserDisable(UserRole userrole)
+    public async Task<List<AppUser>> SearchUser(SearchUserDto dto)
     {
-        var appUser = await _context.AppUsers
-                            .Where(u => u.IsDisabled && u.UserRole == userrole)
-                            .ToListAsync();
+        var query = _context.AppUsers.AsQueryable();
 
-        foreach (var user in appUser)
+        if (!string.IsNullOrWhiteSpace(dto.DisplayName))
         {
-            Console.WriteLine(user);
+            var trimmedSearchTerm = dto.DisplayName.Trim().ToLower();
+            query = query.Where(m => EF.Functions.Like(m.DisplayName.ToLower(), $"%{trimmedSearchTerm}%"));
         }
-        return appUser;
+
+        if (!string.IsNullOrWhiteSpace(dto.UserName))
+        {
+            var trimmedSearchTerm = dto.UserName.Trim().ToLower();
+            query = query.Where(m => EF.Functions.Like(m.Username.ToLower(), $"%{trimmedSearchTerm}%"));
+        }
+
+        if (dto.UserRole != null)
+        {
+            query = query.Where(m => m.UserRole == dto.UserRole);
+        }
+
+        if (dto.IsDisable.HasValue)
+        {
+            query = query.Where(m => m.IsDisabled == dto.IsDisable);
+        }
+        return await query.ToListAsync();
     }
 }
