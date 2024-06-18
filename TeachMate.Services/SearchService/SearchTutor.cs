@@ -22,9 +22,8 @@ namespace TeachMate.Services
         {
             if(DisplayName.IsNullOrEmpty())
             {
-                var tutorAll = await _context.Tutors
-                                       .Include(t => t.AppUser)
-                                       .Select(t => t.AppUser)
+                var tutorAll = await _context.AppUsers
+                                       .Include(t => t.Tutor)
                                        .ToListAsync();
                 if (tutorAll == null)
                 {
@@ -33,10 +32,9 @@ namespace TeachMate.Services
                 return tutorAll;
             }
             // Retrieve the Tutor by ID
-            var tutor = await _context.Tutors
-                                       .Include(t => t.AppUser)
-                                       .Where(t => t.AppUser.DisplayName.ToLower().Contains(DisplayName.ToLower()))
-                                       .Select(t => t.AppUser)
+            var tutor = await _context.AppUsers
+                                       .Include(t => t.Tutor)
+                                       .Where(t => t.DisplayName.ToLower().Contains(DisplayName.ToLower()))
                                        .ToListAsync();
 
             // Check if the tutor is found
