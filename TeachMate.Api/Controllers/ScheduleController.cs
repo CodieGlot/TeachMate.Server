@@ -43,7 +43,7 @@ public class ScheduleController : ControllerBase
     /// </summary>
     [Authorize(Roles = CustomRoles.Tutor)]
     [HttpPost("CreateCustomLearning")]
-    public async Task<ActionResult<LearningSession>> CreateCustomLearning(CreateCustomLearningDto dto)
+    public async Task<ActionResult<LearningSession>> CreateCustomLearning(CreateCustomLearningSessionDto dto)
     {
         var tutor = await _contextService.GetAppUserAndThrow();
         return Ok(await _scheduleService.CreateCustomLearningSession(dto, tutor));
@@ -54,7 +54,7 @@ public class ScheduleController : ControllerBase
     /// </summary>
     [Authorize(Roles = CustomRoles.GeneralUser)]
     [HttpGet("GetScheduleById")]
-    public async Task<ActionResult<LearningSession>> GetScheduleById(int id)
+    public async Task<ActionResult<List<LearningSession>>> GetScheduleById(int id)
     {
         return Ok(await _scheduleService.GetScheduleById(id));
     }
@@ -63,7 +63,7 @@ public class ScheduleController : ControllerBase
     /// </summary>
     [Authorize(Roles = CustomRoles.Tutor)]
     [HttpPost("GetScheduleByTutor")]
-    public async Task<ActionResult<LearningSession>> GetScheduleByTutor()
+    public async Task<ActionResult<List<LearningSession>>> GetScheduleByTutor()
     {
         var tutor = await _contextService.GetAppUserAndThrow();
         return Ok(await _scheduleService.GetScheduleByTutor(tutor));
@@ -71,11 +71,26 @@ public class ScheduleController : ControllerBase
 
     [Authorize(Roles = CustomRoles.Learner)]
     [HttpPost("GetScheduleByLearner")]
-    public async Task<ActionResult<LearningSession>> GetScheduleByLearner()
+    public async Task<ActionResult<List<LearningSession>>> GetScheduleByLearner()
     {
         var learner = await _contextService.GetAppUserAndThrow();
         return Ok(await _scheduleService.GetScheduleByLearner(learner));
     }
-    
+
+    [Authorize(Roles = CustomRoles.GeneralUser)]
+    [HttpGet("GetLearningSessionById")]
+    public async Task<ActionResult<LearningSession>> GetLearningSessionById(int id)
+    {
+        return Ok(await _scheduleService.GetLearningSessionById(id));
+    }
+
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpPost("CreateFreeLearningSession")]
+    public async Task<ActionResult<LearningSession>> CreateFreeLearningSession(CreateCustomLearningSessionDto dto)
+    {
+        var tutor = await _contextService.GetAppUserAndThrow();
+
+        return Ok(await _scheduleService.CreateFreeLearningSession(dto, tutor));
+    }
 
 }
