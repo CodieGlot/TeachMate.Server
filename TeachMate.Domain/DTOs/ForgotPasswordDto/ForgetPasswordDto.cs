@@ -8,7 +8,7 @@ namespace TeachMate.Domain
 {
     public class ForgetPasswordDto
     {
-       public String OTP { get; set; }
+       public String Email { get; set; }
        public String NewPassword { get; set; } 
        public String ConfirmPassword { get; set; }
     }

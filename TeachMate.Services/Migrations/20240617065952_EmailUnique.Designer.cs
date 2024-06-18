@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeachMate.Services;
 
@@ -11,9 +12,11 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240617065952_EmailUnique")]
+    partial class EmailUnique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,10 +55,7 @@ namespace TeachMate.Services.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-
-
                         .HasColumnType("nvarchar(450)");
-
 
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("bit");
@@ -75,15 +75,11 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("Id");
 
-
-                    b.ToTable("AppUsers", (string)null);
-
                     b.HasIndex("Email")
                         .IsUnique()
                         .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("AppUsers");
-
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Dislike", b =>
@@ -106,7 +102,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("LearningModuleFeedbackId");
 
-                    b.ToTable("Dislikes", (string)null);
+                    b.ToTable("Dislikes");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Learner", b =>
@@ -227,7 +223,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("LearningModuleId");
 
-                    b.ToTable("LearningModuleFeedbacks", (string)null);
+                    b.ToTable("LearningModuleFeedbacks");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.LearningModuleRequest", b =>
@@ -331,7 +327,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("LearningModuleFeedbackId");
 
-                    b.ToTable("Likes", (string)null);
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
@@ -401,7 +397,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tutors", (string)null);
+                    b.ToTable("Tutors");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.UserOTP", b =>
@@ -428,7 +424,7 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("UserOTPs", (string)null);
+                    b.ToTable("UserOTPs");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.WeeklySchedule", b =>
@@ -471,7 +467,6 @@ namespace TeachMate.Services.Migrations
 
                     b.HasIndex("WeeklyScheduleId");
 
-                    b.ToTable("WeeklySlots", (string)null);
                     b.ToTable("WeeklySlots");
                 });
 

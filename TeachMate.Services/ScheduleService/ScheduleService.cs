@@ -9,6 +9,7 @@ public class ScheduleService : IScheduleService
 {
     private readonly DataContext _context;
     private readonly ILearningModuleService _learningModuleService;
+
     private readonly IUserService _userService;
     public ScheduleService(DataContext context, ILearningModuleService learningModuleService, IUserService userService)
     {
@@ -127,6 +128,57 @@ public class ScheduleService : IScheduleService
         return learningSessions;
     }
 
+    public async Task<LearningSession> UpdateLearningSession(CreateCustomLearningDto dto, AppUser user)
+    {
+        var learningSession = await _context.LearningSessions.Where(u => u.Id == dto.Id).FirstOrDefaultAsync();
+        if (learningSession == null)
+        {
+            throw new Exception("Custom learning session not found");
+        }
+
+        var tempLearningSession = new LearningSession
+        {
+            Id = learningSession.Id,
+            Title = string.IsNullOrEmpty(dto.Title) ? learningSession.Title : dto.Title,
+            Date = dto.Date != default(DateOnly) ? dto.Date : learningSession.Date,
+            StartTime = dto.StartTime != default(TimeOnly) ? dto.StartTime : learningSession.StartTime,
+            LinkMeet = string.IsNullOrEmpty(dto.LinkMeet) ? learningSession.LinkMeet : dto.LinkMeet,
+            LearningModuleId = learningSession.LearningModuleId
+        };
+
+        var tempDate = learningSession.Date;
+        learningSession.Date = DateOnly.MinValue;
+        await _context.SaveChangesAsync();
+
+        if (await CheckDuplicateLearningSession(tempLearningSession, user))
+        {
+            learningSession.Date = tempDate;
+            await _context.SaveChangesAsync();
+            throw new BadRequestException("Unable to schedule session. The selected time slot overlaps with an existing session in your schedule. Please choose a different time or consult your schedule for availability.");
+        }
+        learningSession.Title = tempLearningSession.Title;
+        learningSession.Date = tempLearningSession.Date;
+        learningSession.StartTime = tempLearningSession.StartTime;
+        learningSession.LinkMeet = tempLearningSession.LinkMeet;
+        await _context.SaveChangesAsync();
+        return learningSession;
+    }
+
+    public async Task<LearningSession> DeleteLearningSessionById(int id)
+    {
+        var learningSession = await _context.LearningSessions
+                                            .Where(u => u.Id == id)
+                                            .FirstOrDefaultAsync();
+
+        if (learningSession == null)
+        {
+            throw new Exception("Custom learning session not found.");
+        }
+
+        _context.LearningSessions.Remove(learningSession);
+        await _context.SaveChangesAsync();
+        return learningSession;
+    }
     public async Task<List<LearningSession>> GetScheduleByTutor(AppUser tutor)
     {
         var learningSessions = await _context.LearningSessions

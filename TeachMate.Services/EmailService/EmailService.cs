@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Mail;
 using TeachMate.Domain;
 
+
 namespace TeachMate.Services;
 public class EmailService : IEmailService
 {
