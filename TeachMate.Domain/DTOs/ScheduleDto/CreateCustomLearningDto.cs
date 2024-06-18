@@ -8,7 +8,7 @@ namespace TeachMate.Domain.DTOs.ScheduleDto
 {
     public class CreateCustomLearningSessionDto
     { 
-
+        public int Id { get; set; }
         public string Title { get; set; }
         public DateOnly Date { get; set; }
         public TimeOnly StartTime { get; set; }

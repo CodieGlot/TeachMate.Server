@@ -9,8 +9,7 @@ namespace TeachMate.Api.Validators.UserValidator
             RuleFor(x => x.NewPassword)
                     .NotEmpty()
                     .Length(6,15);
-            RuleFor(x => x.OTP)
-                .NotEmpty();
+            
             RuleFor(x => x.ConfirmPassword)
                 .NotEmpty();
         }

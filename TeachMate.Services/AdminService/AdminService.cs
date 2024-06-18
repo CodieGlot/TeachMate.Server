@@ -18,7 +18,9 @@ public class AdminService : IAdminService
     }
     public async Task<List<AppUser>> GetAllUser()
     {
-        var appUser = await _context.AppUsers.ToListAsync();
+        var appUser = await _context.AppUsers
+            .Where(user => user.UserRole != UserRole.Admin)
+            .ToListAsync();
 
         appUser.ForEach(user => Console.WriteLine(user));
         foreach (var user in appUser)
