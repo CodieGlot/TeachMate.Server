@@ -47,7 +47,7 @@ public class ScheduleService : IScheduleService
         return learningModule;
     }
 
-    public async Task<LearningSession> CreateCustomLearningSession(CreateCustomLearningDto dto, AppUser user)
+    public async Task<LearningSession> CreateCustomLearningSession(CreateCustomLearningSessionDto dto, AppUser user)
     {
        
         LearningModule learningModule = await _learningModuleService.GetLearningModuleById(dto.LearningModuleId);
@@ -128,7 +128,7 @@ public class ScheduleService : IScheduleService
         return learningSessions;
     }
 
-    public async Task<LearningSession> UpdateLearningSession(CreateCustomLearningDto dto, AppUser user)
+    public async Task<LearningSession> UpdateLearningSession(CreateCustomLearningSessionDto dto, AppUser user)
     {
         var learningSession = await _context.LearningSessions.Where(u => u.Id == dto.Id).FirstOrDefaultAsync();
         if (learningSession == null)
@@ -246,7 +246,41 @@ public class ScheduleService : IScheduleService
        
     }
 
+    public async Task<LearningSession> GetLearningSessionById(int id)
+    {
+        var learningSession = await _context.LearningSessions.Where(x => x.Id == id).Include(x => x.LearningModule).FirstOrDefaultAsync();
 
+        if (learningSession == null) throw new NotFoundException("Learning Session not found");
+        return learningSession;
+    }
 
+    public async Task<LearningSession> CreateFreeLearningSession(CreateCustomLearningSessionDto dto, AppUser user)
+    {
+        LearningModule learningModule = await _learningModuleService.GetLearningModuleById(dto.LearningModuleId);
+        if (learningModule == null) throw new NotFoundException("Can not found learning module");
+        if (dto.Date >= learningModule.StartDate) throw new BadRequestException("Free learning session must be scheduled before the start date of learning module");
+
+        LearningSession session = new LearningSession()
+        {
+            Date = dto.Date,
+            StartTime = dto.StartTime,
+            EndTime = dto.StartTime.AddMinutes(learningModule.Duration),
+            LinkMeet = dto.LinkMeet,
+            Title = dto.Title,
+            LearningModule = learningModule
+        };
+        if (await CheckDuplicateLearningSession(session, user))
+        {
+            throw new BadRequestException("Unable to schedule this free session. The selected time slot overlaps with an existing session in your schedule. Please choose a different time or consult your schedule for availability.");
+        }
+        var count = await _context.LearningSessions.Where(x => x.LearningModuleId == learningModule.Id).CountAsync();
+        session.Slot = count + 1;
+        learningModule.Schedule.Add(session);
+        _context.Update(learningModule);
+        await _context.SaveChangesAsync();
+        return session;
+    }
+
+    
 
 }
