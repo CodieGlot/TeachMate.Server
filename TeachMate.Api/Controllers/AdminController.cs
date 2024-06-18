@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeachMate.Domain;
+using TeachMate.Domain.DTOs.SearchDto;
 using TeachMate.Services;
 
 namespace TeachMate.Api;
@@ -22,27 +23,27 @@ public class AdminController : ControllerBase
     /// Get all user
     /// </summary>
     [Authorize(Roles = CustomRoles.Admin)]
-    [HttpPost("GetAllUser")]
-    public async Task<ActionResult<AppUser>> GetUser()
+    [HttpGet("GetAllUser")]
+    public async Task<ActionResult<List<AppUser>>> GetAllUser()
     {
         return Ok(await _adminService.GetAllUser());
     }
 
     /// <summary>
-    /// Get user is disable
+    /// Search User
     /// </summary>
     [Authorize(Roles = CustomRoles.Admin)]
-    [HttpPost("GetUserDisable")]
-    public async Task<ActionResult<AppUser>> GetUserDisable(UserRole userRole)
+    [HttpPost("SearchUser")]
+    public async Task<ActionResult<List<AppUser>>> SearchUser(SearchUserDto dto)
     {
-        return Ok(await _adminService.GetUserDisable(userRole));
+        return Ok(await _adminService.SearchUser(dto));
     }
 
     /// <summary>
     /// Disable user
     /// </summary>
     [Authorize(Roles = CustomRoles.Admin)]
-    [HttpPost("DisableUser")]
+    [HttpPut("DisableUser")]
     public async Task<ActionResult<AppUser>> DisableUser(Guid Id)
     {
         return Ok(await _userService.DisableUser(Id));
