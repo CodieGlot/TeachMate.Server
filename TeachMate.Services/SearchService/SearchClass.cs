@@ -31,27 +31,31 @@ namespace TeachMate.Services
                 query = query.Where(m => m.Subject == dto.Subject);
             }
 
-            if (dto.GradeLevel != null) 
+            if (dto.GradeLevel != null && dto.GradeLevel != -1) 
             {
                 query = query.Where(m => m.GradeLevel == dto.GradeLevel);
             }
 
-            if (dto.StartOpenDate != null && dto.EndOpenDate != null)
+            if (dto.StartOpenDate != null)
             {
-                query = query.Where(m => m.StartDate >= dto.StartOpenDate && m.EndDate <= dto.EndOpenDate);
-            }
+                query = query.Where(m => m.StartDate >= dto.StartOpenDate);
+            } 
 
-            if (dto.MaximumLearners != null)
+            if (dto.EndOpenDate != null)
+            {
+                query = query.Where(m => m.EndDate <= dto.EndOpenDate);
+            }
+            if (dto.MaximumLearners != null && dto.MaximumLearners != -1)
             {
                 query = query.Where(m => m.MaximumLearners <= dto.MaximumLearners);
             }
 
-            if (dto.ModuleType != null)
+            if (dto.ModuleType != null && dto.ModuleType != ModuleType.None)
             {
                 query = query.Where(m => m.ModuleType == dto.ModuleType);
             }
 
-            if (dto.NumOfWeeks != null)
+            if (dto.NumOfWeeks != null && dto.NumOfWeeks != -1)
             {
                 query = query.Where(m => m.NumOfWeeks == dto.NumOfWeeks);
             }
