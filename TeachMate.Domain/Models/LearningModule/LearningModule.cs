@@ -28,8 +28,12 @@ public class LearningModule
     public List<Learner> EnrolledLearners { get; set; } = new List<Learner>();
     public ModuleType ModuleType { get; set; }
     public int NumOfWeeks { get; set; }
+    public double Price { get; set; } = 0;
 
+    public PaymentType PaymentType { get; set; } = PaymentType.Session;
     public WeeklySchedule? WeeklySchedule { get; set; }
 
+    public List<LearningModulePaymentOrder> LearningModulePaymentOrder { get; set; } = new List<LearningModulePaymentOrder>();
+    
     public List<LearningModuleRequest> LearningModuleRequests { get; set; } = new List<LearningModuleRequest>();
 }
