@@ -212,10 +212,10 @@ public class LearningModuleService : ILearningModuleService
 
         _context.Update(request);
 
-        if (request.Status == RequestStatus.Rejected)
-        {
-            learningModule.LearningModuleRequests.Remove(request);
-        }else
+        //if (request.Status == RequestStatus.Rejected)
+        //{
+        //    learningModule.LearningModuleRequests.Remove(request);
+        //}else
         if (learningModule.MaximumLearners <= learningModule.EnrolledLearners.Count)
         {
             throw new Exception("Class is full");
@@ -223,7 +223,7 @@ public class LearningModuleService : ILearningModuleService
         if (request.Status == RequestStatus.Approved)
         {
             await EnrollLearningModule(request.RequesterId, request.LearningModuleId);
-            learningModule.LearningModuleRequests.Remove(request);
+            //learningModule.LearningModuleRequests.Remove(request);
         }
         await _context.SaveChangesAsync();
 
