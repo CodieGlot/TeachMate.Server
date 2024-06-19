@@ -1,4 +1,6 @@
-﻿namespace TeachMate.Domain;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TeachMate.Domain;
 public class LearningSession
 {
     public int Id { get; set; }
@@ -11,5 +13,5 @@ public class LearningSession
 
     public LearningModule LearningModule{ get; set; }
     public int LearningModuleId { get; set; }
-
+    [NotMapped] public string LearningModuleName { get; set; }
 }
