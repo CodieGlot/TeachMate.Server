@@ -44,8 +44,8 @@ public class AuthService : IAuthService
     public async Task<LoginPayloadDto> Signup(CreateUserDto dto)
     {
         var user = await _userService.GetUserByUsernameOrEmail(dto.Username);
-
-        if (user != null)
+        var userByEmail = await _userService.GetUserByUsernameOrEmail(dto.Email);
+        if (user != null || userByEmail != null)
         {
             throw new ConflictException("Username or Email already exists.");
         }
