@@ -125,6 +125,10 @@ public class ScheduleService : IScheduleService
         var learningSessions =await _context.LearningModules
             .Where(u => u.Id == id)
             .Select(u => u.Schedule).FirstAsync();
+        foreach (var learningSession in learningSessions)
+        {
+            learningSession.LearningModuleName = (await _learningModuleService.GetLearningModuleById(learningSession.LearningModuleId)).Title;
+        }
         return learningSessions;
     }
 
@@ -194,7 +198,8 @@ public class ScheduleService : IScheduleService
                 StartTime = s.StartTime,
                 EndTime = s.EndTime,
                 LinkMeet = s.LinkMeet,
-                LearningModuleId = s.LearningModuleId
+                LearningModuleId = s.LearningModuleId,
+                  LearningModuleName = s.LearningModule.Title
             })
             .ToListAsync();
 
@@ -222,7 +227,9 @@ public class ScheduleService : IScheduleService
                      StartTime = s.StartTime,
                      EndTime = s.EndTime,
                      LinkMeet = s.LinkMeet,
-                     LearningModuleId = s.LearningModuleId
+                     LearningModuleId = s.LearningModuleId,
+                     LearningModuleName = s.LearningModule.Title
+                     
                  }).ToListAsync();
             learningSessions.AddRange(list);
         }

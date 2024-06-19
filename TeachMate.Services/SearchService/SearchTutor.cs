@@ -24,6 +24,7 @@ namespace TeachMate.Services
             {
                 var tutorAll = await _context.AppUsers
                                        .Include(t => t.Tutor)
+                                       .Where(x => x.UserRole==UserRole.Tutor)
                                        .ToListAsync();
                 if (tutorAll == null)
                 {
