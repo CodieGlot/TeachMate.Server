@@ -166,6 +166,12 @@ public class LearningModuleService : ILearningModuleService
         {
             throw new BadRequestException("Module does not exist.");
         }
+        var requestOld = _context.LearningModuleRequests.Where(x => x.LearningModuleId == dto.LearningModuleId && x.RequesterId == user.Id).FirstOrDefault();
+        if (requestOld != null)
+        {
+            throw new BadRequestException("You have already requested this class.");
+
+        }
         var request = new LearningModuleRequest
         {
             RequesterId = user.Id,
