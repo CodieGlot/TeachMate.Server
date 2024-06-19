@@ -20,7 +20,7 @@ namespace TeachMate.Services
 
         public async Task<List<AppUser>> Search(string? DisplayName)
         {
-            if(DisplayName.IsNullOrEmpty())
+            if (DisplayName.IsNullOrEmpty())
             {
                 var tutorAll = await _context.AppUsers
                                        .Include(t => t.Tutor)
