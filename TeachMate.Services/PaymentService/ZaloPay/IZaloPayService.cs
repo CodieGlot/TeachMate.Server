@@ -1,5 +1,6 @@
-﻿
+﻿using TeachMate.Domain;
+
 public interface IZaloPayService
 {
-    Task<string> TestZaloPay();
+    Task<OrderUrlResponseDto> CreateZaloPayOrder(double amount);
 }

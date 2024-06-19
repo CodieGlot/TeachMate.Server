@@ -12,7 +12,7 @@ public class MomoService : IMomoService
     {
         _momoConfig = momoConfig.Value;
     }
-    public async Task<string> MomoTest()
+    public async Task<OrderUrlResponseDto> CreateMomoOrder(double amount)
     {
         Guid myuuid = Guid.NewGuid();
         string myuuidAsString = myuuid.ToString();
@@ -26,7 +26,7 @@ public class MomoService : IMomoService
             partnerCode = "MOMO",
             redirectUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b",
             ipnUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b",
-            amount = 5000,
+            amount = amount,
             orderId = myuuidAsString,
             requestId = myuuidAsString,
             requestType = "payWithMethod",
@@ -47,8 +47,11 @@ public class MomoService : IMomoService
             var quickPayResponse = await client.PostAsync("https://test-payment.momo.vn/v2/gateway/api/create", httpContent);
             var contents = await quickPayResponse.Content.ReadAsStringAsync();
 
-            Console.WriteLine(contents);
-            return contents;
+            var paymentInfo = JsonSerializer.Deserialize<MomoPaymentInfo>(contents);
+
+            return paymentInfo != null && paymentInfo.RequestId != Guid.Empty && paymentInfo.ResultCode == 0
+                ? new OrderUrlResponseDto(paymentInfo.PayUrl)
+                : throw new ExternalServiceException("Momo Service not working.");
         }
     }
 

@@ -1,7 +1,9 @@
 ﻿
+using TeachMate.Domain;
+
 namespace TeachMate.Services;
 
 public interface IMomoService
 {
-    Task<string> MomoTest();
+    Task<OrderUrlResponseDto> CreateMomoOrder(double amount);
 }

@@ -11,14 +11,13 @@ public class PaymentService : IPaymentService
         _zaloPayService = zaloPayService;
         _momoService = momoService;
     }
-    public async Task<ResponseDto> TestZaloPay()
+    public async Task<OrderUrlResponseDto> CreateOrderUrl(double amount, PaymentProviderType type)
     {
-        var result = await _zaloPayService.TestZaloPay();
-        return new ResponseDto(result);
-    }
-    public async Task<ResponseDto> TestMomo()
-    {
-        var result = await _momoService.MomoTest();
-        return new ResponseDto(result);
+        return type switch
+        {
+            PaymentProviderType.ZaloPay => await _zaloPayService.CreateZaloPayOrder(amount),
+            PaymentProviderType.Momo => await _momoService.CreateMomoOrder(amount),
+            _ => throw new NotImplementedException(),
+        };
     }
 }
