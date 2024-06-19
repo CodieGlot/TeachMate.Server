@@ -3,6 +3,5 @@
 namespace TeachMate.Services;
 public interface IPaymentService
 {
-    Task<ResponseDto> TestMomo();
-    Task<ResponseDto> TestZaloPay();
+    Task<OrderUrlResponseDto> CreateOrderUrl(double amount, PaymentProviderType type);
 }

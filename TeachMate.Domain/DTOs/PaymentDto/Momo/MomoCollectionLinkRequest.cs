@@ -5,7 +5,7 @@ public class MomoCollectionLinkRequest
     public string partnerCode { get; set; }
     public string redirectUrl { get; set; }
     public string ipnUrl { get; set; }
-    public long amount { get; set; }
+    public double amount { get; set; }
     public string orderId { get; set; }
     public string requestId { get; set; }
     public string extraData { get; set; }
