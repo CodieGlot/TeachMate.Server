@@ -23,4 +23,9 @@ public class PaymentController : ControllerBase
     {
         return await _paymentService.CreateOrderUrl(50002, PaymentProviderType.Momo);
     }
+    [HttpPost("vnpay")]
+    public async Task<ActionResult<OrderUrlResponseDto>> CreateVnPayOrder()
+    {
+        return await _paymentService.CreateOrderUrl(50002, PaymentProviderType.VnPay);
+    }
 }
