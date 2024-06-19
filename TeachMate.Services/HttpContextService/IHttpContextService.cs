@@ -5,4 +5,5 @@ public interface IHttpContextService
 {
     Task<AppUser?> GetAppUser();
     Task<AppUser> GetAppUserAndThrow();
+    string GetIpAddress();
 }
