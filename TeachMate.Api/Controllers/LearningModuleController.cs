@@ -137,4 +137,13 @@ public class LearningModuleController : ControllerBase
     {
         return Ok(await _learningModuleService.UpdateRequestStatus(dto));
     }
+
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpGet("Learners/GetAll")]
+    public async Task<ActionResult<List<Learner>>> GetAllLearnersByLearningModuleId(int learningModuleId)
+    {
+        var user = await _contextService.GetAppUserAndThrow();
+        return await _learningModuleService.GetAllLearnerInLearningModule(learningModuleId, user.Tutor.Id);
+       
+    }
 }

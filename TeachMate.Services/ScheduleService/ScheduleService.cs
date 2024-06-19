@@ -281,7 +281,7 @@ public class ScheduleService : IScheduleService
             throw new BadRequestException("Unable to schedule this free session. The selected time slot overlaps with an existing session in your schedule. Please choose a different time or consult your schedule for availability.");
         }
         var count = await _context.LearningSessions.Where(x => x.LearningModuleId == learningModule.Id).CountAsync();
-        session.Slot = count + 1;
+        session.Slot = 0;
         learningModule.Schedule.Add(session);
         _context.Update(learningModule);
         await _context.SaveChangesAsync();
