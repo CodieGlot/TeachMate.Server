@@ -59,7 +59,7 @@ public class UserService : IUserService
 
         return appUser;
     }
-    public async Task<AppUser?> DisableUser(Guid id)
+    /*public async Task<AppUser?> DisableUser(Guid id)
     {
         var appUser = await GetUserById(id);
 
@@ -70,7 +70,7 @@ public class UserService : IUserService
         }
 
         return appUser;
-    }
+    }*/
     private async Task MapRelatedDataToAppUser(AppUser? appUser)
     {
         if (appUser == null)
