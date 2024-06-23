@@ -55,4 +55,7 @@ public class DataContext : DbContext
     public object Users { get; set; }
     public DbSet<UserOTP> UserOTPs { get; set; }
 
+    public DbSet<LearningModulePaymentOrder> LearningModulePaymentOrders { get; set; }
+    
+
 }

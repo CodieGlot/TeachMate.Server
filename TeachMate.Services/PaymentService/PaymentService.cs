@@ -5,20 +5,22 @@ public class PaymentService : IPaymentService
 {
     private readonly IZaloPayService _zaloPayService;
     private readonly IMomoService _momoService;
+    private readonly IVnPayService _vnPayService;
 
-    public PaymentService(IZaloPayService zaloPayService, IMomoService momoService)
+    public PaymentService(IZaloPayService zaloPayService, IMomoService momoService, IVnPayService vnPayService)
     {
         _zaloPayService = zaloPayService;
         _momoService = momoService;
+        _vnPayService = vnPayService;
     }
-    public async Task<ResponseDto> TestZaloPay()
+    public async Task<OrderUrlResponseDto> CreateOrderUrl(double amount, PaymentProviderType type)
     {
-        var result = await _zaloPayService.TestZaloPay();
-        return new ResponseDto(result);
-    }
-    public async Task<ResponseDto> TestMomo()
-    {
-        var result = await _momoService.MomoTest();
-        return new ResponseDto(result);
+        return type switch
+        {
+            PaymentProviderType.ZaloPay => await _zaloPayService.CreateZaloPayOrder(amount),
+            PaymentProviderType.Momo => await _momoService.CreateMomoOrder(amount),
+            PaymentProviderType.VnPay => _vnPayService.CreateVnPayOrder(amount),
+            _ => throw new NotImplementedException(),
+        };
     }
 }

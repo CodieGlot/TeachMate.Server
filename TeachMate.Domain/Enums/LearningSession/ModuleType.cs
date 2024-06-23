@@ -3,5 +3,6 @@ public enum ModuleType
 {
     Custom,
     Weekly,
+    None
 }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TeachMate.Domain.DTOs.ScheduleDto
 {
-    public class CreateCustomLearningDto
+    public class CreateCustomLearningSessionDto
     { 
         public int Id { get; set; }
         public string Title { get; set; }

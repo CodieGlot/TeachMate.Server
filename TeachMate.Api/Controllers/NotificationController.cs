@@ -26,6 +26,6 @@ public class NotificationController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<PushNotification>> TestCreate()
     {
-        return Ok(await _notificationService.CreatePushNotification(NotificationType.NewLearningRequest, null, new List<Guid> { new Guid("932CF168-B52B-4E1B-74A7-08DC7DF8DF7F") }, new List<object> { "Codie Test" }));
+        return Ok(await _notificationService.CreatePushNotification(NotificationType.NewLearningRequest, null, new List<Guid> { new Guid("CA30151B-0222-4551-82F9-08DC906585DC") }, new List<object> { "Codie Test" }));
     }
 }

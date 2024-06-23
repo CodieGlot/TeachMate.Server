@@ -14,13 +14,18 @@ public class PaymentController : ControllerBase
         _paymentService = paymentService;
     }
     [HttpPost("zalopay")]
-    public async Task<ActionResult<ResponseDto>> CreateZaloPayOrder()
+    public async Task<ActionResult<OrderUrlResponseDto>> CreateZaloPayOrder()
     {
-        return await _paymentService.TestZaloPay();
+        return await _paymentService.CreateOrderUrl(50002, PaymentProviderType.ZaloPay);
     }
     [HttpPost("momo")]
-    public async Task<ActionResult<ResponseDto>> CreateMomoOrder()
+    public async Task<ActionResult<OrderUrlResponseDto>> CreateMomoOrder()
     {
-        return await _paymentService.TestMomo();
+        return await _paymentService.CreateOrderUrl(50002, PaymentProviderType.Momo);
+    }
+    [HttpPost("vnpay")]
+    public async Task<ActionResult<OrderUrlResponseDto>> CreateVnPayOrder()
+    {
+        return await _paymentService.CreateOrderUrl(50002, PaymentProviderType.VnPay);
     }
 }

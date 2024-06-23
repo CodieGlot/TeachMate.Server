@@ -33,6 +33,21 @@ public class HttpContextService : IHttpContextService
     {
         return await GetAppUser() ?? throw new UnauthorizedException();
     }
+    public string GetIpAddress()
+    {
+        var context = _httpContextAccessor.HttpContext;
+        if (context == null)
+        {
+            return string.Empty;
+        }
+
+        var ipAddress = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+        if (string.IsNullOrEmpty(ipAddress))
+        {
+            ipAddress = context.Connection.RemoteIpAddress?.ToString();
+        }
+        return ipAddress ?? string.Empty;
+    }
     private Guid? GetUserId()
     {
         var userId = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;

@@ -11,23 +11,23 @@ public class ZaloPayService : IZaloPayService
     {
         _zaloPayConfig = zaloPayConfig.Value;
     }
-    public async Task<string> TestZaloPay()
+    public async Task<OrderUrlResponseDto> CreateZaloPayOrder(double amount)
     {
         Random rnd = new Random();
+        var items = Array.Empty<object>();
         var embed_data = new { };
-        var items = new[] { new { itemid = "knb", itemname = "kim nguyen bao", itemprice = 198400, itemquantity = 1 } };
         var app_trans_id = rnd.Next(1000000); // Generate a random order's ID.
 
         var param = new Dictionary<string, string>
         {
             { "app_id", _zaloPayConfig.AppId },
-            { "app_user", "user123" },
+            { "app_user", "teachmate_user" },
             { "app_time", GetUnixTimestamp().ToString() },
-            { "amount", "50000" },
+            { "amount", amount.ToString() },
             { "app_trans_id", DateTime.Now.ToString("yyMMdd") + "_" + app_trans_id }, // the trading code must be in the format yymmdd_xxxx
             { "embed_data", JsonConvert.SerializeObject(embed_data) },
             { "item", JsonConvert.SerializeObject(items) },
-            { "description", "Lazada - Thanh toán đơn hàng #" + app_trans_id },
+            { "description", "TeachMate - Order #" + app_trans_id },
             { "bank_code", "zalopayapp" }
         };
 
@@ -37,12 +37,9 @@ public class ZaloPayService : IZaloPayService
 
         var result = await PostFormAsync(_zaloPayConfig.CreateOrderUrl, param);
 
-        foreach (var entry in result)
-        {
-            Console.WriteLine("{0} = {1}", entry.Key, entry.Value);
-        }
-
-        return result.ToString();
+        return result["return_code"] == "1"
+            ? new OrderUrlResponseDto(result["order_url"])
+            : throw new ExternalServiceException("Momo Service not working.");
     }
 
     private long GetUnixTimestamp()

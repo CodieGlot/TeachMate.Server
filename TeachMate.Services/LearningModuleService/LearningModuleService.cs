@@ -8,11 +8,12 @@ public class LearningModuleService : ILearningModuleService
 {
     private readonly DataContext _context;
     private readonly IUserService _userService;
-
-    public LearningModuleService(DataContext context, IUserService userService)
+    private readonly INotificationService _notificationService;
+    public LearningModuleService(DataContext context, IUserService userService, INotificationService notificationService)
     {
         _context = context;
         _userService = userService;
+        _notificationService = notificationService;
     }
     public async Task<LearningModule?> GetLearningModuleById(int id)
     {
@@ -75,7 +76,10 @@ public class LearningModuleService : ILearningModuleService
         }
 
         learner.Learner.EnrolledModules.Add(learningModule);
+        learningModule.EnrolledLearners.Add(learner.Learner);
         _context.Update(learner);
+        _context.Update(learningModule);
+
         await _context.SaveChangesAsync();
 
         return learningModule;
@@ -166,6 +170,12 @@ public class LearningModuleService : ILearningModuleService
         {
             throw new BadRequestException("Module does not exist.");
         }
+        var requestOld = _context.LearningModuleRequests.Where(x => x.LearningModuleId == dto.LearningModuleId && x.RequesterId == user.Id).FirstOrDefault();
+        if (requestOld != null)
+        {
+            throw new BadRequestException("You have already requested this class.");
+
+        }
         var request = new LearningModuleRequest
         {
             RequesterId = user.Id,
@@ -182,6 +192,8 @@ public class LearningModuleService : ILearningModuleService
             throw new Exception("The Classes is full");
         }
         _context.LearningModuleRequests.Add(request);
+        await _notificationService.CreatePushNotification(NotificationType.NewLearningRequest, null, new List<Guid> { request.LearningModule.TutorId }, new List<object> {  request.RequesterDisplayName });
+
         await _context.SaveChangesAsync();
 
         return request;
@@ -206,18 +218,19 @@ public class LearningModuleService : ILearningModuleService
 
         _context.Update(request);
 
-        if (request.Status == RequestStatus.Rejected)
-        {
-            learningModule.LearningModuleRequests.Remove(request);
-        }else
+        //if (request.Status == RequestStatus.Rejected)
+        //{
+        //    learningModule.LearningModuleRequests.Remove(request);
+        //}else
         if (learningModule.MaximumLearners <= learningModule.EnrolledLearners.Count)
         {
             throw new Exception("Class is full");
         }else
         if (request.Status == RequestStatus.Approved)
         {
+            await _notificationService.CreatePushNotification(NotificationType.LearningRequestAccepted, null, new List<Guid> { request.RequesterId }, new List<object> {  request.LearningModule.Title });
             await EnrollLearningModule(request.RequesterId, request.LearningModuleId);
-            learningModule.LearningModuleRequests.Remove(request);
+            //learningModule.LearningModuleRequests.Remove(request);
         }
         await _context.SaveChangesAsync();
 
@@ -228,5 +241,24 @@ public class LearningModuleService : ILearningModuleService
         return await _context.LearningModuleRequests
            .Where(x => x.LearningModuleId == moduleId && x.LearningModule.TutorId == tutorId)
            .ToListAsync();
+    }
+
+    public async Task<List<Learner>> GetAllLearnerInLearningModule (int moduleId, Guid tutorId)
+    {
+
+        var module = await _context.LearningModules
+      .Where(x => x.Id == moduleId && x.Tutor.Id == tutorId)
+      .Select(x => new
+      {
+          x.EnrolledLearners
+      })
+      .FirstOrDefaultAsync();
+
+        if (module == null)
+        {
+            throw new NotFoundException("Learning Module Not Found");
+        }
+
+        return module.EnrolledLearners;
     }
 }
