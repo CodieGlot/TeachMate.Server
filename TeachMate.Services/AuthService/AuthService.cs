@@ -34,7 +34,10 @@ public class AuthService : IAuthService
         {
             throw new UnauthorizedException("Username or Password is not correct.");
         }
-
+        if (user.IsDisabled)
+        {
+            throw new BadRequestException("This accout has been banned");
+        }
         return new LoginPayloadDto
         {
             AccessToken = GenerateTokenPayload(user),

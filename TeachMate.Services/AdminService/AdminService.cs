@@ -33,18 +33,14 @@ public class AdminService : IAdminService
 
     public async Task<List<AppUser>> SearchUser(SearchUserDto dto)
     {
-        var query = _context.AppUsers.AsQueryable();
+        var query = _context.AppUsers.AsQueryable()
+                .Where(u =>u.UserRole != UserRole.Admin);
 
-        if (!string.IsNullOrWhiteSpace(dto.DisplayName))
+        if (!string.IsNullOrWhiteSpace(dto.DisplayNameOrUsername))
         {
-            var trimmedSearchTerm = dto.DisplayName.Trim().ToLower();
-            query = query.Where(m => EF.Functions.Like(m.DisplayName.ToLower(), $"%{trimmedSearchTerm}%"));
-        }
-
-        if (!string.IsNullOrWhiteSpace(dto.UserName))
-        {
-            var trimmedSearchTerm = dto.UserName.Trim().ToLower();
-            query = query.Where(m => EF.Functions.Like(m.Username.ToLower(), $"%{trimmedSearchTerm}%"));
+            var trimmedSearchTerm = dto.DisplayNameOrUsername.Trim().ToLower();
+            query = query.Where(m => EF.Functions.Like(m.DisplayName.ToLower(), $"%{trimmedSearchTerm}%") ||
+                                     EF.Functions.Like(m.Username.ToLower(), $"%{trimmedSearchTerm}%"));
         }
 
         if (dto.UserRole != null)
@@ -57,5 +53,24 @@ public class AdminService : IAdminService
             query = query.Where(m => m.IsDisabled == dto.IsDisable);
         }
         return await query.ToListAsync();
+    }
+
+    public async Task<AppUser?> UpdateStatus(DisableDto dto)
+    {
+        var appUser = await _context.AppUsers
+            .Where(u => u.UserRole != UserRole.Admin)
+            .FirstOrDefaultAsync(u => u.Id == dto.Id);
+
+        if (appUser != null)
+        {
+            appUser.IsDisabled = !appUser.IsDisabled;
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            throw new NotFoundException("Not found");
+        }
+
+        return appUser;
     }
 }

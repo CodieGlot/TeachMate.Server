@@ -8,4 +8,5 @@ public interface IAdminService
 {
     Task<List<AppUser>> GetAllUser();
     Task<List<AppUser>> SearchUser(SearchUserDto dto);
+    Task<AppUser?> UpdateStatus(DisableDto dto);
 }
