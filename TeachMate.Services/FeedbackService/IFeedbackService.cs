@@ -14,6 +14,7 @@ namespace TeachMate.Services
         Task<LearningModuleFeedback> DisLikeFeedback(int feedbackId, AppUser appUser);
         Task<List<LearningModuleFeedback>> GetFeedbacksByLearningModuleId(int moduleId);
         Task<double> GetAverageRatingByStar(int moduleId);
-
+        Task<TutorReplyFeedback> ReplyToFeedback(TutorReplyFeedbackDto replyDto, AppUser appUser);
+        Task<TutorReplyFeedback?> GetReplyByFeedbackId(int feedbackId);
     }
 }

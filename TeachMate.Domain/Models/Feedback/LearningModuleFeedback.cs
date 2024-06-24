@@ -21,8 +21,8 @@ namespace TeachMate.Domain
         public int LikeNumber { get; set; } = 0;
         public int DislikeNumber { get; set; } = 0;
         public bool IsAnonymous { get; set; } = false;
-        public string Response { get; set; } = string.Empty;
 
+        public TutorReplyFeedback TutorReplyFeedback { get; set; }
     }
 
 }
