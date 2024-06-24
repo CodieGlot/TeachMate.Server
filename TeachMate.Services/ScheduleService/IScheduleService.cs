@@ -10,8 +10,8 @@ namespace TeachMate.Services;
 
 public interface IScheduleService
 {
-    Task<LearningModule> AddWeeklySchedule(AddWeeklyScheduleDto dto);
-    Task<LearningModule> UpdateWeeklyLearningSession(int id);
+    Task<LearningModule> AddWeeklySchedule(AddWeeklyScheduleDto dto, AppUser user);
+    Task<LearningModule> UpdateWeeklyLearningSession(int id, AppUser user);
     Task<LearningSession> CreateCustomLearningSession(CreateCustomLearningSessionDto dto, AppUser user);
     Task<List<LearningSession>> GetScheduleById(int id);
 

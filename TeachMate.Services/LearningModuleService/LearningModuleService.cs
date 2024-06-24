@@ -163,6 +163,12 @@ public class LearningModuleService : ILearningModuleService
 
         return request;
     }
+
+    public async Task<int> GetNumberOfRequestWaiting(Guid userId)
+    {
+        return await _context.LearningModuleRequests.CountAsync(r => r.Status == RequestStatus.Waiting && r.RequesterId == userId);
+    }
+
     public async Task<LearningModuleRequest> CreateLearningModuleRequest(AppUser user, CreateLearningModuleRequestDto dto)
     {
         var learningModule = await GetLearningModuleById(dto.LearningModuleId);
@@ -176,6 +182,9 @@ public class LearningModuleService : ILearningModuleService
             throw new BadRequestException("You have already requested this class.");
 
         }
+        if (await GetNumberOfRequestWaiting(user.Id) >= 2) 
+            throw new BadRequestException("You have reached the maximum limit of 2 class requests.");
+        
         var request = new LearningModuleRequest
         {
             RequesterId = user.Id,
