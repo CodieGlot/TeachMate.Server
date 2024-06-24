@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeachMate.Services;
 
@@ -11,9 +12,11 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240623082012_TutorReplyFeedbacks")]
+    partial class TutorReplyFeedbacks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -416,75 +419,6 @@ namespace TeachMate.Services.Migrations
                     b.ToTable("PushNotificationReceivers");
                 });
 
-            modelBuilder.Entity("TeachMate.Domain.Report", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ReportSystemId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReportUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReportSystemId");
-
-                    b.HasIndex("ReportUserId");
-
-                    b.ToTable("Report");
-                });
-
-            modelBuilder.Entity("TeachMate.Domain.ReportSystem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("typeErrorSystem")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ReportSystem");
-                });
-
-            modelBuilder.Entity("TeachMate.Domain.ReportUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("typeErrorUser")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ReportUser");
-                });
-
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
                 {
                     b.Property<Guid>("Id")
@@ -761,21 +695,6 @@ namespace TeachMate.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("PushNotification");
-                });
-
-            modelBuilder.Entity("TeachMate.Domain.Report", b =>
-                {
-                    b.HasOne("TeachMate.Domain.ReportSystem", "ReportSystem")
-                        .WithMany()
-                        .HasForeignKey("ReportSystemId");
-
-                    b.HasOne("TeachMate.Domain.ReportUser", "ReportUser")
-                        .WithMany()
-                        .HasForeignKey("ReportUserId");
-
-                    b.Navigation("ReportSystem");
-
-                    b.Navigation("ReportUser");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>

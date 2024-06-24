@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TeachMate.Domain;
 using TeachMate.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace TeachMate.Services
 {
@@ -128,6 +129,9 @@ namespace TeachMate.Services
         {
             return await _context.LearningModuleFeedbacks
                                  .Where(fb => fb.LearningModule.Id == moduleId)
+                                 .Include(fb => fb.AppUser)
+                                 .Include(fb => fb.TutorReplyFeedback)
+                                 .ThenInclude(r => r.Replier)
                                  .ToListAsync();
         }
 
@@ -139,6 +143,57 @@ namespace TeachMate.Services
                 return feedbacks.Average(fb => fb.Star);
             }
             return 0; 
+        }
+
+        public async Task<TutorReplyFeedback> ReplyToFeedback(TutorReplyFeedbackDto replyDto, AppUser appUser)
+        {
+            /*var feedbacks = await _context.LearningModuleFeedbacks
+                                .Where(fb => fb.LearningModule.Id == moduleId)
+                                .Include(fb => fb.AppUser)
+                                .Select(p => p.Id)
+                                .FirstOrDefaultAsync();
+
+
+            // Assuming you have a logic to select a feedback to reply to, for example, the first feedback in the list
+*/
+            if (appUser?.Id == null)
+            {
+                throw new BadRequestException("AppUser is not valid or does not have a valid Id.");
+            }
+
+            // Find the original feedback
+            var originalFeedback = await _context.LearningModuleFeedbacks.Where(fb => fb.Id == replyDto.LearningModuleFeedbackId).FirstOrDefaultAsync();
+            if (originalFeedback == null)
+            {
+                throw new BadRequestException($"Feedback not found.");
+            }
+
+            // Create a new reply
+            var tutorReply = new TutorReplyFeedback
+            {
+                ReplyContent = replyDto.ReplyContent,
+                ReplyDate = DateTime.Now,
+                ReplierId = appUser.Id,
+                LearningModuleFeedbackId = replyDto.LearningModuleFeedbackId,
+                LearningModuleFeedback = originalFeedback,
+                Replier = appUser
+            };
+
+            _context.TutorReplyFeedback.Add(tutorReply);
+            await _context.SaveChangesAsync();
+
+            return tutorReply;
+        }
+
+         public async Task<TutorReplyFeedback?> GetReplyByFeedbackId(int feedbackId)
+        {
+            // Query the database to get all replies for the given feedbackId
+            var reply = await _context.TutorReplyFeedback
+                                        .Where(reply => reply.LearningModuleFeedbackId == feedbackId)
+                                        .Include(reply => reply.Replier) // Include the Replier if you need details from AppUser
+                                        .FirstOrDefaultAsync();
+
+            return reply;
         }
     }
 }

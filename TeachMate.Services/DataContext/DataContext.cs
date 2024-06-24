@@ -58,4 +58,6 @@ public class DataContext : DbContext
     public DbSet<LearningModulePaymentOrder> LearningModulePaymentOrders { get; set; }
     public DbSet<Report> Report { get; set; }
 
+    public DbSet<TutorReplyFeedback> TutorReplyFeedback { get; set; }
+
 }
