@@ -56,6 +56,6 @@ public class DataContext : DbContext
     public DbSet<UserOTP> UserOTPs { get; set; }
 
     public DbSet<LearningModulePaymentOrder> LearningModulePaymentOrders { get; set; }
-    
+    public DbSet<Report> Report { get; set; }
 
 }
