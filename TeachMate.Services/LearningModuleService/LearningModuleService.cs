@@ -261,4 +261,51 @@ public class LearningModuleService : ILearningModuleService
 
         return module.EnrolledLearners;
     }
+    public async Task<ResponseDto> OutClass(Guid learnerId, int moduleId)
+    {
+        var learningModule = await GetLearningModuleById(moduleId);
+
+        var learner = await _userService.GetUserById(learnerId);
+        if (learner == null || learner.Learner == null)
+        {
+            throw new BadRequestException("Learner does not exist.");
+        }
+        if (learningModule == null)
+        {
+            throw new BadRequestException("Module does not exist.");
+        }
+
+        learner.Learner.EnrolledModules.Remove(learningModule);
+        learningModule.EnrolledLearners.Remove(learner.Learner);
+        _context.Update(learner);
+        _context.Update(learningModule);
+
+        await _context.SaveChangesAsync();
+
+        return new ResponseDto("Out class success");
+    }
+    public async Task<ResponseDto> KickLearner(KickLearnerDto dto , int moduleId)
+    {
+        var learningModule = await GetLearningModuleById(moduleId);
+
+        var learner = await _userService.GetUserById(dto.LearnerID);
+        if (learner == null || learner.Learner == null)
+        {
+            throw new BadRequestException("Learner does not exist.");
+        }
+        if (learningModule == null)
+        {
+            throw new BadRequestException("Module does not exist.");
+        }
+
+        learner.Learner.EnrolledModules.Remove(learningModule);
+        learningModule.EnrolledLearners.Remove(learner.Learner);
+        _context.Update(learner);
+        _context.Update(learningModule);
+
+        await _context.SaveChangesAsync();
+
+        return new ResponseDto("Kick learner success");
+    }
+
 }
