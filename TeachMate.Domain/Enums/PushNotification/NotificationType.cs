@@ -12,4 +12,6 @@ public enum NotificationType
     LearningRequestAccepted = 3,
     [Description("NotificationMessage_LearningRequestDeclined")]
     LearningRequestBeenDeclined = 4,
+    [Description("NotificationMessage_PaymentRequired")]
+    PaymentRequired = 5,
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Quartz;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -128,6 +129,7 @@ builder.Services.Configure<VnPayConfig>(builder.Configuration.GetSection("VnPay"
 
 // Add User-Defined Services
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<IHttpContextService, HttpContextService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -150,7 +152,21 @@ builder.Services.AddScoped<IMomoService, MomoService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
+// Add Cron-jobs
+builder.Services.AddQuartz(q =>
+{
+    var jobKey = new JobKey("NotifyUsersToPay");
+    q.AddJob<NotifyUsersToPay>(opts => opts.WithIdentity(jobKey));
 
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("NotifyUsersToPay-trigger")
+        // this will trigger at the end of every month
+        .WithCronSchedule("0 0 0 L * ?"));
+
+});
+
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
 var app = builder.Build();
 
