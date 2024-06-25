@@ -129,4 +129,7 @@
 	<data name="NotificationMessage_LearningRequestDeclined" xml:space="preserve">
     <value>The learning request #{0} has been declined.</value>
   </data>
+  <data name="NotificationMessage_PaymentRequired" xml:space="preserve">
+    <value>Kindly reminder: Please complete the payment to access your classes.</value>
+  </data>
 </root>
