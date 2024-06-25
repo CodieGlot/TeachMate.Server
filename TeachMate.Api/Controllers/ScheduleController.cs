@@ -25,7 +25,9 @@ public class ScheduleController : ControllerBase
     [HttpPost("UpdateWeeklySessions")]
     public async Task<ActionResult<LearningModule>> UpdateWeeklySlots(int id)
     {
-        return Ok(await _scheduleService.UpdateWeeklyLearningSession(id));
+        var user = await _contextService.GetAppUserAndThrow();
+
+        return Ok(await _scheduleService.UpdateWeeklyLearningSession(id, user));
     }
 
     /// <summary>
@@ -35,7 +37,9 @@ public class ScheduleController : ControllerBase
     [HttpPost("AddWeeklySchedule")]
     public async Task<ActionResult<LearningModule>> AddWeeklySchedule(AddWeeklyScheduleDto dto)
     {
-        return Ok(await _scheduleService.AddWeeklySchedule(dto));
+        var user = await _contextService.GetAppUserAndThrow();
+
+        return Ok(await _scheduleService.AddWeeklySchedule(dto, user));
     }
 
     /// <summary>

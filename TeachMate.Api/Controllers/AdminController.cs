@@ -40,13 +40,13 @@ public class AdminController : ControllerBase
     }
 
     /// <summary>
-    /// Disable user
+    /// Update status
     /// </summary>
     [Authorize(Roles = CustomRoles.Admin)]
-    [HttpPut("DisableUser")]
-    public async Task<ActionResult<AppUser>> DisableUser(Guid Id)
+    [HttpPut("UpdateStatus")]
+    public async Task<ActionResult<AppUser>> UpdateStatus(DisableDto dto)
     {
-        return Ok(await _userService.DisableUser(Id));
+        return Ok(await _adminService.UpdateStatus(dto));
     }
 
 

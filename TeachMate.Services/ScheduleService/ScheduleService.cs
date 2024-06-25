@@ -18,7 +18,7 @@ public class ScheduleService : IScheduleService
         _userService = userService;
     }
 
-    public async Task<LearningModule> AddWeeklySchedule(AddWeeklyScheduleDto dto)
+    public async Task<LearningModule> AddWeeklySchedule(AddWeeklyScheduleDto dto, AppUser user)
     {
         var learningModule = await _learningModuleService.GetLearningModuleById(dto.LearningModuleId);
         var listWeeklySlotDto = dto.WeeklySlots;
@@ -43,18 +43,26 @@ public class ScheduleService : IScheduleService
         learningModule.WeeklySchedule.WeeklySlots = listWeeklySlot;
         _context.Update(learningModule);
         await _context.SaveChangesAsync();
-        await UpdateWeeklyLearningSession(learningModule.Id);
+        await UpdateWeeklyLearningSession(learningModule.Id, user);
         return learningModule;
     }
 
     public async Task<LearningSession> CreateCustomLearningSession(CreateCustomLearningSessionDto dto, AppUser user)
     {
-       
+
         LearningModule learningModule = await _learningModuleService.GetLearningModuleById(dto.LearningModuleId);
         if (learningModule == null) throw new NotFoundException("Can not found learning module");
         if (learningModule.ModuleType == ModuleType.Weekly)
         {
             throw new BadRequestException("This learning module type is weekly");
+        }
+        if (learningModule.StartDate >= dto.Date)
+        {
+            throw new BadRequestException("This learning module have not started yet");
+        }
+        if (dto.Date <= DateOnly.FromDateTime(DateTime.Now))
+        {
+            throw new BadRequestException("Custom sessions cannot be added for today or past dates. Please select a future date.");
         }
         LearningSession session = new LearningSession()
         {
@@ -77,14 +85,14 @@ public class ScheduleService : IScheduleService
         return session;
     }
 
-    public async Task<LearningModule> UpdateWeeklyLearningSession(int id)
+    public async Task<LearningModule> UpdateWeeklyLearningSession(int id, AppUser user)
     {
         var learningModule = await _learningModuleService.GetLearningModuleById(id);
         if (learningModule == null) throw new NotFoundException("Not found learning module");
         if (learningModule.ModuleType == ModuleType.Custom) throw new BadRequestException("The module type is custom");
         if (!learningModule.Schedule.IsNullOrEmpty()) throw new BadRequestException("Learning Module already update sessions");
         if (learningModule.WeeklySchedule.WeeklySlots.IsNullOrEmpty()) throw new BadRequestException("Weekly Slots has not been defined");
-        
+
         var weeklySlots = learningModule.WeeklySchedule.WeeklySlots;
         var numOfWeeks = learningModule.NumOfWeeks;
         var startDate = learningModule.StartDate;
@@ -110,6 +118,7 @@ public class ScheduleService : IScheduleService
                     LinkMeet = "...",
 
                 };
+                if (await CheckDuplicateLearningSession(learningSession, user)) throw new Exception("The weekly schedule has duplicate session with your schedule");
                 learningSessions.Add(learningSession);
             }
             dateMark = dateMark.AddDays(7);
@@ -122,13 +131,10 @@ public class ScheduleService : IScheduleService
     }
     public async Task<List<LearningSession>> GetScheduleById(int id)
     {
-        var learningSessions =await _context.LearningModules
+        var learningSessions = await _context.LearningModules
             .Where(u => u.Id == id)
             .Select(u => u.Schedule).FirstAsync();
-        foreach (var learningSession in learningSessions)
-        {
-            learningSession.LearningModuleName = (await _learningModuleService.GetLearningModuleById(learningSession.LearningModuleId)).Title;
-        }
+
         return learningSessions;
     }
 
@@ -186,9 +192,9 @@ public class ScheduleService : IScheduleService
     public async Task<List<LearningSession>> GetScheduleByTutor(AppUser tutor)
     {
         var learningSessions = await _context.LearningSessions
-            .Where(ls => ls.LearningModule.TutorId == tutor.Id) 
-            .OrderBy(ls => ls.Date) 
-            .ThenBy(ls => ls.StartTime) 
+            .Where(ls => ls.LearningModule.TutorId == tutor.Id)
+            .OrderBy(ls => ls.Date)
+            .ThenBy(ls => ls.StartTime)
             .Select(s => new LearningSession
             {
                 Id = s.Id,
@@ -199,7 +205,7 @@ public class ScheduleService : IScheduleService
                 EndTime = s.EndTime,
                 LinkMeet = s.LinkMeet,
                 LearningModuleId = s.LearningModuleId,
-                  LearningModuleName = s.LearningModule.Title
+                LearningModuleName = s.LearningModule.Title
             })
             .ToListAsync();
 
@@ -214,26 +220,26 @@ public class ScheduleService : IScheduleService
 
         foreach (var learningModule in learningModules)
         {
-           list  = await _context.LearningSessions
-                .Where(x => x.LearningModule.Id == learningModule.Id)
-                .OrderBy(ls => ls.Date)
-                .ThenBy(ls => ls.StartTime)
-                 .Select(s => new LearningSession
-                 {
-                     Id = s.Id,
-                     Slot = s.Slot,
-                     Title = s.Title,
-                     Date = s.Date,
-                     StartTime = s.StartTime,
-                     EndTime = s.EndTime,
-                     LinkMeet = s.LinkMeet,
-                     LearningModuleId = s.LearningModuleId,
-                     LearningModuleName = s.LearningModule.Title
-                     
-                 }).ToListAsync();
+            list = await _context.LearningSessions
+                 .Where(x => x.LearningModule.Id == learningModule.Id)
+                 .OrderBy(ls => ls.Date)
+                 .ThenBy(ls => ls.StartTime)
+                  .Select(s => new LearningSession
+                  {
+                      Id = s.Id,
+                      Slot = s.Slot,
+                      Title = s.Title,
+                      Date = s.Date,
+                      StartTime = s.StartTime,
+                      EndTime = s.EndTime,
+                      LinkMeet = s.LinkMeet,
+                      LearningModuleId = s.LearningModuleId,
+                      LearningModuleName = s.LearningModule.Title
+
+                  }).ToListAsync();
             learningSessions.AddRange(list);
         }
-         
+
         return learningSessions;
     }
 
@@ -248,9 +254,9 @@ public class ScheduleService : IScheduleService
         {
             learningSessions = await GetScheduleByLearner(user);
         };
-        return learningSessions.Any(x => x.Date == newSession.Date && (((newSession.StartTime <= x.EndTime) && (newSession.StartTime >= x.StartTime)) 
+        return learningSessions.Any(x => x.Date == newSession.Date && (((newSession.StartTime <= x.EndTime) && (newSession.StartTime >= x.StartTime))
         || ((newSession.EndTime >= x.StartTime) && (newSession.EndTime <= x.EndTime))));
-       
+
     }
 
     public async Task<LearningSession> GetLearningSessionById(int id)
@@ -266,7 +272,10 @@ public class ScheduleService : IScheduleService
         LearningModule learningModule = await _learningModuleService.GetLearningModuleById(dto.LearningModuleId);
         if (learningModule == null) throw new NotFoundException("Can not found learning module");
         if (dto.Date >= learningModule.StartDate) throw new BadRequestException("Free learning session must be scheduled before the start date of learning module");
-
+        if (dto.Date <= DateOnly.FromDateTime(DateTime.Now))
+        {
+            throw new BadRequestException("Custom sessions cannot be added for today or past dates. Please select a future date.");
+        }
         LearningSession session = new LearningSession()
         {
             Date = dto.Date,
@@ -288,6 +297,6 @@ public class ScheduleService : IScheduleService
         return session;
     }
 
-    
+
 
 }

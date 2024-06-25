@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using TeachMate.Domain;
 using TeachMate.Services;
@@ -56,7 +57,7 @@ namespace TeachMate.Api.Controllers
             try
             {
                 var user = await _httpContextService.GetAppUserAndThrow();
-                var feedback = await _feedbackService.LikeFeedback(feedbackId,user);
+                var feedback = await _feedbackService.LikeFeedback(feedbackId, user);
                 return Ok(feedback);
             }
             catch (InvalidOperationException ex)
@@ -112,6 +113,37 @@ namespace TeachMate.Api.Controllers
             {
                 var averageRating = await _feedbackService.GetAverageRatingByStar(moduleId);
                 return Ok(averageRating);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An unexpected error occurred: {ex.Message}");
+            }
+        }
+
+        [Authorize(Roles = CustomRoles.Tutor)]
+        [HttpPost("TutorReplyFeedback")]
+        public async Task<IActionResult> TutorReplyFeedback([FromBody] TutorReplyFeedbackDto dto)
+        {
+            var user = await _httpContextService.GetAppUserAndThrow();
+            try
+            {
+                var tutorReplies = await _feedbackService.ReplyToFeedback(dto, user);
+                return Ok(tutorReplies);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An unexpected error occurred: {ex.Message}");
+            }
+        }
+
+        [Authorize(Roles = CustomRoles.Tutor)]
+        [HttpGet("GetReplyByFeedbackId/{feedbackId}")]
+        public async Task<IActionResult> GetReplyByFeedbackId(int feedbackId)
+        {
+            try
+            {
+                var replies = await _feedbackService.GetReplyByFeedbackId(feedbackId);
+                return Ok(replies);
             }
             catch (Exception ex)
             {

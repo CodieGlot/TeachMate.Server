@@ -151,6 +151,7 @@ builder.Services.AddScoped<IZaloPayService, ZaloPayService>();
 builder.Services.AddScoped<IMomoService, MomoService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 // Add Cron-jobs
 builder.Services.AddQuartz(q =>
