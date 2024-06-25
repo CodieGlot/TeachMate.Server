@@ -52,11 +52,13 @@ namespace TeachMate.Services
 
         public async Task<ResponseDto> UpdateLearnerDetail(AppUser user, UpdateLearnerDetailDto dto)
         {
+            
             var user1 = await _context.AppUsers.Where(x => x.Email == dto.Email).FirstOrDefaultAsync();
-            if (user1 != null)
+            if (user1 != null && dto.Email != user.Email)
             {
                 throw new BadRequestException("Email already register");
             }
+            
             user.DisplayName = string.IsNullOrEmpty(dto.DisplayName) ? user.DisplayName : dto.DisplayName;
             user.Learner.DisplayName = string.IsNullOrEmpty(dto.DisplayName) ? user.Learner.DisplayName : dto.DisplayName;
             user.Email = string.IsNullOrEmpty(dto.Email) || !IsValidEmail(dto.Email) ? user.Email : dto.Email;
@@ -70,7 +72,7 @@ namespace TeachMate.Services
         public async Task<ResponseDto> UpdateTutorDetail(AppUser user, UpdateTutorDetailDto dto)
         {
             var user1 = await _context.AppUsers.Where(x => x.Email == dto.Email).FirstOrDefaultAsync();
-            if (user1 != null)
+            if (user1 != null && dto.Email != user.Email)
             {
                 throw new BadRequestException("Email already register");
             }
