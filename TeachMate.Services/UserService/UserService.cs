@@ -66,7 +66,7 @@ public class UserService : IUserService
         if (appUser != null)
         {
             appUser.IsDisabled = true;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();  
         }
 
         return appUser;
