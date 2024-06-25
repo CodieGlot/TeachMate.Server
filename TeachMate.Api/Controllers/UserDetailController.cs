@@ -12,10 +12,12 @@ namespace TeachMate.Api
     {
         private readonly IUserDetailService _information;
         private readonly IHttpContextService _contextService;
-        public UserDetailController(IUserDetailService information, IHttpContextService contextService)
+        private readonly IUserService _userService;
+        public UserDetailController(IUserDetailService information, IHttpContextService contextService, IUserService userService)
         {
             _information = information;
             _contextService = contextService;
+            _userService = userService;
         }
         [Authorize(Roles = CustomRoles.Learner)]
         [HttpPut("Learner/AddDetail")]
@@ -44,7 +46,18 @@ namespace TeachMate.Api
             var user = await _contextService.GetAppUserAndThrow();
             return Ok(await _information.UpdateTutorDetail(user,dto));
         }
-        
 
+        [Authorize(Roles = CustomRoles.Admin)]
+        [HttpGet("GetUserById/{id}")]
+         public async Task<ActionResult<AppUser>> GetUserById(Guid id)
+        {
+            var currentUser = await _contextService.GetAppUser();
+            var user = await _userService.GetUserById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
     }
 }
