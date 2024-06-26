@@ -77,6 +77,7 @@ public class LearningModuleService : ILearningModuleService
 
         learner.Learner.EnrolledModules.Add(learningModule);
         learningModule.EnrolledLearners.Add(learner.Learner);
+        // them add PartipateLearningModule
         _context.Update(learner);
         _context.Update(learningModule);
 
@@ -201,7 +202,7 @@ public class LearningModuleService : ILearningModuleService
             throw new Exception("The Classes is full");
         }
         _context.LearningModuleRequests.Add(request);
-        await _notificationService.CreatePushNotification(NotificationType.NewLearningRequest, null, new List<Guid> { request.LearningModule.TutorId }, new List<object> {  request.RequesterDisplayName });
+        //await _notificationService.CreatePushNotification(NotificationType.NewLearningRequest, null, new List<Guid> { request.LearningModule.TutorId }, new List<object> {  request.RequesterDisplayName });
 
         await _context.SaveChangesAsync();
 
@@ -237,7 +238,7 @@ public class LearningModuleService : ILearningModuleService
         }else
         if (request.Status == RequestStatus.Approved)
         {
-            await _notificationService.CreatePushNotification(NotificationType.LearningRequestAccepted, null, new List<Guid> { request.RequesterId }, new List<object> {  request.LearningModule.Title });
+            //await _notificationService.CreatePushNotification(NotificationType.LearningRequestAccepted, null, new List<Guid> { request.RequesterId }, new List<object> {  request.LearningModule.Title });
             await EnrollLearningModule(request.RequesterId, request.LearningModuleId);
             //learningModule.LearningModuleRequests.Remove(request);
         }
