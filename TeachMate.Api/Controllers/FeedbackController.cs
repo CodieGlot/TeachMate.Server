@@ -105,7 +105,7 @@ namespace TeachMate.Api.Controllers
             }
         }
 
-        [Authorize(Roles = CustomRoles.GeneralUser)]
+        [Authorize(Roles = CustomRoles.Admin)]
         [HttpGet("GetAverageRatingByStar/{moduleId}")]
         public async Task<IActionResult> GetAverageRatingByStar(int moduleId)
         {

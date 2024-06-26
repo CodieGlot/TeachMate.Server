@@ -137,25 +137,18 @@ namespace TeachMate.Services
 
         public async Task<double> GetAverageRatingByStar(int moduleId)
         {
-            var feedbacks = await GetFeedbacksByLearningModuleId(moduleId);
-            if (feedbacks.Any())
-            {
-                return feedbacks.Average(fb => fb.Star);
-            }
-            return 0; 
+            // Use LINQ to calculate the average directly in the database
+            var averageRating = await _context.LearningModuleFeedbacks
+                                              .Where(fb => fb.LearningModule.Id == moduleId)
+                                              .AverageAsync(fb => (double?)fb.Star); // Cast to nullable double to handle null case
+
+            // Return 0 if no feedback exists for the module
+            return averageRating ?? 0;
         }
+
 
         public async Task<TutorReplyFeedback> ReplyToFeedback(TutorReplyFeedbackDto replyDto, AppUser appUser)
         {
-            /*var feedbacks = await _context.LearningModuleFeedbacks
-                                .Where(fb => fb.LearningModule.Id == moduleId)
-                                .Include(fb => fb.AppUser)
-                                .Select(p => p.Id)
-                                .FirstOrDefaultAsync();
-
-
-            // Assuming you have a logic to select a feedback to reply to, for example, the first feedback in the list
-*/
             if (appUser?.Id == null)
             {
                 throw new BadRequestException("AppUser is not valid or does not have a valid Id.");
