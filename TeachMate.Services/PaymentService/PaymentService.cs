@@ -24,5 +24,8 @@ public class PaymentService : IPaymentService
         };
     }
 
-
+    public Task<LearningModule> SetPriceForLearningModuleDto(SetPriceForLearningModuleDto dto)
+    {
+        throw new NotImplementedException();
+    }
 }
