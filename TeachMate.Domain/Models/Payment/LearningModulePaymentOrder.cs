@@ -12,10 +12,10 @@ namespace TeachMate.Domain
         public Guid LearnerId { get; set; }
         public Learner Learner { get; set; } = new Learner();
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public int LearningModuleId { get; set; }
+        public int LearningModuleId { get; set; } 
         public LearningModule LearningModule { get; set; } = new LearningModule();
-        public PaymentStatus PaymentStatus { get; set; }
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending; 
         public double PaymentAmount { get; set; }
-        public bool HasClaimed { get; set; }
+        public bool HasClaimed { get; set; } = false; 
     }
 }
