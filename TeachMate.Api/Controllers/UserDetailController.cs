@@ -47,7 +47,7 @@ namespace TeachMate.Api
             return Ok(await _information.UpdateTutorDetail(user,dto));
         }
 
-        [Authorize(Roles = CustomRoles.Admin)]
+        [Authorize(Roles = CustomRoles.Learner)]
         [HttpGet("GetUserById/{id}")]
          public async Task<ActionResult<AppUser>> GetUserById(Guid id)
         {
