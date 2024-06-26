@@ -12,7 +12,7 @@ public class Learner
     public AppUser AppUser { get; set; } = null!;
     public int GradeLevel { get; set; }
     public List<LearningModuleRequest> LearningModuleRequests { get; set; } = new List<LearningModuleRequest>();
-    public List<LearningModulePaymentOrder>? LearningModulePaymentOrders { get; set; } = new List<LearningModulePaymentOrder> { };
+    public List<LearningModulePaymentOrder> LearningModulePaymentOrders { get; set; } = new List<LearningModulePaymentOrder> { };
 }
 
 

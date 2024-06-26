@@ -17,7 +17,7 @@ public class NotifyUsersToPay : IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
-        var user = await _userService.GetUserByUsernameOrEmail("ngnhathuy1224@gmail.com");
+        var user = await _userService.GetUserByUsernameOrEmail("lpdmy15@gmail.com");
 
         if (user != null)
         {
