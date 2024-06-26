@@ -28,4 +28,14 @@ public class PaymentController : ControllerBase
     {
         return await _paymentService.CreateOrderUrl(50002, PaymentProviderType.VnPay);
     }
+    [HttpPost("CreatePaymentOrder")]
+    public async Task<ActionResult<LearningModulePaymentOrder>> CreatePaymentOrder(CreateOrderPaymentDto dto)
+    { 
+      return await _paymentService.CreatePaymentOrder(dto);
+    }
+    [HttpPut("PayForClass")]
+    public async Task<ActionResult<ResponseDto>> PayForClass(int id) {
+        
+        return await _paymentService.PayForClass(id);
+    }
 }
