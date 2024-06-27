@@ -477,6 +477,9 @@ namespace TeachMate.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid>("UserIdReported")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("typeErrorUser")
                         .HasColumnType("int");
 

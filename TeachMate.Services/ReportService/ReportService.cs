@@ -35,6 +35,7 @@ public class ReportService : IReportService
         var reportUser = new ReportUser()
         {
             typeErrorUser = dto.typeErrorUser,
+            UserIdReported = dto.UserIDReported,
         };
         var report = new Report
         {

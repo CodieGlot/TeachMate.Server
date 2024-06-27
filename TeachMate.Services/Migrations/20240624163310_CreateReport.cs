@@ -30,7 +30,8 @@ namespace TeachMate.Services.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    typeErrorUser = table.Column<int>(type: "int", nullable: false)
+                    typeErrorUser = table.Column<int>(type: "int", nullable: false),
+                    UserIdReported = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -12,7 +12,7 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240624133503_CreateReport")]
+    [Migration("20240624163310_CreateReport")]
     partial class CreateReport
     {
         /// <inheritdoc />
@@ -479,6 +479,9 @@ namespace TeachMate.Services.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("UserIdReported")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("typeErrorUser")
                         .HasColumnType("int");
