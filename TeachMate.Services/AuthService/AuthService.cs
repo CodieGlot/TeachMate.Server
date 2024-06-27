@@ -36,7 +36,7 @@ public class AuthService : IAuthService
         }
         if (user.IsDisabled)
         {
-            throw new BadRequestException("This accout has been banned");
+            throw new BadRequestException("This account has been banned");
         }
         return new LoginPayloadDto
         {

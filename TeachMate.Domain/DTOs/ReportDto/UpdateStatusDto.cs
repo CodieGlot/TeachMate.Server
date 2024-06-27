@@ -3,5 +3,5 @@
 public class UpdateStatusDto
 {
     public int Id { get; set; }
-    public Status status { get; set; }
+    public ReportStatus ReportStatus { get; set; }
 }

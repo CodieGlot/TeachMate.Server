@@ -71,8 +71,9 @@ public class AdminService : IAdminService
     public async Task<List<Report>> GetAllReportSystem()
     {
         var report = await _context.Report
-            .Include(r => r.ReportSystem)
-            .Where(r => r.ReportSystem != null)
+            .Include(r => r.SystemReport)
+            .Include(r => r.User)
+            .Where(r => r.SystemReport != null)
             .ToListAsync();
 
         foreach (var r in report)
@@ -85,8 +86,9 @@ public class AdminService : IAdminService
     public async Task<List<Report>> GetAllReportUser()
     {
         var report = await _context.Report
-            .Include(r => r.ReportUser) // Sử dụng eager loading để nạp ReportUser
-            .Where(r => r.ReportUser != null)
+            .Include(r => r.UserReport) // Sử dụng eager loading để nạp ReportUser
+            .Include (r => r.User)
+            .Where(r => r.UserReport != null)
             .ToListAsync();
 
         foreach (var r in report)
@@ -99,16 +101,17 @@ public class AdminService : IAdminService
     public async Task<List<Report>> SearchReportSystem(SearchReportSystemDto dto)
     {
         var query = _context.Report
-            .Include(r => r.ReportSystem)
+            .Where(r => r.SystemReport !=  null)
+            .Include(r => r.SystemReport)
             .AsQueryable();
 
-        if (dto.typeErrorSystem != null)
+        if (dto.SystemReportType != null)
         {
-            query = query.Where(m => m.ReportSystem != null && m.ReportSystem.typeErrorSystem == dto.typeErrorSystem);
+            query = query.Where(m => m.SystemReport.SystemReportType == dto.SystemReportType);
         }
         if (dto.status != null)
         {
-            query = query.Where(m => m.ReportSystem != null && m.Status == dto.status);
+            query = query.Where(m => m.Status == dto.status);
         }
         return await query.ToListAsync();
     }
@@ -116,16 +119,17 @@ public class AdminService : IAdminService
     public async Task<List<Report>> SearchReportUser(SearchReportUserDto dto)
     {
         var query = _context.Report
-            .Include(r => r.ReportUser)
+            .Where (r => r.UserReport != null)
+            .Include(r => r.UserReport)
             .AsQueryable();
 
         if (dto.typeErrorUser != null)
         {
-            query = query.Where(m => m.ReportUser != null && m.ReportUser.typeErrorUser == dto.typeErrorUser);
+            query = query.Where(m =>m.UserReport.UserReportType == dto.typeErrorUser);
         }
         if (dto.status != null)
         {
-            query = query.Where(m => m.ReportUser != null && m.Status == dto.status);
+            query = query.Where(m =>m.Status == dto.status);
         }
         return await query.ToListAsync();
     }
@@ -137,7 +141,7 @@ public class AdminService : IAdminService
 
         if (report != null)
         {
-            report.Status = dto.status;
+            report.Status = dto.ReportStatus;
             await _context.SaveChangesAsync();
         }
         else

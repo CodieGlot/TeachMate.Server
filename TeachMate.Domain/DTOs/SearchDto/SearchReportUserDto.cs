@@ -2,6 +2,6 @@
 
 public class SearchReportUserDto
 {
-    public TypeErrorUser? typeErrorUser { get; set; } = null;
-    public Status? status { get; set; } = null;
+    public UserReportType? typeErrorUser { get; set; } = null;
+    public ReportStatus? status { get; set; } = null;
 }

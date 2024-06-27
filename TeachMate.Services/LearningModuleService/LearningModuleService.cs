@@ -77,6 +77,7 @@ public class LearningModuleService : ILearningModuleService
 
         learner.Learner.EnrolledModules.Add(learningModule);
         learningModule.EnrolledLearners.Add(learner.Learner);
+        // them add PartipateLearningModule
         _context.Update(learner);
         _context.Update(learningModule);
 
@@ -163,6 +164,12 @@ public class LearningModuleService : ILearningModuleService
 
         return request;
     }
+
+    public async Task<int> GetNumberOfRequestWaiting(Guid userId)
+    {
+        return await _context.LearningModuleRequests.CountAsync(r => r.Status == RequestStatus.Waiting && r.RequesterId == userId);
+    }
+
     public async Task<LearningModuleRequest> CreateLearningModuleRequest(AppUser user, CreateLearningModuleRequestDto dto)
     {
         var learningModule = await GetLearningModuleById(dto.LearningModuleId);
@@ -176,6 +183,9 @@ public class LearningModuleService : ILearningModuleService
             throw new BadRequestException("You have already requested this class.");
 
         }
+        if (await GetNumberOfRequestWaiting(user.Id) >= 2) 
+            throw new BadRequestException("You have reached the maximum limit of 2 class requests.");
+        
         var request = new LearningModuleRequest
         {
             RequesterId = user.Id,
@@ -192,7 +202,7 @@ public class LearningModuleService : ILearningModuleService
             throw new Exception("The Classes is full");
         }
         _context.LearningModuleRequests.Add(request);
-        await _notificationService.CreatePushNotification(NotificationType.NewLearningRequest, null, new List<Guid> { request.LearningModule.TutorId }, new List<object> {  request.RequesterDisplayName });
+        //await _notificationService.CreatePushNotification(NotificationType.NewLearningRequest, null, new List<Guid> { request.LearningModule.TutorId }, new List<object> {  request.RequesterDisplayName });
 
         await _context.SaveChangesAsync();
 
@@ -261,4 +271,51 @@ public class LearningModuleService : ILearningModuleService
 
         return module.EnrolledLearners;
     }
+    public async Task<ResponseDto> OutClass(Guid learnerId, int moduleId)
+    {
+        var learningModule = await GetLearningModuleById(moduleId);
+
+        var learner = await _userService.GetUserById(learnerId);
+        if (learner == null || learner.Learner == null)
+        {
+            throw new BadRequestException("Learner does not exist.");
+        }
+        if (learningModule == null)
+        {
+            throw new BadRequestException("Module does not exist.");
+        }
+
+        learner.Learner.EnrolledModules.Remove(learningModule);
+        learningModule.EnrolledLearners.Remove(learner.Learner);
+        _context.Update(learner);
+        _context.Update(learningModule);
+
+        await _context.SaveChangesAsync();
+
+        return new ResponseDto("Out class success");
+    }
+    public async Task<ResponseDto> KickLearner(KickLearnerDto dto )
+    {
+        var learningModule = await GetLearningModuleById(dto.ModuleID);
+
+        var learner = await _userService.GetUserById(dto.LearnerID);
+        if (learner == null || learner.Learner == null)
+        {
+            throw new BadRequestException("Learner does not exist.");
+        }
+        if (learningModule == null)
+        {
+            throw new BadRequestException("Module does not exist.");
+        }
+
+        learner.Learner.EnrolledModules.Remove(learningModule);
+        learningModule.EnrolledLearners.Remove(learner.Learner);
+        _context.Update(learner);
+        _context.Update(learningModule);
+
+        await _context.SaveChangesAsync();
+
+        return new ResponseDto("Kick learner success");
+    }
+
 }

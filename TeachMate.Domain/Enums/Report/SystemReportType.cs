@@ -1,6 +1,6 @@
 ﻿namespace TeachMate.Domain;
 
-public enum TypeErrorSystem
+public enum SystemReportType
 {
     LoginError,
     ProfileError,

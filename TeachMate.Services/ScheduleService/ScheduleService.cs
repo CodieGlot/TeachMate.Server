@@ -18,7 +18,7 @@ public class ScheduleService : IScheduleService
         _userService = userService;
     }
 
-    public async Task<LearningModule> AddWeeklySchedule(AddWeeklyScheduleDto dto)
+    public async Task<LearningModule> AddWeeklySchedule(AddWeeklyScheduleDto dto, AppUser user)
     {
         var learningModule = await _learningModuleService.GetLearningModuleById(dto.LearningModuleId);
         var listWeeklySlotDto = dto.WeeklySlots;
@@ -43,7 +43,7 @@ public class ScheduleService : IScheduleService
         learningModule.WeeklySchedule.WeeklySlots = listWeeklySlot;
         _context.Update(learningModule);
         await _context.SaveChangesAsync();
-        await UpdateWeeklyLearningSession(learningModule.Id);
+        await UpdateWeeklyLearningSession(learningModule.Id, user);
         return learningModule;
     }
 
@@ -85,7 +85,7 @@ public class ScheduleService : IScheduleService
         return session;
     }
 
-    public async Task<LearningModule> UpdateWeeklyLearningSession(int id)
+    public async Task<LearningModule> UpdateWeeklyLearningSession(int id, AppUser user)
     {
         var learningModule = await _learningModuleService.GetLearningModuleById(id);
         if (learningModule == null) throw new NotFoundException("Not found learning module");
@@ -118,6 +118,7 @@ public class ScheduleService : IScheduleService
                     LinkMeet = "...",
 
                 };
+                if (await CheckDuplicateLearningSession(learningSession, user)) throw new Exception("The weekly schedule has duplicate session with your schedule");
                 learningSessions.Add(learningSession);
             }
             dateMark = dateMark.AddDays(7);
@@ -295,7 +296,6 @@ public class ScheduleService : IScheduleService
         await _context.SaveChangesAsync();
         return session;
     }
-
 
 
 }

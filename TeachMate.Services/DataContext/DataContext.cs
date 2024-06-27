@@ -32,9 +32,16 @@ public class DataContext : DbContext
             .HasIndex(x => x.CreatedAt);
         modelBuilder.Entity<PushNotificationReceiver>()
             .HasKey(x => new { x.PushNotificationId, x.ReceiverId });
-       
+        
 
         modelBuilder.Entity<AppUser>().HasIndex(x => x.Email).IsUnique();
+
+        modelBuilder.Entity<UserReport>()
+       .HasOne(ru => ru.ReportedUser)
+       .WithMany()
+       .HasForeignKey(ru => ru.ReportedUserId)
+       .IsRequired()
+       .OnDelete(DeleteBehavior.Cascade); // Adjust DeleteBehavior as needed
     }
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<Tutor> Tutors { get; set; }
@@ -59,5 +66,6 @@ public class DataContext : DbContext
     public DbSet<Report> Report { get; set; }
 
     public DbSet<TutorReplyFeedback> TutorReplyFeedback { get; set; }
+
 
 }

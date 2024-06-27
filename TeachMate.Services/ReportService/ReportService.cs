@@ -12,14 +12,14 @@ public class ReportService : IReportService
     public async Task<Report> SentReportSystem(ReportSystemDto dto, AppUser user)
     {
 
-        var reportSystem = new ReportSystem()
+        var reportSystem = new SystemReport()
         {
-            typeErrorSystem = dto.typeErrorSystem,
+            SystemReportType = dto.SystemReportType,
         };
         var report = new Report 
         {
             UserID = user.Id,
-            ReportSystem = reportSystem,
+            SystemReport = reportSystem,
             Title = dto.Title,
             Description = dto.Description,
         };
@@ -32,15 +32,15 @@ public class ReportService : IReportService
 
     public async Task<Report> SentReportUser(ReportUserDto dto, AppUser user)
     {
-        var reportUser = new ReportUser()
+        var reportUser = new UserReport()
         {
-            typeErrorUser = dto.typeErrorUser,
-            UserIdReported = dto.UserIDReported,
+            UserReportType = dto.UserReportType,
+            ReportedUserId = dto.ReportedUserId,
         };
         var report = new Report
         {
             UserID = user.Id,
-            ReportUser = reportUser,
+            UserReport = reportUser,
             Title = dto.Title,
             Description = dto.Description,
         };

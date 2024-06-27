@@ -2,6 +2,6 @@
 
 public class SearchReportSystemDto
 {
-    public TypeErrorSystem? typeErrorSystem { get; set; } = null;
-    public Status? status { get; set; } = null;
+    public SystemReportType? SystemReportType { get; set; } = null;
+    public ReportStatus? status { get; set; } = null;
 }

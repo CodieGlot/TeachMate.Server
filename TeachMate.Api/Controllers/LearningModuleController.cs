@@ -53,13 +53,19 @@ public class LearningModuleController : ControllerBase
     ///// <summary>
     ///// Enroll Learning Module
     ///// </summary>
-    //[Authorize(Roles = CustomRoles.Learner)]
-    //[HttpPost("{moduleId:int}/Enroll")]
-    //public async Task<ActionResult<LearningModule>> EnrollLearningModule(int moduleId)
-    //{
-    //    var user = await _contextService.GetAppUserAndThrow();
-    //    return Ok(await _learningModuleService.EnrollLearningModule(user, moduleId));
-    //}
+    [Authorize(Roles = CustomRoles.Learner)]
+    [HttpGet("OutClass/{moduleId:int}")]
+   public async Task<ActionResult<LearningModule>> outClass(int moduleId)
+    {
+        var user = await _contextService.GetAppUserAndThrow();
+        return Ok(await _learningModuleService.OutClass(user.Id, moduleId));
+    }
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpPost("KickLearner/")]
+    public async Task<ActionResult<LearningModule>> KickLearner(KickLearnerDto dto)
+    {
+        return Ok(await _learningModuleService.KickLearner(dto));
+    }
 
     /// <summary>
     /// Create Learning Module
