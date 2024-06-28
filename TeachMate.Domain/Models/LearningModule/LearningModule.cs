@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using TeachMate.Domain;
 
 namespace TeachMate.Domain;
 public class LearningModule
@@ -36,4 +37,6 @@ public class LearningModule
     public List<LearningModulePaymentOrder> LearningModulePaymentOrder { get; set; } = new List<LearningModulePaymentOrder>();
     
     public List<LearningModuleRequest> LearningModuleRequests { get; set; } = new List<LearningModuleRequest>();
+
+   public List<LearningChapter> LearningChapters { get; set; } = new List<LearningChapter> { };
 }

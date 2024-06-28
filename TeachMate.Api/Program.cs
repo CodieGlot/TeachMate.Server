@@ -153,21 +153,47 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
+builder.Services.AddScoped<ILearningMaterialService, LearningMaterialService>();
 // Add Cron-jobs
-builder.Services.AddQuartz(q =>
+//builder.Services.AddQuartz(q =>
+//{
+//    var jobKey = new JobKey("NotifyUsersToPay");
+//    q.AddJob<NotifyUsersToPay>(opts => opts.WithIdentity(jobKey));
+
+//    q.AddTrigger(opts => opts
+//        .ForJob(jobKey)
+//        .WithIdentity("NotifyUsersToPay-trigger")
+//        // this will trigger at the end of every month
+//        .WithCronSchedule("0 0 0 L * ?"));
+
+//});
+// Add Cron-jobs
+DateTime scheduleTime = new DateTime(2024, 6, 27, 19, 35, 0);
+
+if (DateTime.Compare(scheduleTime, DateTime.Now) <= 0)
 {
-    var jobKey = new JobKey("NotifyUsersToPay");
-    q.AddJob<NotifyUsersToPay>(opts => opts.WithIdentity(jobKey));
+    Console.WriteLine("Không thể lập lịch cho một ngày quá khứ hoặc hiện tại.");
+}
+else
+{
+    var cronExpression = $"0 {scheduleTime.Minute} {scheduleTime.Hour} {scheduleTime.Day} {scheduleTime.Month} ? {scheduleTime.Year}";
 
-    q.AddTrigger(opts => opts
-        .ForJob(jobKey)
-        .WithIdentity("NotifyUsersToPay-trigger")
-        // this will trigger at the end of every month
-        .WithCronSchedule("0 0 0 L * ?"));
+    builder.Services.AddQuartz(q =>
+    {
+        var jobKey = new JobKey("NotifyUsersToPay");
+        q.AddJob<NotifyUsersToPay>(opts => opts.WithIdentity(jobKey));
 
-});
+        q.AddTrigger(opts => opts
+            .ForJob(jobKey)
+            .WithIdentity("NotifyUsersToPay-trigger")
+            .WithCronSchedule(cronExpression));
+    });
 
-builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+    // Đăng ký QuartzHostedService và cấu hình
+    builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+}
+
+
 
 var app = builder.Build();
 

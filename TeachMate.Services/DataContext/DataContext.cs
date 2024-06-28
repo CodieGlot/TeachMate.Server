@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TeachMate.Domain;
-using TeachMate.Services.Migrations;
 
 namespace TeachMate.Services;
 
@@ -32,9 +31,20 @@ public class DataContext : DbContext
             .HasIndex(x => x.CreatedAt);
         modelBuilder.Entity<PushNotificationReceiver>()
             .HasKey(x => new { x.PushNotificationId, x.ReceiverId });
-        
+
 
         modelBuilder.Entity<AppUser>().HasIndex(x => x.Email).IsUnique();
+
+
+        modelBuilder.Entity<LearningChapter>()
+            .Property(x => x.Id)
+            .ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<LearningMaterial>()
+            .Property(x => x.Id)
+            .ValueGeneratedOnAdd();
+
+ 
 
         modelBuilder.Entity<UserReport>()
        .HasOne(ru => ru.ReportedUser)
@@ -66,6 +76,8 @@ public class DataContext : DbContext
     public DbSet<Report> Report { get; set; }
 
     public DbSet<TutorReplyFeedback> TutorReplyFeedback { get; set; }
-
-
+    public DbSet<SystemReport> SystemReports { get; set; }
+    public DbSet<UserReport> UserReports { get; set; }
+    public DbSet<LearningChapter> LearningChapters { get; set; }
+    public DbSet<LearningMaterial> LearningMaterials { get; set; }
 }
