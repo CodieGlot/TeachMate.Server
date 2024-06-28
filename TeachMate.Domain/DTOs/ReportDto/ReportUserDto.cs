@@ -2,7 +2,8 @@
 
 public class ReportUserDto
 {
-    public TypeErrorUser typeErrorUser { get; set; }
+    public UserReportType UserReportType { get; set; }
     public String Title { get; set; } = String.Empty;
     public String Description { get; set; } = String.Empty;
+    public Guid ReportedUserId { get; set; }
 }

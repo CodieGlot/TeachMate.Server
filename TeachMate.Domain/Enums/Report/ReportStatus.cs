@@ -1,6 +1,6 @@
 ﻿namespace TeachMate.Domain;
 
-public enum Status
+public enum ReportStatus
 {
     Pending,
     Processing,

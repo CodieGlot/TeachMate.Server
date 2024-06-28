@@ -49,5 +49,53 @@ public class AdminController : ControllerBase
         return Ok(await _adminService.UpdateStatus(dto));
     }
 
+    /// <summary>
+    /// Get all report system
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("GetAllReportSystem")]
+    public async Task<ActionResult<List<Report>>> GetAllReportSystem()
+    {
+        return Ok(await _adminService.GetAllReportSystem());
+    }
 
+    /// <summary>
+    /// Get all report user
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("GetAllReportUser")]
+    public async Task<ActionResult<List<Report>>> GetAllReportUser()
+    {
+        return Ok(await _adminService.GetAllReportUser());
+    }
+
+    /// <summary>
+    /// Search Report System
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPost("SearchReportSystem")]
+    public async Task<ActionResult<List<Report>>> SearchReportSystem(SearchReportSystemDto dto)
+    {
+        return Ok(await _adminService.SearchReportSystem(dto));
+    }
+
+    /// <summary>
+    /// Search Report User
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPost("SearchReportUser")]
+    public async Task<ActionResult<List<Report>>> SearchReportUser(SearchReportUserDto dto)
+    {
+        return Ok(await _adminService.SearchReportUser(dto));
+    }
+
+    /// <summary>
+    /// Update status report
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPut("UpdateStatusReport")]
+    public async Task<ActionResult<Report>> UpdateStatusReport(UpdateStatusDto dto)
+    {
+        return Ok(await _adminService.UpdateStatusReport(dto));
+    }
 }
