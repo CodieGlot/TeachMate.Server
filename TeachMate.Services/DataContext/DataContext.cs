@@ -35,6 +35,13 @@ public class DataContext : DbContext
         
 
         modelBuilder.Entity<AppUser>().HasIndex(x => x.Email).IsUnique();
+
+        modelBuilder.Entity<UserReport>()
+       .HasOne(ru => ru.ReportedUser)
+       .WithMany()
+       .HasForeignKey(ru => ru.ReportedUserId)
+       .IsRequired()
+       .OnDelete(DeleteBehavior.Cascade); // Adjust DeleteBehavior as needed
     }
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<Tutor> Tutors { get; set; }
