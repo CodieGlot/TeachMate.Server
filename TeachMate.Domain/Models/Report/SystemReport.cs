@@ -2,9 +2,9 @@
 
 namespace TeachMate.Domain;
 
-public class ReportSystem 
+public class SystemReport 
 {
     [Key]
     public int Id { get; set; }
-    public TypeErrorSystem typeErrorSystem {  get; set; }   
+    public SystemReportType SystemReportType {  get; set; }   
 }

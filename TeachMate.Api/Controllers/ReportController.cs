@@ -32,10 +32,10 @@ public class ReportController : ControllerBase
     /// <summary>
     /// Sent report user
     /// </summary>
-    //[HttpPost("SentReportUser")]
-    //public async Task<ActionResult<AppUser>> SentReport(ReportSystemDto dto)
-    //{
-    //    var user = await _contextService.GetAppUserAndThrow();
-    //    return Ok(await _reportService.SentReportSystem(dto, user));
-    //}
+    [HttpPost("SentReportUser")]
+    public async Task<ActionResult<AppUser>> SentReport(ReportUserDto dto)
+    {
+        var user = await _contextService.GetAppUserAndThrow();
+        return Ok(await _reportService.SentReportUser(dto, user));
+    }
 }

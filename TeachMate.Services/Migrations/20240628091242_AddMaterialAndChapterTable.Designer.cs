@@ -12,8 +12,8 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240626155101_AddCreatePaymentOrder")]
-    partial class AddCreatePaymentOrder
+    [Migration("20240628091242_AddMaterialAndChapterTable")]
+    partial class AddMaterialAndChapterTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -120,6 +120,61 @@ namespace TeachMate.Services.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Learners");
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.LearningChapter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LearningModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LearningModuleId");
+
+                    b.ToTable("LearningChapters");
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.LearningMaterial", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LearningChapterId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LinkDownload")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UploadDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LearningChapterId");
+
+                    b.ToTable("LearningMaterials");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.LearningModule", b =>
@@ -431,13 +486,10 @@ namespace TeachMate.Services.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReportSystemId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReportUserId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SystemReportId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -447,16 +499,21 @@ namespace TeachMate.Services.Migrations
                     b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("UserReportId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ReportSystemId");
+                    b.HasIndex("SystemReportId");
 
-                    b.HasIndex("ReportUserId");
+                    b.HasIndex("UserID");
+
+                    b.HasIndex("UserReportId");
 
                     b.ToTable("Report");
                 });
 
-            modelBuilder.Entity("TeachMate.Domain.ReportSystem", b =>
+            modelBuilder.Entity("TeachMate.Domain.SystemReport", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -464,28 +521,12 @@ namespace TeachMate.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("typeErrorSystem")
+                    b.Property<int>("SystemReportType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReportSystem");
-                });
-
-            modelBuilder.Entity("TeachMate.Domain.ReportUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("typeErrorUser")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ReportUser");
+                    b.ToTable("SystemReports");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
@@ -565,6 +606,27 @@ namespace TeachMate.Services.Migrations
                     b.HasKey("id");
 
                     b.ToTable("UserOTPs");
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.UserReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("ReportedUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("UserReportType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportedUserId");
+
+                    b.ToTable("UserReports");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.WeeklySchedule", b =>
@@ -653,6 +715,28 @@ namespace TeachMate.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.LearningChapter", b =>
+                {
+                    b.HasOne("TeachMate.Domain.LearningModule", "LearningModule")
+                        .WithMany("LearningChapters")
+                        .HasForeignKey("LearningModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LearningModule");
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.LearningMaterial", b =>
+                {
+                    b.HasOne("TeachMate.Domain.LearningChapter", "LearningChapter")
+                        .WithMany("LearningMaterials")
+                        .HasForeignKey("LearningChapterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LearningChapter");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.LearningModule", b =>
@@ -768,17 +852,25 @@ namespace TeachMate.Services.Migrations
 
             modelBuilder.Entity("TeachMate.Domain.Report", b =>
                 {
-                    b.HasOne("TeachMate.Domain.ReportSystem", "ReportSystem")
+                    b.HasOne("TeachMate.Domain.SystemReport", "SystemReport")
                         .WithMany()
-                        .HasForeignKey("ReportSystemId");
+                        .HasForeignKey("SystemReportId");
 
-                    b.HasOne("TeachMate.Domain.ReportUser", "ReportUser")
+                    b.HasOne("TeachMate.Domain.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("ReportUserId");
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("ReportSystem");
+                    b.HasOne("TeachMate.Domain.UserReport", "UserReport")
+                        .WithMany()
+                        .HasForeignKey("UserReportId");
 
-                    b.Navigation("ReportUser");
+                    b.Navigation("SystemReport");
+
+                    b.Navigation("User");
+
+                    b.Navigation("UserReport");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
@@ -811,6 +903,17 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("Replier");
                 });
 
+            modelBuilder.Entity("TeachMate.Domain.UserReport", b =>
+                {
+                    b.HasOne("TeachMate.Domain.AppUser", "ReportedUser")
+                        .WithMany()
+                        .HasForeignKey("ReportedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReportedUser");
+                });
+
             modelBuilder.Entity("TeachMate.Domain.WeeklySlot", b =>
                 {
                     b.HasOne("TeachMate.Domain.WeeklySchedule", "WeeklySchedule")
@@ -836,8 +939,15 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("LearningModuleRequests");
                 });
 
+            modelBuilder.Entity("TeachMate.Domain.LearningChapter", b =>
+                {
+                    b.Navigation("LearningMaterials");
+                });
+
             modelBuilder.Entity("TeachMate.Domain.LearningModule", b =>
                 {
+                    b.Navigation("LearningChapters");
+
                     b.Navigation("LearningModulePaymentOrder");
 
                     b.Navigation("LearningModuleRequests");

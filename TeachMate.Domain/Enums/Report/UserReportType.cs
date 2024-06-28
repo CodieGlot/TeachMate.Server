@@ -1,6 +1,6 @@
 ﻿namespace TeachMate.Domain;
 
-public enum TypeErrorUser
+public enum UserReportType
 {
     ImpersonatingSomeoneElse,
     PostingInappropriateContent,
