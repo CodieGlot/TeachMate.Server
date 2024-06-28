@@ -17,7 +17,7 @@ public interface ILearningModuleService
     Task<List<LearningModuleRequest>> GetAllReceivedRequests(int moduleId, Guid tutorId);
     Task<List<Learner>> GetAllLearnerInLearningModule(int moduleId, Guid tutorId);
     Task<ResponseDto> OutClass(Guid learnerId, int moduleId);
-    Task<ResponseDto> KickLearner(KickLearnerDto dto, int moduleId);
+    Task<ResponseDto> KickLearner(KickLearnerDto dto);
 
 
 }

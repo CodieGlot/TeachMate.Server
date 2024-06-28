@@ -294,9 +294,9 @@ public class LearningModuleService : ILearningModuleService
 
         return new ResponseDto("Out class success");
     }
-    public async Task<ResponseDto> KickLearner(KickLearnerDto dto , int moduleId)
+    public async Task<ResponseDto> KickLearner(KickLearnerDto dto )
     {
-        var learningModule = await GetLearningModuleById(moduleId);
+        var learningModule = await GetLearningModuleById(dto.ModuleID);
 
         var learner = await _userService.GetUserById(dto.LearnerID);
         if (learner == null || learner.Learner == null)

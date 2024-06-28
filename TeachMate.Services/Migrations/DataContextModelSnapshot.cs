@@ -689,12 +689,12 @@ namespace TeachMate.Services.Migrations
             });
 
             modelBuilder.Entity("TeachMate.Domain.LearningModulePaymentOrder", b =>
-            {
-                b.HasOne("TeachMate.Domain.Learner", "Learner")
-                    .WithMany()
-                    .HasForeignKey("LearnerId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                {
+                    b.HasOne("TeachMate.Domain.Learner", "Learner")
+                        .WithMany("LearningModulePaymentOrders")
+                        .HasForeignKey("LearnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                 b.HasOne("TeachMate.Domain.LearningModule", "LearningModule")
                     .WithMany("LearningModulePaymentOrder")
@@ -827,9 +827,11 @@ namespace TeachMate.Services.Migrations
             });
 
             modelBuilder.Entity("TeachMate.Domain.Learner", b =>
-            {
-                b.Navigation("LearningModuleRequests");
-            });
+                {
+                    b.Navigation("LearningModulePaymentOrders");
+
+                    b.Navigation("LearningModuleRequests");
+                });
 
             modelBuilder.Entity("TeachMate.Domain.LearningModule", b =>
             {

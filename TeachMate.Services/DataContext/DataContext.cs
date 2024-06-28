@@ -32,7 +32,7 @@ public class DataContext : DbContext
             .HasIndex(x => x.CreatedAt);
         modelBuilder.Entity<PushNotificationReceiver>()
             .HasKey(x => new { x.PushNotificationId, x.ReceiverId });
-       
+        
 
         modelBuilder.Entity<AppUser>().HasIndex(x => x.Email).IsUnique();
     }

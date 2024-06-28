@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace TeachMate.Domain
 {
-    public class KickLearnerDto
+    public class CreateOrderPaymentDto
     {
         public Guid LearnerID { get; set; }
-        public int ModuleID { get; set; }
+        public int LearningModuleId {get;set;}
+
     }
 }
