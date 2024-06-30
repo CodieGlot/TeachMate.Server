@@ -10,7 +10,7 @@ namespace TeachMate.Services
     public interface ILearningMaterialService
     {
         Task<LearningChapter> AddLearningChapter(AddLearningChapterDto dto);
-        Task<LearningMaterial> UploadLearningMaterial(UploadLearningMaterial dto);
+        Task<LearningMaterial> UploadLearningMaterial(UploadLearningMaterialDto dto);
         Task<List<LearningMaterial>> GetAllLearningMaterialsByLearningChapterId(int chapterId);
         Task<List<LearningChapter>> GetAllLearningChaptersByLearningModuleId (int moduleId);
     }
