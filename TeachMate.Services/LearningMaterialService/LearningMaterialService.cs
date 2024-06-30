@@ -15,7 +15,9 @@ namespace TeachMate.Services
         public async Task<List<LearningChapter>> GetAllLearningChaptersByLearningModuleId(int moduleId)
         {
             var listChapters = new List<LearningChapter>();
-            listChapters = await _context.LearningChapters.Where(x => x.LearningModuleId == moduleId).ToListAsync();
+            listChapters = await _context.LearningChapters.Where(x => x.LearningModuleId == moduleId)
+                .Include(x => x.LearningMaterials)
+                .ToListAsync();
             return listChapters;
         }
 
@@ -41,14 +43,13 @@ namespace TeachMate.Services
         }
 
 
-        public async Task<LearningMaterial> UploadLearningMaterial(UploadLearningMaterial dto)
+        public async Task<LearningMaterial> UploadLearningMaterial(UploadLearningMaterialDto dto)
         {
             var learningMaterial = new LearningMaterial()
             {
                 DisplayName = dto.DisplayName,
                 LearningChapterId = dto.LearningChapterId,
                 LinkDownload = dto.LinkDownload,
-                UploadDate = dto.UploadDate,
 
             };
             await _context.LearningMaterials.AddAsync(learningMaterial);

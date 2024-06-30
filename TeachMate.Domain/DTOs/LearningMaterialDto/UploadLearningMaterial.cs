@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TeachMate.Domain
 {
-    public class UploadLearningMaterial
+    public class UploadLearningMaterialDto
     {
         public string DisplayName { get; set; }
         public string LinkDownload { get; set; }
