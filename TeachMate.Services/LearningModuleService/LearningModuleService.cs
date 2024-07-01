@@ -318,4 +318,22 @@ public class LearningModuleService : ILearningModuleService
         return new ResponseDto("Kick learner success");
     }
 
+    public async Task<List<LearningModule>> GetAllLearningModuleOfOneTutor(Guid tutorId)
+    {
+        var learningModule = await _context.LearningModules
+                                    .Where(module => module.Tutor.Id == tutorId)
+                                    .ToListAsync();
+        return learningModule;
+    }
+
+    public async Task<double> GetAverageRatingOfTutorByAllLearningModule(Guid tutorId)
+    {
+        var learningModule = await GetAllLearningModuleOfOneTutor(tutorId);
+
+        var averageRating = await _context.LearningModuleFeedbacks
+                                              .Where(fb => fb.LearningModule.Tutor.Id == tutorId)
+                                              .AverageAsync(fb => (double?)fb.Star); 
+
+        return averageRating ?? 0;
+    }
 }

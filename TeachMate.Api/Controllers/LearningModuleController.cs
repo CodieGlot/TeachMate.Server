@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 using TeachMate.Domain;
 using TeachMate.Services;
 
@@ -151,5 +152,28 @@ public class LearningModuleController : ControllerBase
         var user = await _contextService.GetAppUserAndThrow();
         return await _learningModuleService.GetAllLearnerInLearningModule(learningModuleId, user.Tutor.Id);
        
+    }
+
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("LearningModuleOfOneTutor/{tutorId}")]
+    public async Task<ActionResult<List<LearningModule>>> GetAllLearningModuleOfOneTutor(Guid tutorId)
+    {
+        var learningModule = await _learningModuleService.GetAllLearningModuleOfOneTutor(tutorId);
+        return Ok(learningModule);
+    }
+
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("AverageRatingOfTutor/{tutorId}")]
+    public async Task<ActionResult<double>> GetAverageRatingOfTutorByAllLearningModule(Guid tutorId)
+    {
+        try
+        {
+            var averageRating = await _learningModuleService.GetAverageRatingOfTutorByAllLearningModule(tutorId);
+            return Ok(averageRating);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 }

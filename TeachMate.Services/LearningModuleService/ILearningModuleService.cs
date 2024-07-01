@@ -19,5 +19,6 @@ public interface ILearningModuleService
     Task<ResponseDto> OutClass(Guid learnerId, int moduleId);
     Task<ResponseDto> KickLearner(KickLearnerDto dto);
 
-
+    Task<List<LearningModule>> GetAllLearningModuleOfOneTutor(Guid tutorId);
+    Task<double> GetAverageRatingOfTutorByAllLearningModule(Guid tutorId);
 }
