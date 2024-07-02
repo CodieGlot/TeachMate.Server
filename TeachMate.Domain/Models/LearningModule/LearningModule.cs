@@ -38,5 +38,7 @@ public class LearningModule
     
     public List<LearningModuleRequest> LearningModuleRequests { get; set; } = new List<LearningModuleRequest>();
 
-   public List<LearningChapter> LearningChapters { get; set; } = new List<LearningChapter> { };
+    public List<LearningChapter> LearningChapters { get; set; } = new List<LearningChapter> { };
+
+    public List<LearningModuleFeedback> LearningModuleFeedback { get; set; } = new List<LearningModuleFeedback> { };
 }

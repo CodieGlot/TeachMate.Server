@@ -65,4 +65,36 @@ public class PaymentController : ControllerBase
         return await _paymentService.GetAllPaymentOrderByModuleIdByLearner(moduleId, user.Id);
 
     }
+
+    /// <summary>
+    /// Set price for learning module
+    /// </summary>
+    /// <param name="dto">DTO containing LearningModuleId, Price, and PaymentType</param>
+    /// <returns>Action result indicating success or failure</returns>
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpPut("SetPriceForLearningModule")]
+    public async Task<ActionResult<LearningModule>> SetPriceForLearningModule(SetPriceForLearningModuleDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            var updatedModule = await _paymentService.SetPriceForLearningModule(dto);
+
+            if (updatedModule == null)
+            {
+                return NotFound($"Learning module with ID {dto.LearningModuleId} not found.");
+            }
+
+            return Ok(updatedModule);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
 }

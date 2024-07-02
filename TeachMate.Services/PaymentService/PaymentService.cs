@@ -10,9 +10,6 @@ public class PaymentService : IPaymentService
     private readonly IVnPayService _vnPayService;
     private readonly DataContext _context;
 
-
-   
-
     public PaymentService(IZaloPayService zaloPayService, IMomoService momoService, IVnPayService vnPayService, DataContext context)
     {
         _zaloPayService = zaloPayService;
@@ -30,7 +27,6 @@ public class PaymentService : IPaymentService
             _ => throw new NotImplementedException(),
         };
     }
-
     public async Task<LearningModulePaymentOrder> CreatePaymentOrder(CreateOrderPaymentDto dto)
     {
         var amount = await _context.LearningModules
@@ -51,7 +47,7 @@ public class PaymentService : IPaymentService
         var order = new LearningModulePaymentOrder
         {
             Learner = learner,
-            LearningModule=learningModule,
+            LearningModule = learningModule,
             PaymentAmount = amount,
             CreatedAt = DateTime.Now,
             HasClaimed = false,
@@ -63,8 +59,9 @@ public class PaymentService : IPaymentService
         return order;
     }
 
-    public async Task<ResponseDto> PayForClass(int OrderID) {
-        
+    public async Task<ResponseDto> PayForClass(int OrderID)
+    {
+
         var paid = await _context.LearningModulePaymentOrders.Where(p => p.Id == OrderID).FirstOrDefaultAsync();
         if (paid == null)
         {
@@ -72,7 +69,7 @@ public class PaymentService : IPaymentService
         }
         paid.PaymentStatus = PaymentStatus.Paid;
         _context.LearningModulePaymentOrders.Update(paid);
-       await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
         return new ResponseDto("paid success");
     }
 
@@ -126,4 +123,42 @@ public class PaymentService : IPaymentService
         return ListPaymentOrder;
     }
 
+
+
+
+    public async Task<LearningModule> SetPriceForLearningModule(SetPriceForLearningModuleDto dto)
+    {
+        var learningModule = await _context.LearningModules
+        .Where(lm => lm.Id == dto.LearningModuleId)
+        .FirstOrDefaultAsync();
+
+        if (learningModule == null)
+        {
+            throw new ArgumentException("Learning module not found.");
+        }
+
+        if (learningModule.ModuleType == ModuleType.Custom)
+        {
+            learningModule.PaymentType = PaymentType.Session;
+
+        } else if (learningModule.ModuleType == ModuleType.Weekly)
+        {
+            if (dto.PaymentType == PaymentType.Session || dto.PaymentType == PaymentType.Weekly)
+            {
+                learningModule.PaymentType = dto.PaymentType;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid payment type for weekly module. Must be either Session or Weekly.");
+            }
+        } else
+            learningModule.PaymentType = dto.PaymentType;
+
+         learningModule.Price = dto.Price;
+        _context.Update(learningModule);
+        await _context.SaveChangesAsync();
+
+        return learningModule;
+    }
 }
+
