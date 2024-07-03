@@ -63,11 +63,67 @@ public class PaymentService : IPaymentService
     {
 
         var paid = await _context.LearningModulePaymentOrders.Where(p => p.Id == OrderID).FirstOrDefaultAsync();
+        if (paid == null)
+        {
+            throw new BadRequestException("Not found your order");
+        }
         paid.PaymentStatus = PaymentStatus.Paid;
         _context.LearningModulePaymentOrders.Update(paid);
         await _context.SaveChangesAsync();
         return new ResponseDto("paid success");
     }
+
+    public async Task<List<LearningModulePaymentOrder>> GetAllPaymentOrder(Guid LearnerId) {
+        var ListPaymentOrder = await _context.LearningModulePaymentOrders.Where(p => p.LearnerId == LearnerId).Select(p =>
+        new LearningModulePaymentOrder
+        {
+            PaymentAmount = p.PaymentAmount,
+            CreatedAt = p.CreatedAt,
+            Id = p.Id,
+            LearnerId = p.LearnerId,
+            LearningModuleId = p.LearningModuleId,
+            HasClaimed = p.HasClaimed,
+            PaymentStatus = PaymentStatus.Paid,
+        }).ToListAsync();
+        return ListPaymentOrder;
+    }
+    public async Task<List<LearningModulePaymentOrder>> GetAllPaymentOrderByModuleID(int moduleID)
+    {
+        var ListPaymentOrder = await _context.LearningModulePaymentOrders.Where(p => p.LearningModuleId == moduleID).Select(p =>
+        new LearningModulePaymentOrder {
+        PaymentAmount = p.PaymentAmount,
+        CreatedAt = p.CreatedAt,
+        Id = p.Id,
+        LearnerId = p.LearnerId,
+        LearningModuleId = p.LearningModuleId,
+        HasClaimed = p.HasClaimed,
+        PaymentStatus = PaymentStatus.Paid,
+        }).ToListAsync();
+        if(ListPaymentOrder == null)
+        {
+            throw new BadRequestException("No payment order of the class");
+        }
+        return ListPaymentOrder;
+    }
+    public async Task<LearningModulePaymentOrder> GetAllPaymentOrderUnpaidByModuleIdByLearner(int moduleID, Guid LearnerId) {
+        var ListPaymentOrder = await _context.LearningModulePaymentOrders.Where(p => p.LearningModuleId == moduleID && p.LearnerId == LearnerId && p.PaymentStatus==PaymentStatus.Pending).FirstOrDefaultAsync();
+        if (ListPaymentOrder == null)
+        {
+            throw new Exception("Unpaid Order not found");
+        }
+        return ListPaymentOrder;
+    }
+    public async Task<List<LearningModulePaymentOrder>> GetAllPaymentOrderByModuleIdByLearner(int moduleID, Guid LearnerId)
+    {
+        var ListPaymentOrder = await _context.LearningModulePaymentOrders.Where(p => p.LearningModuleId == moduleID && p.LearnerId == LearnerId ).ToListAsync();
+        if (ListPaymentOrder == null)
+        {
+            throw new Exception("Payment Order not found");
+        }
+        return ListPaymentOrder;
+    }
+
+
 
 
     public async Task<LearningModule> SetPriceForLearningModule(SetPriceForLearningModuleDto dto)
@@ -105,3 +161,4 @@ public class PaymentService : IPaymentService
         return learningModule;
     }
 }
+
