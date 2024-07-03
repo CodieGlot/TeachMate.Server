@@ -16,19 +16,19 @@ public class PaymentController : ControllerBase
         _contextService = contextService;
     }
     [HttpPost("zalopay")]
-    public async Task<ActionResult<OrderUrlResponseDto>> CreateZaloPayOrder()
+    public async Task<ActionResult<OrderUrlResponseDto>> CreateZaloPayOrder(int amount)
     {
-        return await _paymentService.CreateOrderUrl(50002, PaymentProviderType.ZaloPay);
+        return await _paymentService.CreateOrderUrl(amount, PaymentProviderType.ZaloPay);
     }
     [HttpPost("momo")]
-    public async Task<ActionResult<OrderUrlResponseDto>> CreateMomoOrder()
+    public async Task<ActionResult<OrderUrlResponseDto>> CreateMomoOrder(int amount)
     {
-        return await _paymentService.CreateOrderUrl(50002, PaymentProviderType.Momo);
+        return await _paymentService.CreateOrderUrl(amount, PaymentProviderType.Momo);
     }
     [HttpPost("vnpay")]
-    public async Task<ActionResult<OrderUrlResponseDto>> CreateVnPayOrder()
+    public async Task<ActionResult<OrderUrlResponseDto>> CreateVnPayOrder(int amount)
     {
-        return await _paymentService.CreateOrderUrl(50002, PaymentProviderType.VnPay);
+        return await _paymentService.CreateOrderUrl(amount, PaymentProviderType.VnPay);
     }
     [HttpPost("CreatePaymentOrder")]
     public async Task<ActionResult<LearningModulePaymentOrder>> CreatePaymentOrder(CreateOrderPaymentDto dto)
