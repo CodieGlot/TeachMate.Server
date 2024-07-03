@@ -9,11 +9,13 @@ public class LearningModuleService : ILearningModuleService
     private readonly DataContext _context;
     private readonly IUserService _userService;
     private readonly INotificationService _notificationService;
-    public LearningModuleService(DataContext context, IUserService userService, INotificationService notificationService)
+    private readonly IPaymentService _paymentService;
+    public LearningModuleService(DataContext context, IUserService userService, INotificationService notificationService, IPaymentService paymentService)
     {
         _context = context;
         _userService = userService;
         _notificationService = notificationService;
+        _paymentService = paymentService;   
     }
     public async Task<LearningModule?> GetLearningModuleById(int id)
     {
@@ -80,9 +82,14 @@ public class LearningModuleService : ILearningModuleService
         // them add PartipateLearningModule
         _context.Update(learner);
         _context.Update(learningModule);
+       
 
         await _context.SaveChangesAsync();
-
+        await _paymentService.CreatePaymentOrder(new CreateOrderPaymentDto
+        {
+            LearnerID = learnerId,
+            LearningModuleId = learningModule.Id,
+        });
         return learningModule;
     }
     public async Task<LearningModule> CreateLearningModule(AppUser user, CreateLearningModuleDto dto)
@@ -238,9 +245,10 @@ public class LearningModuleService : ILearningModuleService
         }else
         if (request.Status == RequestStatus.Approved)
         {
-            await _notificationService.CreatePushNotification(NotificationType.LearningRequestAccepted, null, new List<Guid> { request.RequesterId }, new List<object> {  request.LearningModule.Title });
             await EnrollLearningModule(request.RequesterId, request.LearningModuleId);
             //learningModule.LearningModuleRequests.Remove(request);
+            await _notificationService.CreatePushNotification(NotificationType.LearningRequestAccepted, null, new List<Guid> { request.RequesterId }, new List<object> { request.LearningModule.Title });
+
         }
         await _context.SaveChangesAsync();
 
