@@ -9,10 +9,11 @@ namespace TeachMate.Api.Controllers;
 public class PaymentController : ControllerBase
 {
     private readonly IPaymentService _paymentService;
-
-    public PaymentController(IPaymentService paymentService)
+    private readonly IHttpContextService _contextService;
+    public PaymentController(IPaymentService paymentService , IHttpContextService contextService)
     {
         _paymentService = paymentService;
+        _contextService = contextService;
     }
     [HttpPost("zalopay")]
     public async Task<ActionResult<OrderUrlResponseDto>> CreateZaloPayOrder()
@@ -35,9 +36,34 @@ public class PaymentController : ControllerBase
       return await _paymentService.CreatePaymentOrder(dto);
     }
     [HttpPut("PayForClass")]
-    public async Task<ActionResult<ResponseDto>> PayForClass(int id) {
+    public async Task<ActionResult<ResponseDto>> PayForClass(int OrderID) {
         
-        return await _paymentService.PayForClass(id);
+        return await _paymentService.PayForClass(OrderID);
+    }
+    [HttpPost("GetAllPaymentByLearnerID")]
+    public async Task<ActionResult<List<LearningModulePaymentOrder>>> GetAllPaymentOrder() {
+        var user = await _contextService.GetAppUserAndThrow();
+
+        return await _paymentService.GetAllPaymentOrder(user.Id);
+             
+    }
+    [HttpPost("GetAllPaymentByModuleID")]
+    public async Task<ActionResult<List<LearningModulePaymentOrder>>> GetAllPaymentOrderByModuleId(int moduleId) {
+        return await _paymentService.GetAllPaymentOrderByModuleID(moduleId);
+    }
+
+    [HttpPost("GetAllUnPaidByModuleIdByLearnerId")]
+    public async Task<ActionResult<LearningModulePaymentOrder>> GetUnPaidPaymentOrderByModuleId(int moduleId) {
+        var user = await _contextService.GetAppUserAndThrow();
+        return await _paymentService.GetAllPaymentOrderUnpaidByModuleIdByLearner(moduleId,user.Id);
+    
+    }
+    [HttpPost("GetAllPaymentOrderByModuleIdByLearnerId")]
+    public async Task<ActionResult<List<LearningModulePaymentOrder>>> GetAllPaidPaymentOrderByModuleId(int moduleId)
+    {
+        var user = await _contextService.GetAppUserAndThrow();
+        return await _paymentService.GetAllPaymentOrderByModuleIdByLearner(moduleId, user.Id);
+
     }
 
     /// <summary>
