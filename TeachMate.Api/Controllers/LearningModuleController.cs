@@ -154,7 +154,7 @@ public class LearningModuleController : ControllerBase
        
     }
 
-    [Authorize(Roles = CustomRoles.Admin)]
+    [Authorize(Roles = CustomRoles.GeneralUser)]
     [HttpGet("LearningModuleOfOneTutor/{tutorId}")]
     public async Task<ActionResult<List<LearningModule>>> GetAllLearningModuleOfOneTutor(Guid tutorId)
     {
@@ -162,7 +162,7 @@ public class LearningModuleController : ControllerBase
         return Ok(learningModule);
     }
 
-    [Authorize(Roles = CustomRoles.Admin)]
+    [Authorize(Roles = CustomRoles.GeneralUser)]
     [HttpGet("AverageRatingOfTutor/{tutorId}")]
     public async Task<ActionResult<double>> GetAverageRatingOfTutorByAllLearningModule(Guid tutorId)
     {
