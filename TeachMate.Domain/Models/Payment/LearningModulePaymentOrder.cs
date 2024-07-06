@@ -16,6 +16,8 @@ namespace TeachMate.Domain
         public LearningModule LearningModule { get; set; } = new LearningModule();
         public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending; 
         public double PaymentAmount { get; set; }
-        public bool HasClaimed { get; set; } = false; 
+        public bool HasClaimed { get; set; } = false;
+
+        public List<Transaction> Transaction { get; set; } = new List<Transaction>();
     }
 }

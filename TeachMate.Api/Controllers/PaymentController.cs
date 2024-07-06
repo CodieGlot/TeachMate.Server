@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeachMate.Domain;
+using TeachMate.Domain.DTOs;
 using TeachMate.Services;
 
 namespace TeachMate.Api.Controllers;
@@ -18,18 +19,19 @@ public class PaymentController : ControllerBase
     [HttpPost("zalopay")]
     public async Task<ActionResult<OrderUrlResponseDto>> CreateZaloPayOrder(int amount)
     {
-        return await _paymentService.CreateOrderUrl(amount, PaymentProviderType.ZaloPay);
+        return await _paymentService.CreateOrderUrl(amount, PaymentProviderType.ZaloPay, "");
     }
     [HttpPost("momo")]
     public async Task<ActionResult<OrderUrlResponseDto>> CreateMomoOrder(int amount)
     {
-        return await _paymentService.CreateOrderUrl(amount, PaymentProviderType.Momo);
+        return await _paymentService.CreateOrderUrl(amount, PaymentProviderType.Momo, "");
     }
     [HttpPost("vnpay")]
-    public async Task<ActionResult<OrderUrlResponseDto>> CreateVnPayOrder(int amount)
+    public async Task<ActionResult<OrderUrlResponseDto>> CreateVnPayOrder(double amount)
     {
-        return await _paymentService.CreateOrderUrl(amount, PaymentProviderType.VnPay);
+        return await _paymentService.CreateOrderUrl(amount, PaymentProviderType.VnPay, DateTime.Now.Ticks.ToString());
     }
+
     [HttpPost("CreatePaymentOrder")]
     public async Task<ActionResult<LearningModulePaymentOrder>> CreatePaymentOrder(CreateOrderPaymentDto dto)
     { 
@@ -95,6 +97,18 @@ public class PaymentController : ControllerBase
         {
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
+    }
+    [HttpPost("CreateNewTransaction")]
+    public async Task<ActionResult<OrderUrlResponseDto>> CreateNewTransaction (CreateTransactionDto dto)
+    {
+        var t = await _paymentService.CreateTransactionAsync(dto); 
+        return Ok(await _paymentService.CreateOrderUrl(dto.Amount, dto.PaymentGateway, t.TxnRef));
+    }
+
+    [HttpPut("UpdateTransactionAsync")]
+    public async Task<ActionResult<OrderUrlResponseDto>> UpdateTransactionAsync(UpdateTransactionDto dto)
+    {
+        return Ok(await _paymentService.UpdateTransactionAsync(dto));
     }
 
 }
