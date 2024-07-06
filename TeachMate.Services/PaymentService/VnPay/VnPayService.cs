@@ -12,10 +12,10 @@ public class VnPayService : IVnPayService
         _contextService = contextService;
 
     }
-    public OrderUrlResponseDto CreateVnPayOrder(double amount)
+    public OrderUrlResponseDto CreateVnPayOrder(double amount, string tickParam)
     {
         Guid orderId = Guid.NewGuid();
-        var tick = DateTime.Now.Ticks.ToString();
+        var tick = tickParam;
 
         var vnpay = new VnPayLibrary();
         vnpay.AddRequestData("vnp_Version", _vnPayConfig.Version);

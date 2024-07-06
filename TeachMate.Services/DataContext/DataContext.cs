@@ -44,7 +44,6 @@ public class DataContext : DbContext
             .Property(x => x.Id)
             .ValueGeneratedOnAdd();
 
- 
 
         modelBuilder.Entity<UserReport>()
        .HasOne(ru => ru.ReportedUser)
@@ -80,4 +79,6 @@ public class DataContext : DbContext
     public DbSet<UserReport> UserReports { get; set; }
     public DbSet<LearningChapter> LearningChapters { get; set; }
     public DbSet<LearningMaterial> LearningMaterials { get; set; }
+
+    public DbSet<Transaction> Transactions { get; set; }
 }

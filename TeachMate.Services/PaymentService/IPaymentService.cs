@@ -4,7 +4,7 @@
 namespace TeachMate.Services;
 public interface IPaymentService
 {
-    Task<OrderUrlResponseDto> CreateOrderUrl(double amount, PaymentProviderType type);
+    Task<OrderUrlResponseDto> CreateOrderUrl(double amount, PaymentProviderType type, string tick);
 
     Task<LearningModule> SetPriceForLearningModule(SetPriceForLearningModuleDto dto);
 
@@ -18,6 +18,7 @@ public interface IPaymentService
 
     Task<ResponseDto> PayForClass(int OrderID);
 
-
+    Task<Transaction> CreateTransactionAsync(CreateTransactionDto dto);
+    Task<Transaction> UpdateTransactionAsync(UpdateTransactionDto dto);
 
 }
