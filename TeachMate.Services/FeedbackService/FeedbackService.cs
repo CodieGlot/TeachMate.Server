@@ -137,13 +137,11 @@ namespace TeachMate.Services
 
         public async Task<double> GetAverageRatingByStar(int moduleId)
         {
-            // Use LINQ to calculate the average directly in the database
             var averageRating = await _context.LearningModuleFeedbacks
                                               .Where(fb => fb.LearningModule.Id == moduleId)
-                                              .AverageAsync(fb => (double?)fb.Star); // Cast to nullable double to handle null case
+                                              .AverageAsync(fb => (double?)fb.Star); 
 
-            // Return 0 if no feedback exists for the module
-            return averageRating ?? 0;
+            return averageRating?? 0.0;
         }
 
 

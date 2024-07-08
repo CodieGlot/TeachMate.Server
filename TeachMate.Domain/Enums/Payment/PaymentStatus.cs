@@ -8,7 +8,7 @@ namespace TeachMate.Domain
 {
     public enum PaymentStatus
     {
-        Pending,
-        Paid
+            Pending,
+            Paid
     }
 }
