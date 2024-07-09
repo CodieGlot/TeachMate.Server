@@ -216,5 +216,19 @@ public class PaymentService : IPaymentService
 
         return null!;
     }
+    // have paid, have enroll
+    public async Task<bool> CheckPermissionToViewLearningModule(Guid learnerId, int partId)
+    {
+        bool hasPaid = await _context.LearningModulePaymentOrders
+                           .AnyAsync(p => p.LearnerId == learnerId &&
+                                          p.LearningModuleId == partId &&
+                                          p.PaymentStatus == PaymentStatus.Paid) &&
+                                      !(await _context.LearningModulePaymentOrders
+                           .AnyAsync(p => p.LearnerId == learnerId &&
+                                          p.LearningModuleId == partId &&
+                                          p.PaymentStatus == PaymentStatus.Pending));
+
+        return hasPaid;
+    }
 }
 

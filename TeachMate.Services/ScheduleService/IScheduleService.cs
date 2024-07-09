@@ -25,4 +25,5 @@ public interface IScheduleService
     Task<LearningSession> GetLearningSessionById(int id);
 
     Task<LearningSession> CreateFreeLearningSession(CreateCustomLearningSessionDto dto, AppUser user);
+    Task<string> ParticipateLearningSession(Guid learnerId, int learningSessionId);
 }

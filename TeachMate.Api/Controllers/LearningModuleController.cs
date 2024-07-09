@@ -176,4 +176,11 @@ public class LearningModuleController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
+    [Authorize(Roles = CustomRoles.GeneralUser)]
+    [HttpGet("NumberOfLearner")]
+    public async Task<ActionResult<int>> GetNumberOfLearner(int learningModule)
+    {
+         return Ok(await _learningModuleService.GetNumberOfLearnersInAClass(learningModule));
+    }
 }
