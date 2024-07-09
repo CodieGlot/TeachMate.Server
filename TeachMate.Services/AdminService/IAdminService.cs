@@ -9,6 +9,7 @@ public interface IAdminService
     Task<List<AppUser>> GetAllUser();
     Task<List<AppUser>> SearchUser(SearchUserDto dto);
     Task<AppUser?> UpdateStatus(DisableDto dto);
+    Task<Report?> GetReportByID(int id);
     Task<List<Report>> GetAllReportSystem();
     Task<List<Report>> GetAllReportUser();
     Task<List<Report>> SearchReportSystem(SearchReportSystemDto dto);

@@ -68,12 +68,21 @@ public class AdminService : IAdminService
         return appUser;
     }
 
+    public async Task<Report?> GetReportByID(int id)
+    {
+
+        var report = await _context.Report
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return report;
+    }
+
     public async Task<List<Report>> GetAllReportSystem()
     {
         var report = await _context.Report
+            .Where(r => r.SystemReport != null)
             .Include(r => r.SystemReport)
             .Include(r => r.User)
-            .Where(r => r.SystemReport != null)
             .ToListAsync();
 
         foreach (var r in report)
@@ -86,9 +95,9 @@ public class AdminService : IAdminService
     public async Task<List<Report>> GetAllReportUser()
     {
         var report = await _context.Report
-            .Include(r => r.UserReport) // Sử dụng eager loading để nạp ReportUser
-            .Include (r => r.User)
             .Where(r => r.UserReport != null)
+            .Include(r => r.UserReport.ReportedUser) // Sử dụng eager loading để nạp ReportUser
+            .Include (r => r.User)
             .ToListAsync();
 
         foreach (var r in report)
@@ -103,15 +112,16 @@ public class AdminService : IAdminService
         var query = _context.Report
             .Where(r => r.SystemReport !=  null)
             .Include(r => r.SystemReport)
+            .Include(r => r.User)
             .AsQueryable();
 
         if (dto.SystemReportType != null)
         {
             query = query.Where(m => m.SystemReport.SystemReportType == dto.SystemReportType);
         }
-        if (dto.status != null)
+        if (dto.reportStatus != null)
         {
-            query = query.Where(m => m.Status == dto.status);
+            query = query.Where(m => m.Status == dto.reportStatus);
         }
         return await query.ToListAsync();
     }
@@ -120,16 +130,17 @@ public class AdminService : IAdminService
     {
         var query = _context.Report
             .Where (r => r.UserReport != null)
-            .Include(r => r.UserReport)
+            .Include(r => r.UserReport.ReportedUser)
+            .Include(r => r.User)
             .AsQueryable();
 
-        if (dto.typeErrorUser != null)
+        if (dto.UserReportType != null)
         {
-            query = query.Where(m =>m.UserReport.UserReportType == dto.typeErrorUser);
+            query = query.Where(m =>m.UserReport.UserReportType == dto.UserReportType);
         }
-        if (dto.status != null)
+        if (dto.reportStatus != null)
         {
-            query = query.Where(m =>m.Status == dto.status);
+            query = query.Where(m =>m.Status == dto.reportStatus);
         }
         return await query.ToListAsync();
     }

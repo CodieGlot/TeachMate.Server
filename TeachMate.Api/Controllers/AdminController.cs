@@ -50,6 +50,16 @@ public class AdminController : ControllerBase
     }
 
     /// <summary>
+    /// Get report by ID
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("GetReportByID")]
+    public async Task<ActionResult<Report>> GetReportByID(int id)
+    {
+        return Ok(await _adminService.GetReportByID(id));
+    }
+
+    /// <summary>
     /// Get all report system
     /// </summary>
     [Authorize(Roles = CustomRoles.Admin)]
