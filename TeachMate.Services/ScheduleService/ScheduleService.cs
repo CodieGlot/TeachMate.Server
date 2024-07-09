@@ -9,13 +9,14 @@ public class ScheduleService : IScheduleService
 {
     private readonly DataContext _context;
     private readonly ILearningModuleService _learningModuleService;
-
+    private readonly IPaymentService _paymentService;
     private readonly IUserService _userService;
-    public ScheduleService(DataContext context, ILearningModuleService learningModuleService, IUserService userService)
+    public ScheduleService(DataContext context, ILearningModuleService learningModuleService, IUserService userService, IPaymentService paymentService)
     {
         _context = context;
         _learningModuleService = learningModuleService;
         _userService = userService;
+        _paymentService = paymentService;
     }
 
     public async Task<LearningModule> AddWeeklySchedule(AddWeeklyScheduleDto dto, AppUser user)
@@ -297,5 +298,46 @@ public class ScheduleService : IScheduleService
         return session;
     }
 
+    public async Task<string> ParticipateLearningSession(Guid learnerId, int learningSessionId)
+    {
+        var learningSession = await _context.LearningSessions.FirstOrDefaultAsync(o => o.Id == learningSessionId);
+        var learningModule = await _context.LearningModules.FirstOrDefaultAsync(m => m.Id == learningSession.LearningModuleId);
+        //free
+        if (learningSession.Date < learningModule.StartDate)
+        {
+            if ((learningSession.Date < DateOnly.FromDateTime(DateTime.Now)) || ((learningSession.Date == DateOnly.FromDateTime(DateTime.Now)) && (learningSession.EndTime < TimeOnly.FromDateTime(DateTime.Now))))
+            {
+                throw new BadRequestException("The session have ended");
+            }
+            else if (learningSession.Date > DateOnly.FromDateTime(DateTime.Now) || ((learningSession.Date == DateOnly.FromDateTime(DateTime.Now)) && (learningSession.StartTime > TimeOnly.FromDateTime(DateTime.Now))))
+            {
+                throw new BadRequestException("The session have not started");
+            }
+
+            else if ((learningSession.Date == DateOnly.FromDateTime(DateTime.Now)) && (learningSession.StartTime < TimeOnly.FromDateTime(DateTime.Now) && (learningSession.EndTime > TimeOnly.FromDateTime(DateTime.Now)))) {
+                return learningSession.LinkMeet;
+            }
+        }
+        else
+        {
+            if (!await _paymentService.CheckPermissionToViewLearningModule(learnerId,learningModule.Id))
+            {
+                throw new BadRequestException("You must pay for class to participate this session");
+            }
+            else if ((learningSession.Date < DateOnly.FromDateTime(DateTime.Now)) || ((learningSession.Date == DateOnly.FromDateTime(DateTime.Now)) && (learningSession.EndTime < TimeOnly.FromDateTime(DateTime.Now)))) 
+            {
+                throw new BadRequestException("The session have ended");
+            }
+            else if (learningSession.Date > DateOnly.FromDateTime(DateTime.Now) || ((learningSession.Date == DateOnly.FromDateTime(DateTime.Now)) && (learningSession.StartTime > TimeOnly.FromDateTime(DateTime.Now))))
+            {
+                throw new BadRequestException("The session have not started");
+            }
+
+            else if ((learningSession.Date == DateOnly.FromDateTime(DateTime.Now)) && (learningSession.StartTime < TimeOnly.FromDateTime(DateTime.Now) && (learningSession.EndTime > TimeOnly.FromDateTime(DateTime.Now)))) {
+                return learningSession.LinkMeet;
+            }
+        }
+        return null!;
+    }
 
 }

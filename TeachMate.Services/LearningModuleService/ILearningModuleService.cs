@@ -21,4 +21,6 @@ public interface ILearningModuleService
 
     Task<List<LearningModule>> GetAllLearningModuleOfOneTutor(Guid tutorId);
     Task<double> GetAverageRatingOfTutorByAllLearningModule(Guid tutorId);
+
+    Task<int> GetNumberOfLearnersInAClass(int moduleId);
 }

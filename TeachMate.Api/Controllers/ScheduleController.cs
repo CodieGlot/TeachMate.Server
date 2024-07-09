@@ -114,8 +114,15 @@ public class ScheduleController : ControllerBase
     public async Task<ActionResult<LearningSession>> CreateFreeLearningSession(CreateCustomLearningSessionDto dto)
     {
         var tutor = await _contextService.GetAppUserAndThrow();
-
         return Ok(await _scheduleService.CreateFreeLearningSession(dto, tutor));
+    }
+
+    [Authorize(Roles = CustomRoles.Learner)]
+    [HttpGet("ParticipateLearningSession")]
+    public async Task<ActionResult<string>> ParticipateLearningSession(int learningSessionId)
+    {
+        var learner = await _contextService.GetAppUserAndThrow();
+        return Ok(await _scheduleService.ParticipateLearningSession(learner.Id, learningSessionId));
     }
 
 }

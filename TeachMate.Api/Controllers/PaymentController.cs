@@ -111,4 +111,12 @@ public class PaymentController : ControllerBase
         return Ok(await _paymentService.UpdateTransactionAsync(dto));
     }
 
+    [Authorize(Roles = CustomRoles.Learner)]
+    [HttpGet("CheckPermissionToViewLearningModule")]
+    public async Task<ActionResult<bool>> CheckPermissionToViewLearningModule(int learningModuleId)
+    {
+        var user = await _contextService.GetAppUserAndThrow();
+        return Ok(await _paymentService.CheckPermissionToViewLearningModule(user.Id, learningModuleId));
+    }
+
 }

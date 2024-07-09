@@ -21,4 +21,7 @@ public interface IPaymentService
     Task<Transaction> CreateTransactionAsync(CreateTransactionDto dto);
     Task<Transaction> UpdateTransactionAsync(UpdateTransactionDto dto);
 
+    Task<bool> CheckPermissionToViewLearningModule(Guid learnerId, int learningModuleId);
+
+
 }

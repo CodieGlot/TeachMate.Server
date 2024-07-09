@@ -344,4 +344,12 @@ public class LearningModuleService : ILearningModuleService
 
         return averageRating ?? 0;
     }
+
+    public async Task<int> GetNumberOfLearnersInAClass(int moduleId)
+    {
+        return await _context.Learners
+             .Where(learner => learner.EnrolledModules.Any(module => module.Id == moduleId))
+             .CountAsync();
+    }
+
 }
