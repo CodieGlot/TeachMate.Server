@@ -108,4 +108,34 @@ public class AdminController : ControllerBase
     {
         return Ok(await _adminService.UpdateStatusReport(dto));
     }
+
+    /// <summary>
+    /// Get all payment order
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("GetAllPaymentOrder")]
+    public async Task<ActionResult<List<LearningModulePaymentOrder>>> GetAllPaymentOrder()
+    {
+        return Ok(await _adminService.GetAllPaymentOrder());
+    }
+
+    /// <summary>
+    /// Search Payment Order
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPost("SearchPaymentOrder")]
+    public async Task<ActionResult<List<LearningModulePaymentOrder>>> SearchPaymentOrder(SearchPaymentOrderDto dto)
+    {
+        return Ok(await _adminService.SearchPaymentOrder(dto));
+    }
+
+    /// <summary>
+    /// Update has claimed
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPut("UpdateHasClaimed")]
+    public async Task<ActionResult<LearningModulePaymentOrder>> UpdateHasClaimed(HasClaimedDto dto)
+    {
+        return Ok(await _adminService.UpdateHasClaimed(dto));
+    }
 }

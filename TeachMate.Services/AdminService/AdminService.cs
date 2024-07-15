@@ -18,10 +18,6 @@ public class AdminService : IAdminService
             .Where(user => user.UserRole != UserRole.Admin)
             .ToListAsync();
 
-        foreach (var user in appUser)
-        {
-            Console.WriteLine(user);
-        }
         return appUser;
     }
 
@@ -85,10 +81,6 @@ public class AdminService : IAdminService
             .Include(r => r.User)
             .ToListAsync();
 
-        foreach (var r in report)
-        {
-            Console.WriteLine(r);
-        }
         return report;
     }
 
@@ -100,10 +92,6 @@ public class AdminService : IAdminService
             .Include (r => r.User)
             .ToListAsync();
 
-        foreach (var r in report)
-        {
-            Console.WriteLine(r);
-        }
         return report;
     }
 
@@ -161,5 +149,54 @@ public class AdminService : IAdminService
         }
 
         return report;
+    }
+
+    public async Task<List<LearningModulePaymentOrder>> GetAllPaymentOrder()
+    {
+        var paymentOrder = await _context.LearningModulePaymentOrders
+            .Include(r => r.Learner)
+            .Include(r => r.LearningModule.Tutor)
+            .Include(r => r.Transaction)
+            .ToListAsync();
+
+        return paymentOrder;
+    }
+
+    public async Task<List<LearningModulePaymentOrder>> SearchPaymentOrder(SearchPaymentOrderDto dto)
+    {
+        var query = _context.LearningModulePaymentOrders
+            .Include(r => r.Learner)
+            .Include(r => r.LearningModule.Tutor)
+            .Include(r => r.Transaction)
+            .AsQueryable();
+
+        if (dto.HasClaimed.HasValue)
+        {
+            query = query.Where(m => m.HasClaimed == dto.HasClaimed);
+        }
+        if (dto.PaymentStatus != null)
+        {
+            query = query.Where(m => m.PaymentStatus == dto.PaymentStatus);
+        }
+
+        return await query.ToListAsync();
+    }
+
+    public async Task<LearningModulePaymentOrder?> UpdateHasClaimed(HasClaimedDto dto)
+    {
+        var paymentOrder = await _context.LearningModulePaymentOrders
+            .FirstOrDefaultAsync(u => u.Id == dto.Id);
+
+        if (paymentOrder != null)
+        {
+            paymentOrder.HasClaimed = !paymentOrder.HasClaimed;
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            throw new NotFoundException("Not found");
+        }
+
+        return paymentOrder;
     }
 }
