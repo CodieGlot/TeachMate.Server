@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Quartz.Simpl;
+using System.Diagnostics;
 using System.Text.Json;
 using TeachMate.Domain;
 
@@ -352,4 +354,53 @@ public class LearningModuleService : ILearningModuleService
              .CountAsync();
     }
 
+    public async Task<ResponseDto> CreateQuestionForSesstion(QuestionDto dto,AppUser appUser) {
+        if (dto.AnswerId == 0) {
+            dto.AnswerId = null;
+        }
+        
+        var QuestionAfterSesstion = new Question { 
+        AnswerId = dto.AnswerId,
+        Context=dto.context,
+        LearningSessionId=dto.LearningSessionId,
+        TutorID = appUser.Id,
+        };
+        await _context.Questions.AddAsync(QuestionAfterSesstion);
+        await _context.SaveChangesAsync();
+        return new ResponseDto("Create Success");
+    }
+    public async Task<ResponseDto> AnswerQuestion(AnswerDto dto,AppUser appUser)
+    {
+        
+        var AnswerQuestion = new Answer
+        {
+            Context = dto.Context,
+            TutorComment = dto.TutorComment,
+            LearnerId = appUser.Id,
+            QuestionId = dto.QuestionId,
+            Grade = dto.grade,
+        };
+        await _context.Answers.AddAsync(AnswerQuestion);
+        await _context.SaveChangesAsync();
+        return new ResponseDto("Answer Success");
+        }
+
+    public async Task<ResponseDto> Grade(GradeAnswerDto dto) {
+        var answer = await _context.Answers.Where(p=>p.Id==dto.answerID).FirstOrDefaultAsync();
+        if (answer == null)
+        {
+            throw new Exception("Not found answer");
+        }
+        if(dto.Comments ==null){
+            throw new Exception("Pls Comment");
+        }
+        answer.TutorComment = dto.Comments;
+        answer.Grade = dto.Grade;
+        _context.Answers.Update(answer);
+        await _context.SaveChangesAsync();
+        return new ResponseDto("Grade Success");
+        
+    }
+
 }
+ 

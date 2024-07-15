@@ -81,4 +81,6 @@ public class DataContext : DbContext
     public DbSet<LearningMaterial> LearningMaterials { get; set; }
 
     public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<Question> Questions { get; set; }  
+    public DbSet<Answer> Answers { get; set; }
 }

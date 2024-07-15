@@ -11,6 +11,7 @@ public class LearningSession
     public TimeOnly EndTime { get; set; }
     public string LinkMeet { get; set; }
 
+    public Question? Question { get; set; }
     public LearningModule LearningModule{ get; set; }
     public int LearningModuleId { get; set; }
     [NotMapped] public string LearningModuleName { get; set; }
