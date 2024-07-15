@@ -23,4 +23,7 @@ public interface ILearningModuleService
     Task<double> GetAverageRatingOfTutorByAllLearningModule(Guid tutorId);
 
     Task<int> GetNumberOfLearnersInAClass(int moduleId);
+    Task<ResponseDto> CreateQuestionForSesstion(QuestionDto dto,AppUser appUser);
+    Task<ResponseDto> AnswerQuestion(AnswerDto dto,AppUser appUser);
+    Task<ResponseDto> Grade(GradeAnswerDto dto);
 }

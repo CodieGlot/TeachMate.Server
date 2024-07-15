@@ -183,4 +183,24 @@ public class LearningModuleController : ControllerBase
     {
          return Ok(await _learningModuleService.GetNumberOfLearnersInAClass(learningModule));
     }
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpPost("CreateQuestion")]
+    public async Task<ActionResult> CreateQuestion(QuestionDto dto) {
+        var user = await _contextService.GetAppUserAndThrow();
+    
+        return Ok(await _learningModuleService.CreateQuestionForSesstion(dto,user));
+    }
+    [Authorize(Roles = CustomRoles.Learner)]
+    [HttpPost("AnswerQuestion")]
+    public async Task<ActionResult> AnswerQuestion( AnswerDto dto)
+    {
+        var user = await _contextService.GetAppUserAndThrow();
+        return Ok(await _learningModuleService.AnswerQuestion(dto, user));
+    }
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpPost("GradeAnswer")]
+    public async Task<ActionResult> GradeAnswer(GradeAnswerDto dto) {
+        return Ok(await _learningModuleService.Grade(dto));
+    }
+
 }
