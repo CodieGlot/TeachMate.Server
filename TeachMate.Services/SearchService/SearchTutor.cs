@@ -35,7 +35,7 @@ namespace TeachMate.Services
             // Retrieve the Tutor by ID
             var tutor = await _context.AppUsers
                                        .Include(t => t.Tutor)
-                                       .Where(t => t.DisplayName.ToLower().Contains(DisplayName.ToLower()))
+                                       .Where(t => t.DisplayName.ToLower().Contains(DisplayName.ToLower()) && t.UserRole == UserRole.Tutor)
                                        .ToListAsync();
 
             // Check if the tutor is found

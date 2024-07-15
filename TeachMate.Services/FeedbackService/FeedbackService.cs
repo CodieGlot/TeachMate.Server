@@ -186,5 +186,13 @@ namespace TeachMate.Services
 
             return reply;
         }
+
+        public async Task<bool> HasFeedback(Guid learnerId, int learningModuleId)
+        {
+            var hasFeedback =await _context.LearningModuleFeedbacks
+                                    .AnyAsync(x => x.AppUser.Id == learnerId && x.LearningModule.Id == learningModuleId);
+            return hasFeedback;
+            
+        }
     }
 }

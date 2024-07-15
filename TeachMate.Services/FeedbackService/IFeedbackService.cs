@@ -16,5 +16,7 @@ namespace TeachMate.Services
         Task<double> GetAverageRatingByStar(int moduleId);
         Task<TutorReplyFeedback> ReplyToFeedback(TutorReplyFeedbackDto replyDto, AppUser appUser);
         Task<TutorReplyFeedback?> GetReplyByFeedbackId(int feedbackId);
+
+        Task<bool> HasFeedback(Guid learnerId, int learningModuleId);
     }
 }
