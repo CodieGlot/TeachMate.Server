@@ -209,4 +209,25 @@ public class AdminService : IAdminService
 
         return paymentOrder;
     }
+
+    public async Task<int> CountTutor()
+    {
+        return await _context.AppUsers
+                .Where(u => u.UserRole == UserRole.Tutor)
+                .CountAsync();
+    }
+
+    public async Task<int> CountLearner()
+    {
+        return await _context.AppUsers
+                .Where(u => u.UserRole == UserRole.Learner)
+                .CountAsync();
+    }
+
+    public async Task<int> CountClass()
+    {
+        return await _context.LearningModules
+                .CountAsync();
+    }
+
 }

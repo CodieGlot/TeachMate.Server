@@ -18,5 +18,9 @@ public interface IAdminService
     Task<LearningModulePaymentOrder?> GetPaymentByID(int id);
     Task<List<LearningModulePaymentOrder>> GetAllPaymentOrder();
     Task<List<LearningModulePaymentOrder>> SearchPaymentOrder(SearchPaymentOrderDto dto);
-    Task<LearningModulePaymentOrder?> UpdateHasClaimed(HasClaimedDto dto); 
+    Task<LearningModulePaymentOrder?> UpdateHasClaimed(HasClaimedDto dto);
+    Task<int> CountTutor();
+    Task<int> CountLearner();
+    Task<int> CountClass();
+    //Task<int> RevenueCalculation();
 }
