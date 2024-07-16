@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeachMate.Services;
 
@@ -11,9 +12,11 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240715093631_AddCertificate")]
+    partial class AddCertificate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,15 +57,14 @@ namespace TeachMate.Services.Migrations
                     b.Property<Guid>("LearnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
+                    b.Property<string>("QuestionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TutorComment")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
 
                     b.ToTable("Answers");
                 });
@@ -556,6 +558,10 @@ namespace TeachMate.Services.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AnswerId")
+                        .IsUnique()
+                        .HasFilter("[AnswerId] IS NOT NULL");
+
                     b.HasIndex("LearningSessionId")
                         .IsUnique();
 
@@ -838,17 +844,6 @@ namespace TeachMate.Services.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TeachMate.Domain.Answer", b =>
-                {
-                    b.HasOne("TeachMate.Domain.Question", "Question")
-                        .WithMany("Answers")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
-                });
-
             modelBuilder.Entity("TeachMate.Domain.Dislike", b =>
                 {
                     b.HasOne("TeachMate.Domain.AppUser", "AppUser")
@@ -1025,6 +1020,10 @@ namespace TeachMate.Services.Migrations
 
             modelBuilder.Entity("TeachMate.Domain.Question", b =>
                 {
+                    b.HasOne("TeachMate.Domain.Answer", null)
+                        .WithOne("Question")
+                        .HasForeignKey("TeachMate.Domain.Question", "AnswerId");
+
                     b.HasOne("TeachMate.Domain.LearningSession", "LearningSession")
                         .WithOne("Question")
                         .HasForeignKey("TeachMate.Domain.Question", "LearningSessionId")
@@ -1120,6 +1119,12 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("WeeklySchedule");
                 });
 
+            modelBuilder.Entity("TeachMate.Domain.Answer", b =>
+                {
+                    b.Navigation("Question")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TeachMate.Domain.AppUser", b =>
                 {
                     b.Navigation("Learner");
@@ -1171,11 +1176,6 @@ namespace TeachMate.Services.Migrations
             modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
                 {
                     b.Navigation("Receivers");
-                });
-
-            modelBuilder.Entity("TeachMate.Domain.Question", b =>
-                {
-                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>

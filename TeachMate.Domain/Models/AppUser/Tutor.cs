@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using TeachMate.Domain.Models.Certificate;
 
 namespace TeachMate.Domain;
 public class Tutor
@@ -12,5 +13,5 @@ public class Tutor
     public AppUser AppUser { get; set; } = null!;
     public string Description {  get; set; } = string.Empty;
     public int GradeLevel { get; set; }
-
+    public List<Certificate> Certificates { get; set; } = new List<Certificate>();
 }
