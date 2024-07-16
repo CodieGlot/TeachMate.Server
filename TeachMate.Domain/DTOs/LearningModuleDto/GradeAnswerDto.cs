@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace TeachMate.Domain
 {
-    public class TutorReplyFeedbackDto
+    public class GradeAnswerDto
     {
-        public string ReplyContent { get; set; }  
-
-        public int LearningModuleFeedbackId { get; set; }
-
+        public int Grade { get; set; }
+        public int answerID { get; set; }
+        public string Comments { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeachMate.Services;
 
@@ -11,9 +12,11 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240716150809_AddQuestionAndAnswer")]
+    partial class AddQuestionAndAnswer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -483,41 +486,6 @@ namespace TeachMate.Services.Migrations
                     b.HasIndex("TutorId");
 
                     b.ToTable("Certificates");
-                });
-
-            modelBuilder.Entity("TeachMate.Domain.Models.Payment.AccountInformation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccountNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BankCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TaxCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("TutorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TutorId")
-                        .IsUnique();
-
-                    b.ToTable("AccountInformations");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
@@ -1047,17 +1015,6 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("Tutor");
                 });
 
-            modelBuilder.Entity("TeachMate.Domain.Models.Payment.AccountInformation", b =>
-                {
-                    b.HasOne("TeachMate.Domain.Tutor", "Tutor")
-                        .WithOne("AccountInformation")
-                        .HasForeignKey("TeachMate.Domain.Models.Payment.AccountInformation", "TutorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tutor");
-                });
-
             modelBuilder.Entity("TeachMate.Domain.PushNotificationReceiver", b =>
                 {
                     b.HasOne("TeachMate.Domain.PushNotification", "PushNotification")
@@ -1226,9 +1183,6 @@ namespace TeachMate.Services.Migrations
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
                 {
-                    b.Navigation("AccountInformation")
-                        .IsRequired();
-
                     b.Navigation("Certificates");
 
                     b.Navigation("CreatedModules");

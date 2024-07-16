@@ -150,5 +150,15 @@ namespace TeachMate.Api.Controllers
                 return StatusCode(500, $"An unexpected error occurred: {ex.Message}");
             }
         }
+
+        [Authorize(Roles = CustomRoles.GeneralUser)]
+        [HttpGet("HasFeedback")]
+        public async Task<bool> HasFeedback( int learningModuleId)
+        {
+            var learner = await _httpContextService.GetAppUserAndThrow();
+                var hasFeedback = await _feedbackService.HasFeedback(learner.Id, learningModuleId);
+                return hasFeedback;
+            
+        }
     }
 }

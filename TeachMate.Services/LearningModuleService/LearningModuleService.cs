@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Quartz.Simpl;
+using System.Diagnostics;
 using System.Text.Json;
 using TeachMate.Domain;
 
@@ -15,11 +17,11 @@ public class LearningModuleService : ILearningModuleService
         _context = context;
         _userService = userService;
         _notificationService = notificationService;
-        _paymentService = paymentService;   
+        _paymentService = paymentService;
     }
     public async Task<LearningModule?> GetLearningModuleById(int id)
     {
-        
+
         var learningModule = await _context.LearningModules
             .Include(x => x.EnrolledLearners)
             .Include(x => x.Schedule)
@@ -82,7 +84,7 @@ public class LearningModuleService : ILearningModuleService
         // them add PartipateLearningModule
         _context.Update(learner);
         _context.Update(learningModule);
-       
+
 
         await _context.SaveChangesAsync();
         await _paymentService.CreatePaymentOrder(new CreateOrderPaymentDto
@@ -118,7 +120,7 @@ public class LearningModuleService : ILearningModuleService
 
         else if (dto.ModuleType == ModuleType.Weekly)
         {
-            learningModule.WeeklySchedule = new WeeklySchedule() ;
+            learningModule.WeeklySchedule = new WeeklySchedule();
             /*var listWeeklySlotDto = dto.WeeklySlots;
             var listWeeklySlot = new List<WeeklySlot>();
             learningModule.WeeklySchedule = new WeeklySchedule();
@@ -141,7 +143,7 @@ public class LearningModuleService : ILearningModuleService
         {
             user.Tutor.CreatedModules.Add(learningModule);
         }
-        
+
         _context.Update(user);
         await _context.SaveChangesAsync();
 
@@ -190,18 +192,18 @@ public class LearningModuleService : ILearningModuleService
             throw new BadRequestException("You have already requested this class.");
 
         }
-        if (await GetNumberOfRequestWaiting(user.Id) >= 2) 
+        if (await GetNumberOfRequestWaiting(user.Id) >= 2)
             throw new BadRequestException("You have reached the maximum limit of 2 class requests.");
-        
+
         var request = new LearningModuleRequest
         {
             RequesterId = user.Id,
             RequesterDisplayName = user.DisplayName,
             LearningModuleId = dto.LearningModuleId,
             Title = dto.Title,
-            
+
             Status = RequestStatus.Waiting,
-            
+
         };
 
         if (learningModule.MaximumLearners <= learningModule.EnrolledLearners.Count)
@@ -230,7 +232,7 @@ public class LearningModuleService : ILearningModuleService
         {
             throw new BadRequestException("Request does not exist.");
         }
-        
+
         request.Status = dto.Status;
 
         _context.Update(request);
@@ -242,7 +244,7 @@ public class LearningModuleService : ILearningModuleService
         if (learningModule.MaximumLearners <= learningModule.EnrolledLearners.Count)
         {
             throw new Exception("Class is full");
-        }else
+        } else
         if (request.Status == RequestStatus.Approved)
         {
             await EnrollLearningModule(request.RequesterId, request.LearningModuleId);
@@ -261,7 +263,7 @@ public class LearningModuleService : ILearningModuleService
            .ToListAsync();
     }
 
-    public async Task<List<Learner>> GetAllLearnerInLearningModule (int moduleId, Guid tutorId)
+    public async Task<List<Learner>> GetAllLearnerInLearningModule(int moduleId, Guid tutorId)
     {
 
         var module = await _context.LearningModules
@@ -302,7 +304,7 @@ public class LearningModuleService : ILearningModuleService
 
         return new ResponseDto("Out class success");
     }
-    public async Task<ResponseDto> KickLearner(KickLearnerDto dto )
+    public async Task<ResponseDto> KickLearner(KickLearnerDto dto)
     {
         var learningModule = await GetLearningModuleById(dto.ModuleID);
 
@@ -340,7 +342,7 @@ public class LearningModuleService : ILearningModuleService
 
         var averageRating = await _context.LearningModuleFeedbacks
                                               .Where(fb => fb.LearningModule.Tutor.Id == tutorId)
-                                              .AverageAsync(fb => (double?)fb.Star); 
+                                              .AverageAsync(fb => (double?)fb.Star);
 
         return averageRating ?? 0;
     }
@@ -352,4 +354,67 @@ public class LearningModuleService : ILearningModuleService
              .CountAsync();
     }
 
+    public async Task<ResponseDto> CreateQuestionForSesstion(QuestionDto dto, AppUser appUser) {
+        if (dto.AnswerId == 0) {
+            dto.AnswerId = null;
+        }
+
+        var QuestionAfterSesstion = new Question {
+            AnswerId = dto.AnswerId,
+            Context = dto.context,
+            LearningSessionId = dto.LearningSesstionID,
+            TutorID = appUser.Id,
+        };
+        await _context.Questions.AddAsync(QuestionAfterSesstion);
+        await _context.SaveChangesAsync();
+        return new ResponseDto("Create Success");
+    }
+    public async Task<ResponseDto> AnswerQuestion(AnswerDto dto, AppUser appUser)
+    {
+
+        var AnswerQuestion = new Answer
+        {
+            Context = dto.Context,
+            TutorComment = dto.TutorComment,
+            LearnerId = appUser.Id,
+            QuestionId = dto.QuestionId,
+            Grade = dto.grade,
+        };
+        await _context.Answers.AddAsync(AnswerQuestion);
+        await _context.SaveChangesAsync();
+        return new ResponseDto("Answer Success");
+    }
+
+    public async Task<ResponseDto> Grade(GradeAnswerDto dto) {
+        var answer = await _context.Answers.Where(p => p.Id == dto.answerID).FirstOrDefaultAsync();
+        if (answer == null)
+        {
+            throw new Exception("Not found answer");
+        }
+        if (dto.Comments == null) {
+            throw new Exception("Pls Comment");
+        }
+        answer.TutorComment = dto.Comments;
+        answer.Grade = dto.Grade;
+        _context.Answers.Update(answer);
+        await _context.SaveChangesAsync();
+        return new ResponseDto("Grade Success");
+
+    }
+    public async Task<Question> getQuestionBySession(int id) { 
+     var question = await _context.Questions.Where(p=>p.LearningSession.Id == id).FirstOrDefaultAsync();
+        if (question == null) {
+            throw new Exception("No question in this session");
+        }
+        return question;
+    }
+    public async Task<List<Answer>> GetAnswerByQuestion(int id) {
+        var answer = await _context.Answers.Where(p => p.QuestionId == id).ToListAsync();
+        if (answer == null) {
+            throw new Exception("No answer in this question");
+        }
+        return answer;
+    }
+
 }
+ 

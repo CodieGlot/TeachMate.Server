@@ -1,4 +1,6 @@
 ﻿using TeachMate.Domain;
+using TeachMate.Domain.Models.Payment;
+using TeachMate.Services.Migrations;
 
 
 namespace TeachMate.Services;
@@ -22,6 +24,8 @@ public interface IPaymentService
     Task<Transaction> UpdateTransactionAsync(UpdateTransactionDto dto);
 
     Task<bool> CheckPermissionToViewLearningModule(Guid learnerId, int learningModuleId);
-
+    Task<AccountInformation> AddAccountInformation(AddAccountInformationDto dto, Guid tutorID);
+    Task<AccountInformation> GetAccountInformationByTutorId(Guid tutorId);
+    Task<bool> ExistedAccountInformationByTutorId(Guid tutorId);
 
 }
