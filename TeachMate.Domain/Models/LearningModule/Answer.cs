@@ -11,9 +11,9 @@ namespace TeachMate.Domain
         public int Id { get; set; }
         public Guid LearnerId { get; set; }
         public string? Context { get; set; }
-        public string QuestionId { get; set; }
+        public int QuestionId { get; set; }
         public string? TutorComment { get; set; }
         public int? Grade { get; set; } 
-        public Question Question { get; set; }
+        public virtual Question Question { get; set; }
     }
 }

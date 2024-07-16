@@ -9,7 +9,7 @@ namespace TeachMate.Domain
     public class AnswerDto
     {
         public string? Context { get; set; }
-        public string QuestionId { get; set; }
+        public int QuestionId { get; set; }
         public string? TutorComment { get; set; }
         public int? grade { get; set; } = null;
     }

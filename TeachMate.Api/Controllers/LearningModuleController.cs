@@ -56,7 +56,7 @@ public class LearningModuleController : ControllerBase
     ///// </summary>
     [Authorize(Roles = CustomRoles.Learner)]
     [HttpGet("OutClass/{moduleId:int}")]
-   public async Task<ActionResult<LearningModule>> outClass(int moduleId)
+    public async Task<ActionResult<LearningModule>> outClass(int moduleId)
     {
         var user = await _contextService.GetAppUserAndThrow();
         return Ok(await _learningModuleService.OutClass(user.Id, moduleId));
@@ -151,7 +151,7 @@ public class LearningModuleController : ControllerBase
     {
         var user = await _contextService.GetAppUserAndThrow();
         return await _learningModuleService.GetAllLearnerInLearningModule(learningModuleId, user.Tutor.Id);
-       
+
     }
 
     [Authorize(Roles = CustomRoles.GeneralUser)]
@@ -181,18 +181,17 @@ public class LearningModuleController : ControllerBase
     [HttpGet("NumberOfLearner")]
     public async Task<ActionResult<int>> GetNumberOfLearner(int learningModule)
     {
-         return Ok(await _learningModuleService.GetNumberOfLearnersInAClass(learningModule));
+        return Ok(await _learningModuleService.GetNumberOfLearnersInAClass(learningModule));
     }
     [Authorize(Roles = CustomRoles.Tutor)]
     [HttpPost("CreateQuestion")]
     public async Task<ActionResult> CreateQuestion(QuestionDto dto) {
         var user = await _contextService.GetAppUserAndThrow();
-    
-        return Ok(await _learningModuleService.CreateQuestionForSesstion(dto,user));
+        return Ok(await _learningModuleService.CreateQuestionForSesstion(dto, user));
     }
     [Authorize(Roles = CustomRoles.Learner)]
     [HttpPost("AnswerQuestion")]
-    public async Task<ActionResult> AnswerQuestion( AnswerDto dto)
+    public async Task<ActionResult> AnswerQuestion(AnswerDto dto)
     {
         var user = await _contextService.GetAppUserAndThrow();
         return Ok(await _learningModuleService.AnswerQuestion(dto, user));
@@ -201,6 +200,14 @@ public class LearningModuleController : ControllerBase
     [HttpPost("GradeAnswer")]
     public async Task<ActionResult> GradeAnswer(GradeAnswerDto dto) {
         return Ok(await _learningModuleService.Grade(dto));
+    }
+    [HttpPost("GetQuestionBySesstion")]
+    public async Task<ActionResult<Question>> GetQuestionBySesstion(int id) {
+        return Ok(await _learningModuleService.getQuestionBySession(id));
+    }
+    [HttpGet("GetAnswerByQuestion")]
+    public async Task<ActionResult<List<Answer>>> GetAnswerByQuestion(int id) {
+        return Ok(await _learningModuleService.GetAnswerByQuestion(id));
     }
 
 }
