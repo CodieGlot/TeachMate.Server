@@ -154,6 +154,8 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddScoped<ILearningMaterialService, LearningMaterialService>();
+builder.Services.AddScoped<ICertificateService, CertificateService>();
+
 // Add Cron-jobs
 //builder.Services.AddQuartz(q =>
 //{

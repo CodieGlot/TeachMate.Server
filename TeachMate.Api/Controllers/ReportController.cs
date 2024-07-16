@@ -22,6 +22,7 @@ public class ReportController : ControllerBase
     /// <summary>
     /// Sent report system
     /// </summary>
+    [Authorize(Roles = CustomRoles.GeneralUser)]
     [HttpPost("SentReportSystem")]
     public async Task<ActionResult<AppUser>> SentReportSystem(ReportSystemDto dto)
     {
@@ -32,8 +33,9 @@ public class ReportController : ControllerBase
     /// <summary>
     /// Sent report user
     /// </summary>
+    [Authorize(Roles = CustomRoles.GeneralUser)]
     [HttpPost("SentReportUser")]
-    public async Task<ActionResult<AppUser>> SentReport(ReportUserDto dto)
+    public async Task<ActionResult<AppUser>> SentUserReport(ReportUserDto dto)
     {
         var user = await _contextService.GetAppUserAndThrow();
         return Ok(await _reportService.SentReportUser(dto, user));
