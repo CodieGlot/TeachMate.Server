@@ -14,7 +14,8 @@ namespace TeachMate.Domain
         public int LearningSessionId { get; set; }
         public  int? AnswerId { get; set; }
         public Guid TutorID { get; set; }
-        public LearningSession LearningSession { get; set; }
+        public virtual LearningSession LearningSession { get; set; }
+        public virtual ICollection<Answer> Answers { get; set; }
 
      }
 }
