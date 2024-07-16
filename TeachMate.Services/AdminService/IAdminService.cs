@@ -15,6 +15,7 @@ public interface IAdminService
     Task<List<Report>> SearchReportSystem(SearchReportSystemDto dto);
     Task<List<Report>> SearchReportUser(SearchReportUserDto dto);
     Task<Report?> UpdateStatusReport(UpdateStatusDto dto);
+    Task<LearningModulePaymentOrder?> GetPaymentByID(int id);
     Task<List<LearningModulePaymentOrder>> GetAllPaymentOrder();
     Task<List<LearningModulePaymentOrder>> SearchPaymentOrder(SearchPaymentOrderDto dto);
     Task<LearningModulePaymentOrder?> UpdateHasClaimed(HasClaimedDto dto); 

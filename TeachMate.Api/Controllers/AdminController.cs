@@ -110,6 +110,16 @@ public class AdminController : ControllerBase
     }
 
     /// <summary>
+    /// Get payment by ID
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("GetPaymentByID")]
+    public async Task<ActionResult<Report>> GetPaymentByID(int id)
+    {
+        return Ok(await _adminService.GetPaymentByID(id));
+    }
+
+    /// <summary>
     /// Get all payment order
     /// </summary>
     [Authorize(Roles = CustomRoles.Admin)]

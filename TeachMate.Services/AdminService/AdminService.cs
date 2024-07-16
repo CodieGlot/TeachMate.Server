@@ -21,6 +21,7 @@ public class AdminService : IAdminService
         return appUser;
     }
 
+    //Manage User
     public async Task<List<AppUser>> SearchUser(SearchUserDto dto)
     {
         var query = _context.AppUsers.AsQueryable()
@@ -72,7 +73,7 @@ public class AdminService : IAdminService
 
         return report;
     }
-
+    //Manage Report
     public async Task<List<Report>> GetAllReportSystem()
     {
         var report = await _context.Report
@@ -150,12 +151,21 @@ public class AdminService : IAdminService
 
         return report;
     }
+    //Manage Revenue
+    public async Task<LearningModulePaymentOrder?> GetPaymentByID(int id)
+    {
+
+        var payment = await _context.LearningModulePaymentOrders
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return payment;
+    }
 
     public async Task<List<LearningModulePaymentOrder>> GetAllPaymentOrder()
     {
         var paymentOrder = await _context.LearningModulePaymentOrders
             .Include(r => r.Learner)
-            .Include(r => r.LearningModule.Tutor)
+            .Include(r => r.LearningModule)
             .Include(r => r.Transaction)
             .ToListAsync();
 
