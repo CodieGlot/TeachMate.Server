@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TeachMate.Domain;
+using TeachMate.Domain.Models.Certificate;
 
 namespace TeachMate.Services;
 
@@ -83,4 +84,6 @@ public class DataContext : DbContext
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Question> Questions { get; set; }  
     public DbSet<Answer> Answers { get; set; }
+    public DbSet<Certificate> Certificates { get; set; }
+
 }
