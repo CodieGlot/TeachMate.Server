@@ -12,8 +12,8 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240716060855_addQuestionAndAnswer")]
-    partial class addQuestionAndAnswer
+    [Migration("20240716150809_AddQuestionAndAnswer")]
+    partial class AddQuestionAndAnswer
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -453,6 +453,39 @@ namespace TeachMate.Services.Migrations
                     b.HasIndex("LearningModuleFeedbackId");
 
                     b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("TeachMate.Domain.Models.Certificate.Certificate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CertificateFile")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateClaimed")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TutorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TutorId");
+
+                    b.ToTable("Certificates");
                 });
 
             modelBuilder.Entity("TeachMate.Domain.PushNotification", b =>
@@ -971,6 +1004,17 @@ namespace TeachMate.Services.Migrations
                     b.Navigation("LearningModuleFeedback");
                 });
 
+            modelBuilder.Entity("TeachMate.Domain.Models.Certificate.Certificate", b =>
+                {
+                    b.HasOne("TeachMate.Domain.Tutor", "Tutor")
+                        .WithMany("Certificates")
+                        .HasForeignKey("TutorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tutor");
+                });
+
             modelBuilder.Entity("TeachMate.Domain.PushNotificationReceiver", b =>
                 {
                     b.HasOne("TeachMate.Domain.PushNotification", "PushNotification")
@@ -1139,6 +1183,8 @@ namespace TeachMate.Services.Migrations
 
             modelBuilder.Entity("TeachMate.Domain.Tutor", b =>
                 {
+                    b.Navigation("Certificates");
+
                     b.Navigation("CreatedModules");
                 });
 
