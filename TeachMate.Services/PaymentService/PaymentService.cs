@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TeachMate.Domain;
+using TeachMate.Domain.Models.Payment;
 
 namespace TeachMate.Services;
 public class PaymentService : IPaymentService
@@ -229,6 +230,33 @@ public class PaymentService : IPaymentService
                                           p.PaymentStatus == PaymentStatus.Pending));
 
         return hasPaid;
+    }
+
+    public async Task<AccountInformation> AddAccountInformation(AddAccountInformationDto dto, Guid tutorId)
+    {
+        var accountInfo = new AccountInformation()
+        {
+            AccountNumber = dto.AccountNumber,
+            BankCode = dto.BankCode,
+            FullName = dto.FullName,
+            TaxCode = dto.TaxCode,
+            TutorId = tutorId
+        };
+        await _context.AccountInformations.AddAsync(accountInfo);
+        await _context.SaveChangesAsync();
+        return accountInfo;
+    }
+
+    public async Task<AccountInformation> GetAccountInformationByTutorId(Guid tutorId)
+    {
+        var accountInfo = await _context.AccountInformations.FirstOrDefaultAsync(a => a.TutorId == tutorId);
+        return accountInfo!;
+    }
+
+    public async Task<bool> ExistedAccountInformationByTutorId(Guid tutorId)
+    {
+        var accountInfo = await _context.AccountInformations.AnyAsync(a => a.TutorId == tutorId);
+        return accountInfo;
     }
 }
 

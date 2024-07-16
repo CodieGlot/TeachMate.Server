@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TeachMate.Domain;
 using TeachMate.Domain.DTOs;
+using TeachMate.Domain.Models.Payment;
 using TeachMate.Services;
 
 namespace TeachMate.Api.Controllers;
@@ -119,4 +120,27 @@ public class PaymentController : ControllerBase
         return Ok(await _paymentService.CheckPermissionToViewLearningModule(user.Id, learningModuleId));
     }
 
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpPost("AddAccountInfo")]
+    public async Task<ActionResult<AccountInformation>> AddAccountInformation(AddAccountInformationDto dto)
+    {
+        var user = await _contextService.GetAppUserAndThrow();
+        return Ok(await _paymentService.AddAccountInformation(dto, user.Id));
+    }
+
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpGet("GetAccountInfo")]
+    public async Task<ActionResult<AccountInformation>> GetAccountInfo()
+    {
+        var user = await _contextService.GetAppUserAndThrow();
+        return Ok(await _paymentService.GetAccountInformationByTutorId(user.Id));
+    }
+
+    [Authorize(Roles = CustomRoles.Tutor)]
+    [HttpGet("ExistedAccountInfo")]
+    public async Task<ActionResult<bool>> ExistedAccountInfo()
+    {
+        var user = await _contextService.GetAppUserAndThrow();
+        return Ok(await _paymentService.ExistedAccountInformationByTutorId(user.Id));
+    }
 }
