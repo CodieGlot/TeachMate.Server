@@ -12,8 +12,8 @@ using TeachMate.Services;
 namespace TeachMate.Services.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240716153327_AddAccountInformation")]
-    partial class AddAccountInformation
+    [Migration("20240716185146_AddQuestionAndAnswer")]
+    partial class AddQuestionAndAnswer
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
