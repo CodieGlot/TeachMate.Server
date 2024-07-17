@@ -110,6 +110,16 @@ public class AdminController : ControllerBase
     }
 
     /// <summary>
+    /// Get payment by ID
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("GetPaymentByID")]
+    public async Task<ActionResult<Report>> GetPaymentByID(int id)
+    {
+        return Ok(await _adminService.GetPaymentByID(id));
+    }
+
+    /// <summary>
     /// Get all payment order
     /// </summary>
     [Authorize(Roles = CustomRoles.Admin)]
@@ -137,5 +147,35 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<LearningModulePaymentOrder>> UpdateHasClaimed(HasClaimedDto dto)
     {
         return Ok(await _adminService.UpdateHasClaimed(dto));
+    }
+
+    /// <summary>
+    /// Count tutor
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("CountTutor")]
+    public async Task<ActionResult<int>> CountTutor()
+    {
+        return Ok(await _adminService.CountTutor());
+    }
+
+    /// <summary>
+    /// Count learner
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("CountLearner")]
+    public async Task<ActionResult<int>> CountLearner()
+    {
+        return Ok(await _adminService.CountLearner());
+    }
+
+    /// <summary>
+    /// Count class
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("CountClass")]
+    public async Task<ActionResult<int>> CountClass()
+    {
+        return Ok(await _adminService.CountClass());
     }
 }
