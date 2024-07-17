@@ -72,7 +72,7 @@ namespace TeachMate.SeleniumTests
                 Thread.Sleep(TimeSpan.FromSeconds(5));
 
                 // Assert that the current URL is as expected
-                Assert.That(_driver.Url, Is.EqualTo($"{baseUrl}add-learner-detail"));
+                Assert.That(_driver.Url, Is.EqualTo($"{baseUrl}/add-learner-detail"));
             }
             catch (Exception ex)
             {
