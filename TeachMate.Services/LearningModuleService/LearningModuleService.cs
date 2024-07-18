@@ -211,7 +211,7 @@ public class LearningModuleService : ILearningModuleService
             throw new Exception("The Classes is full");
         }
         _context.LearningModuleRequests.Add(request);
-        //await _notificationService.CreatePushNotification(NotificationType.NewLearningRequest, null, new List<Guid> { request.LearningModule.TutorId }, new List<object> {  request.RequesterDisplayName });
+        await _notificationService.CreatePushNotification(NotificationType.NewLearningRequest, null, new List<Guid> { request.LearningModule.TutorId }, new List<object> {  request.RequesterDisplayName });
 
         await _context.SaveChangesAsync();
 
