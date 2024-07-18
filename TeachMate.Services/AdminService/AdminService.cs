@@ -22,6 +22,16 @@ public class AdminService : IAdminService
     }
 
     //Manage User
+    /*public async Task<AppUser?> GetUserById(Guid id)
+    {
+        var appUser = await _context.AppUsers
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        await MapRelatedDataToAppUser(appUser);
+
+        return appUser;
+    }*/
+
     public async Task<List<AppUser>> SearchUser(SearchUserDto dto)
     {
         var query = _context.AppUsers.AsQueryable()

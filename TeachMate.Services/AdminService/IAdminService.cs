@@ -6,6 +6,7 @@ namespace TeachMate.Services;
 
 public interface IAdminService
 {
+    //Task<AppUser?> GetUserById(Guid id);
     Task<List<AppUser>> GetAllUser();
     Task<List<AppUser>> SearchUser(SearchUserDto dto);
     Task<AppUser?> UpdateStatus(DisableDto dto);
