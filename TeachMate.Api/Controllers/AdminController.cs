@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TeachMate.Domain;
 using TeachMate.Domain.DTOs.SearchDto;
+using TeachMate.Domain.Models.Payment;
 using TeachMate.Services;
 
 namespace TeachMate.Api;
@@ -11,12 +12,14 @@ namespace TeachMate.Api;
 public class AdminController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly IAdminService _adminService;   
+    private readonly IAdminService _adminService;
+    private readonly IPaymentService _paymentService;
 
-    public AdminController(IUserService userService, IAdminService adminService)
+    public AdminController(IUserService userService, IAdminService adminService, IPaymentService paymentService)
     {
         _userService = userService;
         _adminService = adminService;
+        _paymentService = paymentService;
     }
 
     /// <summary>
@@ -149,6 +152,13 @@ public class AdminController : ControllerBase
         return Ok(await _adminService.UpdateHasClaimed(dto));
     }
 
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("GetAccountInformationByTutorId")]
+    public async Task<ActionResult<AccountInformation>> GetAccountInformationByTutorId(Guid id)
+    {
+        return Ok(await _paymentService.GetAccountInformationByTutorId(id));
+    }
+
     /// <summary>
     /// Count tutor
     /// </summary>
@@ -177,5 +187,25 @@ public class AdminController : ControllerBase
     public async Task<ActionResult<int>> CountClass()
     {
         return Ok(await _adminService.CountClass());
+    }
+
+    /// <summary>
+    /// Total Revenue
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("TotalRevenue")]
+    public async Task<ActionResult<double>> TotalRevenue()
+    {
+        return Ok(await _adminService.TotalRevenue());
+    }
+
+    /// <summary>
+    /// Total Revenue ForMonth
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPost("TotalRevenueForMonth")]
+    public async Task<ActionResult<double>> TotalRevenueForMonth(TotalRevenueForMonthDto dto)
+    {
+        return Ok(await _adminService.TotalRevenueForMonth(dto));
     }
 }

@@ -22,5 +22,6 @@ public interface IAdminService
     Task<int> CountTutor();
     Task<int> CountLearner();
     Task<int> CountClass();
-    //Task<int> RevenueCalculation();
+    Task<double> TotalRevenue();
+    Task<double> TotalRevenueForMonth(TotalRevenueForMonthDto dto);
 }

@@ -156,6 +156,7 @@ public class AdminService : IAdminService
     {
 
         var payment = await _context.LearningModulePaymentOrders
+            .Include(x => x.LearningModule)
             .FirstOrDefaultAsync(x => x.Id == id);
 
         return payment;
@@ -199,7 +200,7 @@ public class AdminService : IAdminService
 
         if (paymentOrder != null)
         {
-            paymentOrder.HasClaimed = !paymentOrder.HasClaimed;
+            paymentOrder.HasClaimed = dto.HasClaimed;
             await _context.SaveChangesAsync();
         }
         else
@@ -230,4 +231,35 @@ public class AdminService : IAdminService
                 .CountAsync();
     }
 
+    public async Task<double> TotalRevenue()
+    {
+        var totalRevenue = await _context.LearningModulePaymentOrders
+            .Where(x => x.PaymentStatus == PaymentStatus.Paid)
+            .Select(x => x.PaymentAmount)
+            .ToListAsync();
+
+        double total = 0;
+        foreach (var item in totalRevenue)
+        {
+            total += item*0.15;
+        }
+        
+        return total;
+    }
+
+    public async Task<double> TotalRevenueForMonth(TotalRevenueForMonthDto dto)
+    {
+        var totalRevenue = await _context.LearningModulePaymentOrders
+            .Where(x => x.PaymentStatus == PaymentStatus.Paid && x.CreatedAt.Month == dto.month && x.CreatedAt.Year == dto.year)
+            .Select(x => x.PaymentAmount)
+            .ToListAsync();
+
+        double total = 0;
+        foreach (var item in totalRevenue)
+        {
+            total += item * 0.15;
+        }
+
+        return total;
+    }
 }
