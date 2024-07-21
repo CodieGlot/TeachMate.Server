@@ -188,4 +188,24 @@ public class AdminController : ControllerBase
     {
         return Ok(await _adminService.CountClass());
     }
+
+    /// <summary>
+    /// Total Revenue
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpGet("TotalRevenue")]
+    public async Task<ActionResult<double>> TotalRevenue()
+    {
+        return Ok(await _adminService.TotalRevenue());
+    }
+
+    /// <summary>
+    /// Total Revenue ForMonth
+    /// </summary>
+    [Authorize(Roles = CustomRoles.Admin)]
+    [HttpPost("TotalRevenueForMonth")]
+    public async Task<ActionResult<double>> TotalRevenueForMonth(TotalRevenueForMonthDto dto)
+    {
+        return Ok(await _adminService.TotalRevenueForMonth(dto));
+    }
 }
