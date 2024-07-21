@@ -31,6 +31,16 @@ namespace TeachMate.Services
                 query = query.Where(m => m.Subject == dto.Subject);
             }
 
+            if(dto.MaxPrice != null && dto.MaxPrice != -1)
+            {
+                query = query.Where(m => m.Price <= dto.MaxPrice);
+            }
+
+            if (dto.MinPrice != null && dto.MinPrice != -1)
+            {
+                query = query.Where(m => m.Price >= dto.MinPrice);
+            }
+
             if (dto.GradeLevel != null && dto.GradeLevel != -1)
             {
                 query = query.Where(m => m.GradeLevel == dto.GradeLevel);

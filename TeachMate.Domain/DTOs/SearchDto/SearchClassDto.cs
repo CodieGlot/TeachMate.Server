@@ -20,6 +20,8 @@ namespace TeachMate.Domain
         public int? MaximumLearners { get; set; }
         public ModuleType? ModuleType { get; set; }
         public int? NumOfWeeks { get; set; } = 0;
+        public double? MaxPrice { get; set;} = 0;
+        public double? MinPrice { get; set; } = 0;
 
     }
 }
